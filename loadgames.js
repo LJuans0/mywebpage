@@ -10,17 +10,26 @@ Papa.parse(csvUrl, {
     container.innerHTML = ""; // limpia el texto "Cargando..."
 
     juegos.forEach(juego => {
-      if (!juego.nombre) return; // ignora filas vacías
+      if (!juego["Nombre"]) return; // ignora filas vacías
 
       const card = document.createElement("div");
       card.className = "juego-card";
+      card.style.borderLeft = `10px solid ${juego["Accent Color"] || "#ccc"}`;
+
       card.innerHTML = `
-        <h3>${juego.Nombre}</h3>
-        <p><strong>Tiempo:</strong> ${juego.Tiempo || "—"}</p>
-        <p><strong>Nota:</strong> ${juego.Nota || "—"}</p>
-        <p><strong>Review:</strong> ${juego.Review || "—"}</p>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <img src="${juego["Logo"]}" alt="${juego["Nombre"]} logo" style="width: 64px; height: 64px; object-fit: contain;">
+          <div>
+            <h3 style="margin: 0;">${juego["Nombre"]}</h3>
+            <p style="margin: 0;"><strong>Nota:</strong> ${juego["Nota"] || "—"} &nbsp; | &nbsp; <strong>Tiempo:</strong> ${juego["Tiempo"] || "—"}</p>
+            <p style="margin: 0;"><strong>Fecha:</strong> ${juego["Fecha de pasado"] || "—"}</p>
+          </div>
+        </div>
+        <p style="margin-top: 1rem;"><strong>Reseña:</strong> ${juego["Review"] || "—"}</p>
       `;
+
       container.appendChild(card);
     });
   }
 });
+
