@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta property="og:title" content="LJ's EXP">
+  <meta property="og:description" content="Acerca de LJuan / Satomu, mira lo que hace y le gusta">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ljuan.neocities.org/">
+  <meta property="og:image" content="https://cdn.discordapp.com/avatars/828103505897193492/90be43c2ef0362930ed228e3b5052228.webp?size=128">
+  <meta name="twitter:title" content="LJ's EXP">
+  <meta name="twitter:description" content="Acerca de LJuan / Satomu, mira lo que hace y le gusta">
+  <meta name="twitter:image" content="https://cdn.discordapp.com/avatars/828103505897193492/90be43c2ef0362930ed228e3b5052228.webp?size=128">
+  
+  <title>LJ's EXP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <style>
+
+    :root {
+      --color-bg: #000000;
+      --color-text: #000000;
+      --color-accent: #0073ff;
+      --color-border: #dbf7ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+  background: linear-gradient(to bottom, #f6fcff, #dceeff);
+  color: var(--color-text);
+  font-family: 'Hind Madurai', sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  background: linear-gradient(to bottom, #ffffff, #dbf7ff);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0, 90, 150, 0.35);
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  backdrop-filter: blur(9px);
+  border: 5px solid var(--color-border);
+}
+
+.extracard {
+  background: linear-gradient(to bottom, #ffffff, #dbf7ff);
+  border-radius: 20px;
+  margin-top: 10px;
+  padding: 0rem 1rem;
+  box-shadow: 0 8px 30px rgba(0, 90, 150, 0.35);
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  backdrop-filter: blur(9px);
+  border: 5px solid var(--color-border);
+}
+
+.profile-pic {
+  width: 180px;
+  height: 180px;
+  border-radius: 100px;
+  border: 2px solid var(--color-border);
+  object-fit: cover;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Karla', sans-serif;
+  color: var(--color-accent);
+  text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.12);
+}
+
+h1 {
+  font-size: 1.7rem;
+  margin-bottom: 1rem;
+}
+
+p, li {
+  font-size: 1rem;
+  line-height: 1.6;
+border-radius: 20px;
+  padding: 0.5rem;
+  box-shadow: 0px 8px 30px rgba(0, 90, 150, 0.2);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-accent);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.socials {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.socials a.vertical {
+  background: linear-gradient(to bottom, #ffffff, #dbf7ff);
+  border: 1px solid #d1eaff;
+  border-radius: 20px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 120, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.socials a.vertical:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to bottom, #ffffff, #c9f3ff);
+}
+
+.socials a.vertical p {
+  font-size: 0.8rem;
+  margin: 0;
+  color: #333;
+}
+
+.socials a.horizontal {
+  background: linear-gradient(to bottom, #ffffff, #dbf7ff);
+  border: 1px solid #d1eaff;
+  border-radius: 20px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 120, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.socials a.horizontal:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to bottom, #ffffff, #c9f3ff);
+}
+
+.socials a.horizontal p {
+  font-size: 0.8rem;
+  margin: 0;
+  color: #333;
+}
+
+.social-pic {
+  transition: transform 0.2s ease;
+  transform: perspective(500px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
+  will-change: transform;
+  filter: hue-rotate(210deg);
+}
+
+.socials-pic {
+  transition: transform 0.2s ease;
+  width: 28px;
+  height: 28px;
+  filter: hue-rotate(200deg);
+}
+
+    .profile-pic {
+      flex-shrink: 0;
+      width: 180px;
+      height: 180px;
+      border-radius: 100px;
+      object-fit: cover;
+      border: 1px solid var(--color-border);
+      margin-top: 1px;
+      box-shadow: 0px 0px 10px rgba(0, 115, 255, 0.6);
+    }
+    
+#wave-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  background: #f6fcff;
+}
+
+
+  .crt::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+@keyframes flicker {
+  0% {
+  opacity: 0.27861;
+  }
+  5% {
+  opacity: 0.34769;
+  }
+  10% {
+  opacity: 0.23604;
+  }
+  15% {
+  opacity: 0.10626;
+  }
+  20% {
+  opacity: 0.18128;
+  }
+  25% {
+  opacity: 0.10626;
+  }
+  30% {
+  opacity: 0.18128;
+  }
+  35% {
+  opacity: 0.23604;
+  }
+}
+
+.crt::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.06);
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+  animation: flicker 0.9s infinite;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+
+  .card, .extracard {
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+  }
+
+  .socials {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .profile-pic {
+    width: 140px;
+    height: 140px;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  .info {
+    text-align: center;
+  }
+
+  .socials a.vertical, .socials a.horizontal {
+    width: 1000%;
+    max-width: 300px;
+  }
+
+  .socials a.horizontal {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .socials-pic {
+    width: 24px;
+    height: 24px;
+  }
+}#mute-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  background: linear-gradient(to bottom, #ffffff, #c9f3ff);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+  <div class="crt"></div>
+  <div class="background-waves"></div>
+  <div class="content-wrapper">
+
+  <div class="card">
+    <div class="info">
+      <h1>LJuan / Satomu</h1>
+      <p>Aficionado al desarrollo de juegos, modelado 3D, programación, y mantenimiento de equipos. Te invito a que revises a lo que le invierto mi tiempo en los botones de abajo (especialmente lo que juego).</p>
+      <div class="socials">
+        <a href="#" class="vertical" target="_blank">
+    <img src="PixelStarr.png" alt="Star Icon" class="social-pic" />
+    <p>Mi EXP</p>
+
+      <a href="https://store.steampowered.com/app/2005990/Gunkan_Zero/" class="vertical" target="_blank">
+    <img src="Unity.png" alt="Unity Icon" class="social-pic" />
+    <p>Juego que desarrollo</p>
+  </a>
+      
+      <a href="https://sketchfab.com/satomu" class="vertical" target="_blank">
+    <img src="Blender3D.png" alt="Blender Icon" class="social-pic" />
+    <p>Mis modelos 3D</p>
+  </a>
+      </div>
+
+    </div>
+
+    <div class="socials">
+      <img src="https://cdn.discordapp.com/avatars/828103505897193492/90be43c2ef0362930ed228e3b5052228.webp?size=128" alt="Foto de perfil" class="profile-pic" /> 
+    </div>
+  </div>
+
+<div class="extracard">
+<h4>También tengo presencia en línea aqui...</h4>
+<div class="socials">
+
+<a href="https://steamcommunity.com/id/satomu18/" class="horizontal" target="_blank">
+    <img src="Steama.png" alt="steam icon" class="socials-pic" />
+  </a>
+<a href="https://gamejolt.com/@LJuans/games" class="horizontal" target="_blank">
+    <img src="GameJolt.png" alt="gamejolt icon" class="socials-pic" />
+  </a>
+<a href="https://www.youtube.com/@_satomu" class="horizontal" target="_blank">
+    <img src="YouTube.png" alt="youtube icon" class="socials-pic" />
+  </a>
+<a href="https://www.instagram.com/_ljuans/" class="horizontal" target="_blank">
+    <img src="Instagram_1.png" alt="ig icon" class="socials-pic" />
+  </a>
+</div>
+</div>
+<p style="font-style: italic; max-width:208px";>BGM: Doctor - 沖辺 美佐紀</p>
+</div>
+
+  <svg width="0" height="0">
+    <defs>
+      <filter id="displacementFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0" numOctaves="1" result="turbulence"/>
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const socialLinks = document.querySelectorAll('.socials a');
+    
+    socialLinks.forEach(link => {
+      link.addEventListener('mousemove', (e) => {
+        // Solo aplicar efecto cuando está en hover
+        if(e.currentTarget.matches(':hover')) {
+          const linkRect = e.currentTarget.getBoundingClientRect();
+          const linkCenterX = linkRect.left + linkRect.width / 2;
+          const linkCenterY = linkRect.top + linkRect.height / 2;
+          
+          // Calcular posición relativa del mouse
+          const mouseX = e.clientX - linkCenterX;
+          const mouseY = e.clientY - linkCenterY;
+          
+          // Calcular ángulos de rotación (limitados para no girar demasiado)
+          const maxRotation = 75; // Grados máximos de rotación
+          const rotateY = (mouseX / linkRect.width) * maxRotation;
+          const rotateX = -(mouseY / linkRect.height) * maxRotation;
+          
+          // Aplicar transformación al ícono dentro del link
+          const icon = e.currentTarget.querySelector('.social-pic');
+          if(icon) {
+            icon.style.setProperty('--rotate-y', `${rotateY}deg`);
+            icon.style.setProperty('--rotate-x', `${rotateX}deg`);
+          }
+        }
+      });
+      
+      // Resetear posición cuando el mouse sale
+      link.addEventListener('mouseleave', (e) => {
+        const icon = e.currentTarget.querySelector('.social-pic');
+        if(icon) {
+          icon.style.setProperty('--rotate-y', '0deg');
+          icon.style.setProperty('--rotate-x', '0deg');
+        }
+      });
+    });
+  });
+</script>
+
+<canvas id="wave-bg"></canvas>
+<script>
+  const canvas = document.getElementById('wave-bg');
+  const ctx = canvas.getContext('2d');
+
+  let width, height;
+  let baseAmplitude = 0;
+  let amplitudeBoost = 0;
+  let lastMouseX = 0;
+  let lastMouseY = 0;
+  let lastMoveTime = Date.now();
+
+  const sensitivity = 0.015; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  document.addEventListener('mousemove', e => {
+    const dx = e.clientX - lastMouseX;
+    const dy = e.clientY - lastMouseY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    amplitudeBoost += distance * sensitivity; // ✅ Aplica sensibilidad
+    amplitudeBoost = Math.min(amplitudeBoost, 50);
+
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+    lastMoveTime = Date.now();
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = '#f6fcff';
+    ctx.fillRect(0, 0, width, height);
+
+    const timeSinceLastMove = Date.now() - lastMoveTime;
+    if (timeSinceLastMove > 0) {
+      amplitudeBoost *= 0.95;
+      if (amplitudeBoost < 0.01) amplitudeBoost = 0;
+    }
+
+    const waveCount = 4;
+    for (let i = 0; i < waveCount; i++) {
+      const amplitude = baseAmplitude + amplitudeBoost + i * 5;
+      const frequency = 0.005 + i * 0.001;
+      const offsetY = height * (0.2 + i * 0.15);
+      const color = `rgba(100, 169, 255, ${0.06 + i * 0.04})`;
+
+      ctx.beginPath();
+      for (let x = 0; x <= width; x++) {
+        const y = offsetY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
+
+<audio id="bg-music" autoplay loop>
+  <source src="https://github.com/LJuans0/mywebpage/raw/refs/heads/main/maintheme.mp3">
+</audio>
+
+<button id="mute-button">🔊</button>
+
+<script>
+  const audio = document.getElementById("bg-music");
+  const button = document.getElementById("mute-button");
+
+  let isMuted = false;
+
+  button.addEventListener("click", () => {
+    if (isMuted) {
+      audio.play();
+      button.textContent = "🔊"; // ícono de sonido
+    } else {
+      audio.pause();
+      button.textContent = "🔇"; // ícono de silencio
+    }
+    isMuted = !isMuted;
+  });
+const music = document.getElementById("bg-music");
+  music.volume = 0.2; // Volumen fijo al 30%
+  // Autoplay a veces está bloqueado hasta que el usuario interactúa:
+  window.addEventListener("click", () => {
+    if (!isMuted && audio.paused) {
+      audio.play();
+    }
+  });
+</script>
+
+</audio>
+</body>
+</html>
