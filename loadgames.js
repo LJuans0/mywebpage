@@ -15,9 +15,9 @@ Papa.parse(csvUrl, {
       const card = document.createElement("div");
       card.className = "juego-card";
       card.innerHTML = `
-        <h3>${juego.nombre}</h3>
-        <p><strong>Tiempo:</strong> ${juego.tiempo || "—"}</p>
-        <p><strong>Nota:</strong> ${juego.nota || "—"}</p>
+        <h3>${juego.Nombre}</h3>
+        <p><strong>Tiempo:</strong> ${juego.Tiempo || "—"}</p>
+        <p><strong>Nota:</strong> ${juego.Nota || "—"}</p>
         <p><strong>Completado:</strong> ${juego.completado || "—"}</p>
       `;
       container.appendChild(card);
