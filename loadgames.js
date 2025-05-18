@@ -1,4 +1,4 @@
-const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR1XDkBEEb3mPcd_IskPiRtNUYBWyKDynGZycSrzuqmbaXIFPfcdGCAbBjBFO6s_kdZp-8eekabv8hD/pub?gid=0&single=true&output=csv';
+const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR1XDkBEEb3mPcd_IskPiRtNUYBWyKDynGZycSrzuqmbaXIFPfcdGCAbBjBFO6s_kdZp-8eekabv8hD/pub?output=csv';
 
 Papa.parse(csvUrl, {
   download: true,
