@@ -18,7 +18,7 @@ Papa.parse(csvUrl, {
         <h3>${juego.Nombre}</h3>
         <p><strong>Tiempo:</strong> ${juego.Tiempo || "—"}</p>
         <p><strong>Nota:</strong> ${juego.Nota || "—"}</p>
-        <p><strong>Completado:</strong> ${juego.completado || "—"}</p>
+        <p><strong>Review:</strong> ${juego.Review || "—"}</p>
       `;
       container.appendChild(card);
     });
