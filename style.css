@@ -61,6 +61,7 @@ h1, h2, h3, h4 {
   font-family: 'Karla', sans-serif;
   color: var(--color-accent);
   text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.12);
+  width:240px;margin-bottom: 5px;
 }
 
 h1 {
@@ -68,11 +69,24 @@ h1 {
   margin-bottom: 1rem;
 }
 
-p, li {
+p {
+  
   font-size: 1rem;
   line-height: 1.6;
 border-radius: 20px;
-  padding: 0.5rem;
+  padding: 0.2rem;
+  box-shadow: 0px 8px 30px rgba(0, 90, 150, 0.2);
+}
+
+score {
+  font-family: 'Karla', sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  border-radius: 20px;
+  padding: 0.4rem;
+  margin-top:-100px;
+  background:linear-gradient(to bottom, #4d9dff, #0073ff);;
+  color:white;
   box-shadow: 0px 8px 30px rgba(0, 90, 150, 0.2);
 }
 
@@ -290,5 +304,51 @@ a:hover {
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   cursor: pointer;
+}
+<!//NO CAMBIAR NADA DE ARRIBAAAAAAAAAAAAAAAA ES EL STYLE PARA IR PROBANDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO-->
+
+#game-library {
+  margin-top: 2rem;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem;
+}
+
+.game-card {
+  background: linear-gradient(to bottom, #ffffff, #dbf7ff);
+  border: 3px solid var(--color-border);
+  border-radius: 20px;
+  padding: 0.4rem 0.7rem;
+  box-shadow: 0 8px 30px rgba(0, 90, 150, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;max-width:400px;
+  gap:15px;
+
+}
+
+.game-viewer {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(to bottom, #c9e5f6, #b7dbfa);
+  border-radius: 12px;
+  margin-bottom: 0rem;
+}
+
+.game-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.review {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 0.5rem;
+  border-radius: 12px;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
 }
 </style>
