@@ -11,18 +11,91 @@
 
 <div class="crt"></div>
 <div class="background-waves"></div>
+   <header class="page-header">
+        <h1 class="page-title">Mi EXP</h1>
+        <p class="page-subtitle">La razón principal de esta página es poder recopilar y tener un registro de todos los juegos que he jugado, e idealmente pasado. ¡Toma un vistazo y veamos si tenemos algo en común!</p>
 
+    </header>
 
-  <section id="game-library">
-    <div class="game-card" style="flex-direction:row;" >
-      <div class="game-viewer" id="game-3d-witcher"></div>
-      <div class="game-info">
-        <h2>The Legend of Zelda: Ocarina of Time</h2>
-        <score>9/10</score>
-        
-      </div>
+    <div class="disclaimer">
+        <strong>Nota importante:</strong> Las puntuaciones y opiniones reflejadas aquí son meramente personales y subjetivas: representan que tanto me entretuve o disfrute cada juego.
     </div>
-  </section>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-box" placeholder="Buscar juegos..." aria-label="Buscar juegos">
+    </div>
+
+    <div class="games-counter" id="gamesCounter"></div>
+
+    <div class="games-container" id="gamesContainer">
+        <!-- Las tarjetas de juegos se generarán dinámicamente -->
+    </div>
+
+    <script>
+        // Datos de los juegos
+        const games = [
+            { title: "The Legend of Zelda: Majora's Mask", score: 95, icon: "https://via.placeholder.com/50" },
+            { title: "Shin Megami Tensei: Vangeance", score: 95, icon: "https://via.placeholder.com/50" },
+            { title: "Red Dead Redemption 2", score: 97, icon: "https://via.placeholder.com/50" },
+            { title: "The Witcher 3: Wild Hunt", score: 96, icon: "https://via.placeholder.com/50" },
+            { title: "Super Mario Odyssey", score: 94, icon: "https://via.placeholder.com/50" },
+            { title: "God of War (2018)", score: 95, icon: "https://via.placeholder.com/50" },
+            { title: "Hollow Knight", score: 92, icon: "https://via.placeholder.com/50" },
+            { title: "Celeste", score: 90, icon: "https://via.placeholder.com/50" },
+            { title: "Persona 5 Royal", score: 96, icon: "https://via.placeholder.com/50" },
+            { title: "Dark Souls III", score: 93, icon: "https://via.placeholder.com/50" },
+            { title: "Portal 2", score: 98, icon: "https://via.placeholder.com/50" },
+            { title: "Bloodborne", score: 94, icon: "https://via.placeholder.com/50" }
+        ];
+
+        // Función para renderizar los juegos
+        function renderGames(filteredGames = games) {
+            const container = document.getElementById('gamesContainer');
+            container.innerHTML = '';
+
+            if (filteredGames.length === 0) {
+                container.innerHTML = '<div class="no-results">No se encontraron juegos que coincidan con tu búsqueda.</div>';
+                return;
+            }
+
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('a');
+                gameCard.className = 'game-card-horizontal';
+                gameCard.href = '#'; // Puedes cambiar esto por enlaces reales
+                
+                gameCard.innerHTML = `
+                    <img src="${game.icon}" alt="Ícono de ${game.title}" class="game-icon-horizontal">
+                    <div class="game-info-horizontal">
+                        <div class="game-title-horizontal">${game.title}</div>
+                        <div class="game-score-horizontal">${game.score}</div>
+                    </div>
+                `;
+                
+                container.appendChild(gameCard);
+            });
+
+            // Actualizar contador
+            document.getElementById('gamesCounter').textContent = `Mostrando ${filteredGames.length} de ${games.length} juegos`;
+        }
+
+        // Función para filtrar juegos
+        function filterGames() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filteredGames = games.filter(game => 
+                game.title.toLowerCase().includes(searchTerm)
+            );
+            renderGames(filteredGames);
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterGames);
+
+        // Renderizar juegos al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            renderGames();
+        });
+    </script>
+
 
 <!//NO CAMBIAR NADA DE ABAJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO-->
 
