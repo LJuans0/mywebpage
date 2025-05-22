@@ -11,19 +11,6 @@
       box-sizing: border-box;
     }
 
-    body {
-  background: linear-gradient(to bottom, #f6fcff, #dceeff);
-  color: var(--color-text);
-  font-family: 'Hind Madurai', sans-serif;
-  max-width: 800px;
-  margin: auto;
-  padding: 2rem;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .card {
   background: linear-gradient(to bottom, #ffffff, #dbf7ff);
   border-radius: 20px;
