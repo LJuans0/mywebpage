@@ -480,6 +480,7 @@ a:hover {
             object-fit: contain;
             margin-right: 12px;
             flex-shrink: 0;
+            border-radius: 10px;
         }
 
         .game-info-horizontal {
