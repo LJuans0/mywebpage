@@ -509,4 +509,67 @@ a:hover {
             border-radius: 20px;
             align-self: flex-start;
         }
+
+.favorite-switch {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    
+    .switch-label {
+        margin-left: 8px;
+        font-size: 14px;
+    }
+    
+    .favorite-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    
+    .slider {
+        position: relative;
+        display: inline-block;
+        min-width: 39px;
+        width: 40px;
+        height: 24px;
+        background: linear-gradient(to bottom, #b8b8b8, #8f8f8f);
+        transition: .4s;
+        border-radius: 20px;
+    }
+    
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+        right:50px;
+        background: linear-gradient(to bottom, #ffffff, #d4d4d4);
+        transition: .4s;
+        border-radius: 20px;
+    }
+    
+    input:checked + .slider {
+        background: linear-gradient(to bottom, #ffdd00, #c9af00);
+    }
+    
+    input:checked + .slider:before {
+        transform: translateX(100%);
+    }
+    
+    /* Estilo para los juegos favoritos */
+    .game-card-horizontal.favorite {
+        //border: 2px solid gold;
+    }
+    
+    .favorite-icon {
+        color: gold;
+        margin-left: auto;
+        padding: 0 10px;
+        font-size: 28px;
+    }
+
 </style>
