@@ -354,7 +354,6 @@ a:hover {
 
 <!//NO CAMBIAR NADA DE ARRIBAAAAAAAAAAAAAAAA ES EL STYLE PARA IR PROBANDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO-->
 
-
         /* Encabezado */
         .page-header {
 
@@ -430,11 +429,14 @@ a:hover {
 
         /* Contenedor de juegos */
         .games-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(var(--card-width), 1fr));
-            gap: 0px;
-            width: 100%;
-        }
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    padding: 10px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
 
 
@@ -453,21 +455,19 @@ a:hover {
 
         /* Estilo 3 - Tarjeta Horizontal */
         .game-card-horizontal {
-            background: linear-gradient(to bottom, #ffffff, #dbf7ff);
-            border-radius: 16px;
-            padding: 12px;
-            box-shadow: 0 8px 20px rgba(0, 90, 150, 0.25);
-            width: var(--card-width);
-            height: 80px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 3px solid var(--color-border);
-            text-decoration: none;
-            overflow: hidden;
-            margin:10px;
-        }
+    background: linear-gradient(to bottom, #ffffff, #dbf7ff);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0, 90, 150, 0.2);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid var(--color-border);
+    text-decoration: none;
+    overflow: hidden;
+    height: 70px; /* Altura más compacta */
+}
 
         .game-card-horizontal:hover {
             transform: translateY(-5px);
@@ -475,12 +475,13 @@ a:hover {
         }
 
         .game-icon-horizontal {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
             object-fit: contain;
             margin-right: 12px;
             flex-shrink: 0;
-            border-radius: 10px;
+            box-shadow: 0 9px 25px rgba(0, 90, 150, 0.35);
         }
 
         .game-info-horizontal {
@@ -491,14 +492,14 @@ a:hover {
         }
 
         .game-title-horizontal {
-            font-family: 'Karla', sans-serif;
-            color: var(--color-accent);
-            font-size: 0.9rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 4px;
-        }
+    font-family: 'Karla', sans-serif;
+    color: var(--color-accent);
+    font-size: 0.85rem; /* Tamaño de fuente más pequeño */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+}
 
         .game-score-horizontal {
             font-family: 'Karla', sans-serif;
@@ -570,7 +571,8 @@ a:hover {
         color: gold;
         margin-left: auto;
         padding: 0 10px;
-        font-size: 28px;
+        font-size: 25px;
     }
+</style>
 
 </style>
