@@ -26,13 +26,14 @@
 <div class="filter-controls">
     <div class="search-container">
         <input type="text" id="searchInput" class="search-box" placeholder="Buscar juegos..." aria-label="Buscar juegos">
-    <label class="favorite-switch">
-        <input type="checkbox" id="favoriteFilter">
-        <span class="slider round"></span>
-        <span class="switch-label">Solo favoritos</span>
-    </label>
+        <label class="favorite-switch">
+            <input type="checkbox" id="favoriteFilter">
+            <span class="slider round"></span>
+            <span class="switch-label">Solo favoritos</span>
+        </label>
+    </div>
 </div>
-<div id="gamesCounter"></div>
+<div id="gamesCounter" style="text-align: center; margin: 10px 0;"></div>
 <div class="games-container" id="gamesContainer">
     <!-- Las tarjetas de juegos se generarán dinámicamente -->
 </div>
@@ -40,8 +41,8 @@
 <script>
     // Datos de los juegos con campo favorite añadido
     const games = [
-        { title: "The Legend of Zelda: Majora's Mask", score: 95, icon: "https://via.placeholder.com/50", favorite: true },
-        { title: "Shin Megami Tensei: Vangeance", score: 95, icon: "https://via.placeholder.com/50", favorite: false },
+        { title: "The Legend of Zelda: Majora's Mask", score: 95, icon: "https://cdn2.steamgriddb.com/icon/dd3cd8b31f21e6ff4f74584f8710277f.ico ", favorite: true },
+        { title: "Shin Megami Tensei: Vangeance", score: 10, icon: "https://via.placeholder.com/50", favorite: false },
         { title: "Red Dead Redemption 2", score: 97, icon: "https://via.placeholder.com/50", favorite: true },
         { title: "The Witcher 3: Wild Hunt", score: 96, icon: "https://via.placeholder.com/50", favorite: true },
         { title: "Super Mario Odyssey", score: 94, icon: "https://via.placeholder.com/50", favorite: false },
