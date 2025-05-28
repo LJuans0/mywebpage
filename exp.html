@@ -38,24 +38,56 @@
     <!-- Las tarjetas de juegos se generarán dinámicamente -->
 </div>
 
-<script>
-    // Datos de los juegos con campo favorite añadido
-    const games = [
-        { title: "The Legend of Zelda: Majora's Mask", score: 95, icon: "https://cdn2.steamgriddb.com/icon/dd3cd8b31f21e6ff4f74584f8710277f.ico ", favorite: true },
-        { title: "Shin Megami Tensei: Vangeance", score: 10, icon: "https://via.placeholder.com/50", favorite: false },
-        { title: "Red Dead Redemption 2", score: 97, icon: "https://via.placeholder.com/50", favorite: true },
-        { title: "The Witcher 3: Wild Hunt", score: 96, icon: "https://via.placeholder.com/50", favorite: true },
-        { title: "Super Mario Odyssey", score: 94, icon: "https://via.placeholder.com/50", favorite: false },
-        { title: "God of War (2018)", score: 95, icon: "https://via.placeholder.com/50", favorite: true },
-        { title: "Hollow Knight", score: 92, icon: "https://via.placeholder.com/50", favorite: false },
-        { title: "Celeste", score: 90, icon: "https://via.placeholder.com/50", favorite: true },
-        { title: "Persona 5 Royal", score: 96, icon: "https://via.placeholder.com/50", favorite: true },
-        { title: "Dark Souls III", score: 93, icon: "https://via.placeholder.com/50", favorite: false },
-        { title: "Portal 2", score: 98, icon: "https://via.placeholder.com/50", favorite: true },
-        { title: "Bloodborne", score: 94, icon: "https://via.placeholder.com/50", favorite: true }
-    ];
 
-    // Función para renderizar los juegos
+<script>
+const games = [
+    {
+        title: "Shin Megami Tensei V: Vangeance",
+        score: 5,
+        icon: "https://cdn2.steamgriddb.com/icon/dd3cd8b31f21e6ff4f74584f8710277f.ico",
+        favorite: true,
+        playtime: "60h",
+        finishedDate: "12/1/2022",
+        platform: "PS4",
+        review: "el PRIMER y probablemente ÚNICO rogue like que me ha gustado hasta ahora. parece que tiene correlación con poker obviamente jamás he jugado poker y me costó un poco al inicio entender las jugadas. puede que haberlo conocido antes hubiese hecho de mi inicio algo más suave y llevadero. sin embargo, el jugo de este juego sin duda está en los joker. de alguna manera el desarrollador logró que una mecánica de power ups tan básica y simplona como puede ser, sea tan entretenida y adictiva. GOTY? no lo creo. al final, siento que es un dopamine relief, con todo lo juicy que se siente cada interacción.",
+        ost: "https://www.youtube.com/embed/N4BddJsbmqw?si=Zd_dTGRXgw2xhGWk&amp;controls=0",
+        cover: "https://cdn.mobygames.com/covers/4749225-shin-megami-tensei-persona-3-fes-playstation-2-front-cover.jpg"
+    },
+    {
+        title: "The Legend of Zelda: Majora's Mask",
+        score: "10",
+        icon: "https://cdn2.steamgriddb.com/icon/dd3cd8b31f21e6ff4f74584f8710277f.ico",
+        favorite: true,
+        playtime: "40h",
+        finishedDate: "12/2/2021",
+        platform: "N64",
+        review: "Una experiencia única, melancólica y brillante.",
+        ost: "https://www.youtube.com/embed/N4BddJsbmqw?si=Zd_dTGRXgw2xhGWk&amp;controls=0",
+        cover: "https://cdn.mobygames.com/covers/4749225-shin-megami-tensei-persona-3-fes-playstation-2-front-cover.jpg"
+    }
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    function openModal(game) {
+    document.getElementById('modalTitle').textContent = game.title;
+    document.getElementById('modalFavorite').textContent = game.favorite ? "★" : "";
+    document.getElementById('modalScore').textContent = game.score;
+    document.getElementById('modalTime').textContent = game.playtime || "N/D";
+    document.getElementById('modalDate').textContent = game.finishedDate || "N/D";
+    document.getElementById('modalPlatform').textContent = game.platform || "N/D";
+    document.getElementById('modalReview').textContent = game.review || "Sin reseña";
+    document.getElementById('modalVideo').src = game.ost || "";
+    document.getElementById('modalCover').src = game.cover || "";
+
+    document.getElementById('gameModal').classList.remove('hidden');
+}
+
+    document.querySelector('.close-button').addEventListener('click', () => {
+        document.getElementById('gameModal').classList.add('hidden');
+        document.getElementById('modalVideo').src = ""; // Detener video
+    });
+
     function renderGames(filteredGames = games) {
         const container = document.getElementById('gamesContainer');
         container.innerHTML = '';
@@ -69,12 +101,16 @@
             const gameCard = document.createElement('a');
             gameCard.className = 'game-card-horizontal';
             gameCard.href = '#';
-            
-            // Añadir clase favorite si el juego es favorito
+
+            gameCard.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal(game);
+            });
+
             if (game.favorite) {
                 gameCard.classList.add('favorite');
             }
-            
+
             gameCard.innerHTML = `
                 <img src="${game.icon}" alt="Ícono de ${game.title}" class="game-icon-horizontal">
                 <div class="game-info-horizontal">
@@ -83,25 +119,24 @@
                 </div>
                 <div class="favorite-icon">${game.favorite ? '★' : ''}</div>
             `;
-            
+
             container.appendChild(gameCard);
         });
 
-        // Actualizar contador
-        document.getElementById('gamesCounter').textContent = `Mostrando ${filteredGames.length} de ${games.length} juegos`;
+        document.getElementById('gamesCounter').textContent =
+            `Mostrando ${filteredGames.length} de ${games.length} juegos`;
     }
 
-    // Función para filtrar juegos
     function filterGames() {
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         const onlyFavorites = document.getElementById('favoriteFilter').checked;
-        
+
         const filteredGames = games.filter(game => {
             const matchesSearch = game.title.toLowerCase().includes(searchTerm);
             const matchesFavorite = onlyFavorites ? game.favorite : true;
             return matchesSearch && matchesFavorite;
         });
-        
+
         renderGames(filteredGames);
     }
 
@@ -109,11 +144,42 @@
     document.getElementById('searchInput').addEventListener('input', filterGames);
     document.getElementById('favoriteFilter').addEventListener('change', filterGames);
 
-    // Renderizar juegos al cargar la página
-    document.addEventListener('DOMContentLoaded', () => {
-        renderGames();
-    });
+    // Renderizar al inicio
+    renderGames();
+});
 </script>
+
+<div id="gameModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <div class="modal-body">
+      <div class="modal-left">
+        <img id="modalCover" src="" alt="Cover del juego" class="modal-cover">
+      </div>
+      <div class="modal-right">
+        <div class="modal-header">
+          <h2>
+    <span id="modalFavorite">★</span>
+    <span id="modalTitle">Título</span>
+
+  </h2>
+  <div class="modal-score" id="modalScore">95</div>
+        </div>
+        <div class="modal-meta">
+          <p><strong>Tiempo:</strong> <span id="modalTime"></span></p>
+          <p><strong>Terminado:</strong> <span id="modalDate"></span></p>
+          <p><strong>Plataforma:</strong> <span id="modalPlatform"></span></p>
+        </div>
+        <div class="modal-review">
+          <p id="modalReview"></p> Mejor track del OST:
+        </div>
+        <div class="modal-video">
+          <iframe id="modalVideo" width="224" height="126" frameborder="1"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!//NO CAMBIAR NADA DE ABAJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO-->
 
