@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Test GLB + Texturas Selectivas</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from "https://cdn.skypack.dev/three@0.129.0";
+    import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
+    import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
+
+    // Escena y cámara
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(2, 2, 4);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Controles orbitales
+    const controls = new OrbitControls(camera, renderer.domElement);
+
+    // Luces
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+
+    // Cargar texturas
+    const textureLoader = new THREE.TextureLoader();
+    const textureFront = textureLoader.load('https://upload.wikimedia.org/wikipedia/en/9/98/BotW_cover_art.jpg');
+    const textureBack = textureLoader.load('https://media.discordapp.net/attachments/1362996538791563445/1378485273876365322/switch_zeldabreathofthewild_1.jpg?format=webp&width=487&height=792');
+    const textureSpine = textureLoader.load('https://media.discordapp.net/attachments/1362996538791563445/1378485273343557763/spineswitch_zeldabreathofthewild.jpg?format=webp&width=49&height=792');
+
+    // Cargar modelo .glb
+    const loader = new GLTFLoader();
+    loader.load(
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Box/glTF-Binary/Box.glb',
+      // 🔼 Usa tu propio modelo aquí
+      function (gltf) {
+        const model = gltf.scene;
+        scene.add(model);
+
+        // Recorremos todas las meshes y aplicamos texturas según el nombre
+        model.traverse((child) => {
+          if (child.isMesh) {
+            switch (child.name) {
+              case "Front":
+                child.material = new THREE.MeshBasicMaterial({ map: textureFront });
+                break;
+              case "Back":
+                child.material = new THREE.MeshBasicMaterial({ map: textureBack });
+                break;
+              case "Spine":
+                child.material = new THREE.MeshBasicMaterial({ map: textureSpine });
+                break;
+              default:
+                child.material = new THREE.MeshStandardMaterial({ color: 0x999999 });
+            }
+          }
+        });
+      },
+      undefined,
+      (error) => {
+        console.error("Error al cargar el modelo:", error);
+      }
+    );
+
+    // Animación
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
