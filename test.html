@@ -10,83 +10,46 @@
 </head>
 <body>
   <script type="module">
-    import * as THREE from "https://cdn.skypack.dev/three@0.129.0";
-    import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
-    import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
+    import * as THREE from 'https://cdn.skypack.dev/three';
+import { GLTFLoader } from 'https://cdn.skypack.dev/three/examples/jsm/loaders/GLTFLoader.js';
 
-    // Escena y cámara
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(2, 2, 4);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+const renderer = new THREE.WebGLRenderer({ alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-    // Controles orbitales
-    const controls = new OrbitControls(camera, renderer.domElement);
+// Texturas personalizadas para algunas partes
+const loaderTexture = new THREE.TextureLoader();
+const textureFront = loaderTexture.load('tu_url_textura_front.jpg');
 
-    // Luces
-    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
+const loader = new GLTFLoader();
+loader.load('SwitchCase.glb', function(gltf) {
+  const model = gltf.scene;
 
-    // Cargar texturas
-    const textureLoader = new THREE.TextureLoader();
-    const textureFront = textureLoader.load('https://i.postimg.cc/MZ0r99vd/coverswitch-zeldabreathofthewild.jpg');
-    const textureBack = textureLoader.load('https://i.postimg.cc/SRGTjxww/backswitch-zeldabreathofthewild.jpg');
-    const textureSpine = textureLoader.load('https://i.postimg.cc/FzvC9Lny/spineswitch-zeldabreathofthewild.jpg');
+  model.traverse((child) => {
+    if (child.isMesh) {
+      // Guardar material original
+      const originalMaterial = child.material;
 
-    // Cargar modelo .glb
-    const loader = new GLTFLoader();
-    loader.load(
-      'SwitchCase2.glb',
-      // 🔼 Usa tu propio modelo aquí
-      function (gltf) {
-        const model = gltf.scene;
-        scene.add(model);
-
-        // Recorremos todas las meshes y aplicamos texturas según el nombre
-        model.traverse((child) => {
-          if (child.isMesh) {
-            switch (child.name) {
-              case "Front":
-                child.material = new THREE.MeshBasicMaterial({ map: textureFront });
-                break;
-              case "Back":
-                child.material = new THREE.MeshBasicMaterial({ map: textureBack });
-                break;
-              case "Spine":
-                child.material = new THREE.MeshBasicMaterial({ map: textureSpine });
-                break;
-              default:
-                child.material = new THREE.MeshStandardMaterial({ color: 0x999999 });
-            }
-          }
+      // Si es una parte específica, reemplazar el material
+      if (child.name === 'Front') {
+        child.material = new THREE.MeshStandardMaterial({
+          map: textureFront
         });
-      },
-      undefined,
-      (error) => {
-        console.error("Error al cargar el modelo:", error);
+      } else {
+        // Mantener el material original para el resto
+        child.material = originalMaterial;
       }
-    );
-
-    // Animación
-    function animate() {
-      requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene, camera);
     }
+  });
 
-    animate();
-
-    // Resize
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+  scene.add(model);
+}, undefined, function(error) {
+  console.error(error);
+});
   </script>
 </body>
 </html>
