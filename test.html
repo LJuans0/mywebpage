@@ -34,14 +34,14 @@
 
     // Cargar texturas
     const textureLoader = new THREE.TextureLoader();
-    const textureFront = textureLoader.load('https://upload.wikimedia.org/wikipedia/en/9/98/BotW_cover_art.jpg');
-    const textureBack = textureLoader.load('https://media.discordapp.net/attachments/1362996538791563445/1378485273876365322/switch_zeldabreathofthewild_1.jpg?format=webp&width=487&height=792');
-    const textureSpine = textureLoader.load('https://media.discordapp.net/attachments/1362996538791563445/1378485273343557763/spineswitch_zeldabreathofthewild.jpg?format=webp&width=49&height=792');
+    const textureFront = textureLoader.load('https://i.postimg.cc/MZ0r99vd/coverswitch-zeldabreathofthewild.jpg');
+    const textureBack = textureLoader.load('https://i.postimg.cc/SRGTjxww/backswitch-zeldabreathofthewild.jpg');
+    const textureSpine = textureLoader.load('https://i.postimg.cc/FzvC9Lny/spineswitch-zeldabreathofthewild.jpg');
 
     // Cargar modelo .glb
     const loader = new GLTFLoader();
     loader.load(
-      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Box/glTF-Binary/Box.glb',
+      'SwitchCase.glb',
       // 🔼 Usa tu propio modelo aquí
       function (gltf) {
         const model = gltf.scene;
