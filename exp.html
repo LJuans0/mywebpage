@@ -852,138 +852,118 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 
 <script type="module">
-  import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
+import * as THREE from "https://cdn.skypack.dev/three@0.129.0";
+import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
-  const container = document.getElementById("container3D");
+const container = document.getElementById("container3D");
 
-  // 📦 Tipos con dimensiones, rotación inicial y color de fondo
-  const boxTypes = {
-    small: {
-      width: 1, height: 1, depth: 1,
-      rotation: [0.3, 0.3, 0],
-      backgroundColor: 0x555555
-    },
-    Switch: {
-      width: 1.5, height: 2.5, depth: 0.15,
-      rotation: [0, 1.5, 0],
-      backgroundColor: 0xd3d2d3
-    },
-    tall: {
-      width: 1, height: 2, depth: 1,
-      rotation: [0.5, 0.2, 0],
-      backgroundColor: 0x993333
-    }
-  };
+let scene, camera, renderer, currentModel;
 
-  // Mapeo de plataformas a tipos de caja
-  const platformToBoxType = {
-    "Switch": "Switch",
-    "PS2": "tall",
-    "PS4": "tall",
-    "DS": "small",
-    "3DS": "small",
-    "PC": "small",
-    // Agrega más si necesitas
-  };
+const platformToModel = {
+  "Switch": "SwitchCase.glb",
+  "PS2": "PS2Case.glb",
+  "PS4": "PS4Case.glb",
+  "PC": "PCCase.glb",
+  "3DS": "DSCase.glb",
+  "DS": "DSCase.glb"
+};
 
-  let scene, camera, renderer, cube;
-
-  function getBoxTypeForPlatform(platform) {
-    return boxTypes[platformToBoxType[platform]] || boxTypes.small;
+function initScene() {
+  if (renderer) {
+    container.removeChild(renderer.domElement);
   }
 
-  function init3DViewer(textures, boxTypeKey) {
-    const box = boxTypes[boxTypeKey] || boxTypes.small;
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+  camera.position.set(2, 2, 4);
 
-    if (renderer) {
-      container.removeChild(renderer.domElement);
-    }
+  renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
 
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-    camera.position.z = 2;
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const light = new THREE.DirectionalLight(0xffffff, 0.8);
+  light.position.set(2, 2, 3);
+  scene.add(light);
+}
 
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
+async function loadTextures(game) {
+  const loader = new THREE.TextureLoader();
+  return {
+    front: await loader.loadAsync(game.coverFront),
+    back: await loader.loadAsync(game.coverBack),
+    spine: await loader.loadAsync(game.coverSide)
+  };
+}
 
-    const geometry = new THREE.BoxGeometry(box.width, box.height, box.depth);
+async function loadModelForGame(game, textures) {
+  const modelPath = platformToModel[game.platform] || "DefaultCase.glb";
 
-    const materials = [
-      new THREE.MeshStandardMaterial({}), // Right
-      new THREE.MeshStandardMaterial({ map: textures.side }), // Left
-      new THREE.MeshStandardMaterial({}), // Top
-      new THREE.MeshStandardMaterial({}), // Bottom
-      new THREE.MeshStandardMaterial({ map: textures.front }), // Front
-      new THREE.MeshStandardMaterial({ map: textures.back })   // Back
-    ];
+  const loader = new GLTFLoader();
 
-    for (let i = 0; i < 6; i++) {
-      if (!materials[i].map) {
-        materials[i].color = new THREE.Color(box.backgroundColor);
+  return new Promise((resolve, reject) => {
+    loader.load(
+      modelPath,
+      (gltf) => {
+        const model = gltf.scene;
+
+        model.traverse((child) => {
+          if (child.isMesh) {
+            switch (child.name) {
+              case "Front":
+                child.material = new THREE.MeshBasicMaterial({ map: textures.front });
+                break;
+              case "Back":
+                child.material = new THREE.MeshBasicMaterial({ map: textures.back });
+                break;
+              case "Spine":
+                child.material = new THREE.MeshBasicMaterial({ map: textures.spine });
+                break;
+              default:
+                // Mantener material original
+                break;
+            }
+          }
+        });
+
+        resolve(model);
+      },
+      undefined,
+      (err) => {
+        console.error("Error cargando modelo:", err);
+        reject(err);
       }
-    }
+    );
+  });
+}
 
-    cube = new THREE.Mesh(geometry, materials);
-    cube.rotation.set(...box.rotation);
-    scene.add(cube);
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
 
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(1, 1, 2);
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0x404040));
+window.load3DBoxForGame = async (game) => {
+  initScene();
 
-    animate();
+  if (currentModel) {
+    scene.remove(currentModel);
   }
 
-  let isDragging = false;
-  let targetRotation = { x: 0, y: 0 };
+  const textures = await loadTextures(game);
+  const model = await loadModelForGame(game, textures);
+  currentModel = model;
+  scene.add(model);
 
-  function animate() {
-    requestAnimationFrame(animate);
-    if (cube) {
-      cube.rotation.x += (targetRotation.x - cube.rotation.x) * 0.1;
-      cube.rotation.y += (targetRotation.y - cube.rotation.y) * 0.1;
-    }
-    renderer.render(scene, camera);
-  }
+  animate();
+};
 
-  container.addEventListener('mousedown', () => isDragging = true);
-  container.addEventListener('mouseup', () => isDragging = false);
-  container.addEventListener('mouseleave', () => isDragging = false);
-  container.addEventListener('mousemove', (event) => {
-    if (!isDragging) return;
-    targetRotation.y += event.movementX * 0.005;
-    targetRotation.x += event.movementY * 0.005;
-    targetRotation.x = Math.max(-Math.PI / 10, Math.min(Math.PI / 10, targetRotation.x));
-  });
-
-  container.addEventListener('wheel', (event) => {
-    event.preventDefault();
-    camera.position.z += event.deltaY * 0.003;
-    camera.position.z = THREE.MathUtils.clamp(camera.position.z, 1.5, 10);
-  });
-
-  window.addEventListener('resize', () => {
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
-  });
-
-  async function loadTextures(frontURL, backURL, sideURL) {
-    const loader = new THREE.TextureLoader();
-    return {
-      front: await loader.loadAsync(frontURL),
-      back: await loader.loadAsync(backURL),
-      side: await loader.loadAsync(sideURL)
-    };
-  }
-
-  window.load3DBoxForGame = async (game) => {
-    const textures = await loadTextures(game.coverFront, game.coverBack, game.coverSide);
-    const boxTypeKey = platformToBoxType[game.platform] || "small";
-    init3DViewer(textures, boxTypeKey);
-  };
+// Resize handler
+window.addEventListener('resize', () => {
+  if (!camera || !renderer) return;
+  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(container.clientWidth, container.clientHeight);
+});
 </script>
 
 <!//NO CAMBIAR NADA DE ABAJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO-->
