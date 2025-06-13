@@ -12,6 +12,8 @@
       --color-text: #000000;
       --color-accent: #0073ff;
       --color-border: #dbf7ff;
+    transition: --color-accent 0.3s ease, --color-border 0.3s ease;
+
     }
 
     * {
@@ -29,6 +31,10 @@
 
   align-items: center;
   justify-content: center;
+}
+
+.game-score, .game-score-horizontal, .modal-score {
+    transition: background 0.3s ease;
 }
 
 .card {
@@ -68,6 +74,7 @@ h1, h2, h3, h4 {
   font-family: 'Karla', sans-serif;
   color: var(--color-accent);
   text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.12);
+
   margin-bottom:5px;
   margin-top:6px;
   width:auto;
@@ -101,13 +108,13 @@ score {
 }
 
 a {
-  color: var(--color-accent);
+  color: #4d9dff;
   text-decoration: none;
   border-bottom: 1px dotted var(--color-accent);
 }
 
 a:hover {
-  text-decoration: underline;
+
 }
 
 .socials {
@@ -328,7 +335,7 @@ a:hover {
 
         .page-title {
             font-family: 'Karla', sans-serif;
-            color: var(--color-accent);
+            color: #0073ff;
             font-size: 5rem;
             margin-bottom:1rem;
             text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.12);
@@ -338,7 +345,7 @@ a:hover {
         .page-subtitle {
             background: linear-gradient(to bottom, #ffffff, #dbf7ff);
             box-shadow: 0 8px 30px rgba(0, 90, 150, 0.35);
-            border: 5px solid var(--color-border);
+            border: 3px solid #dbf7ff;
             padding: 0.5rem;
             font-size: 1rem;
             color: black;
@@ -376,7 +383,7 @@ a:hover {
             width: 100%;
             max-width: 500px;
             padding: 0.8rem 1.2rem;
-            border: 2px solid var(--color-border);
+            border: 2px solid #dbf7ff;
             border-radius: 20px;
             font-family: 'Hind Madurai', sans-serif;
             font-size: 1rem;
@@ -386,7 +393,7 @@ a:hover {
         }
 
         .search-box:focus {
-            border-color: var(--color-accent);
+            border-color: #0a6ff3;
             box-shadow: 0 4px 20px rgba(0, 115, 255, 0.2);
         }
 
@@ -427,7 +434,7 @@ a:hover {
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    border: 2px solid var(--color-border);
+    border: 2px solid #dbf7ff;
     text-decoration: none;
     overflow: hidden;
     height: 70px; /* Altura más compacta */
@@ -456,13 +463,15 @@ a:hover {
         }
 
         .game-title-horizontal {
+
     font-family: 'Karla', sans-serif;
-    color: var(--color-accent);
+    color: #0073ff;
     font-size: 0.85rem; /* Tamaño de fuente más pequeño */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 3px;
+
 }
 
         .game-score-horizontal {
@@ -545,7 +554,8 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 119, 255, 0.5);
+    background: rgba(var(--modal-rgb), 0.5);
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -558,10 +568,10 @@ a:hover {
 }
 
 .modal-content {
-    background: linear-gradient(to bottom, #ffffff, #dbf7ff);
+    background: linear-gradient(to bottom, #ffffff, var(--color-border));
+    border: 4px solid var(--color-border);
     padding: 2rem;
     border-radius: 12px;
-    border: 4px solid var(--color-border);
     max-width: 900px;
     width: 90%;
     color: var(--color-accent);
@@ -619,10 +629,14 @@ a:hover {
 }
 
 .modal-header h2 {
+box-shadow: 0px 0px 15px rgba(0, 90, 150, 0.2);
     font-size: 1.8rem;
     display: flex;
     align-items: center;
     gap: 8px;
+border-radius: 12px;
+padding:5px 10px;
+margin-right:10px;
 }
 
 .modalFavorite {
@@ -716,7 +730,8 @@ const games = [
         ost: "https://www.youtube.com/embed/N4BddJsbmqw?si=Zd_dTGRXgw2xhGWk&amp;controls=0",
         coverFront: 'https://i.postimg.cc/MZ0r99vd/coversw-itch-zeldabreathofthewild.jpg',
         coverBack: 'https://i.postimg.cc/SRGTjxww/backswitch-zeldabreathofthewild.jpg',
-        coverSide: 'https://i.postimg.cc/FzvC9Lny/spineswitch-zeldabreathofthewild.jpg'
+        coverSide: 'https://i.postimg.cc/FzvC9Lny/spineswitch-zeldabreathofthewild.jpg',
+        accentColor: "#ff0000", // Color dorado para Majora's Mask
     },
     {
         title: "The Legend of Zelda: Majora's Mask",
@@ -730,7 +745,8 @@ const games = [
         ost: "https://www.youtube.com/embed/N4BddJsbmqw?si=Zd_dTGRXgw2xhGWk&amp;controls=0",
         coverFront: 'https://i.postimg.cc/MZ0r99vd/coversw-itch-zeldabreathofthewild.jpg',
         coverBack: 'https://i.postimg.cc/MZ0r99vd/coversw-itch-zeldabreathofthewild.jpg',
-        coverSide: 'https://i.postimg.cc/MZ0r99vd/coversw-itch-zeldabreathofthewild.jpg'
+        coverSide: 'https://i.postimg.cc/MZ0r99vd/coversw-itch-zeldabreathofthewild.jpg',
+        accentColor: "#f2c40a", // Color dorado para Majora's Mask
     }
 ];
 
@@ -750,6 +766,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 🚀 Llamar al visor 3D con portadas del juego
     load3DBoxForGame(game);
+updateColorScheme(game.accentColor);
 
 }
 
@@ -757,6 +774,82 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('gameModal').classList.add('hidden');
         document.getElementById('modalVideo').src = ""; // Detener video
     });
+
+
+function updateColorScheme(accentColor) {
+    // Generar colores derivados (más claro y más oscuro)
+    const lighterColor = lightenColor(accentColor, 30);
+    const darkerColor = darkenColor(accentColor, 20);
+    const veryLightColor = lightenColor(accentColor, 45);
+
+// Actualizar el fondo del modal con transparencia (0.5)
+    const modal = document.querySelector('.modal');
+    if (modal) {
+        // Convierte el color hexadecimal a RGB
+        const rgbColor = hexToRgb(accentColor);
+        modal.style.background = `rgba(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}, 0.5)`;
+    }
+
+
+    // Aplicar los nuevos colores a las variables CSS
+    document.documentElement.style.setProperty('--color-accent', accentColor);
+    document.documentElement.style.setProperty('--color-border', lighterColor);
+    
+    // Actualizar gradientes y fondos
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.style.background = `linear-gradient(to bottom, #ffffff, ${veryLightColor})`;
+    }
+
+    // Actualizar el color del score
+    const scoreElements = document.querySelectorAll('.game-score, .modal-score');
+    scoreElements.forEach(el => {
+        el.style.background = `linear-gradient(to bottom, ${lighterColor}, ${accentColor})`;
+    });
+}
+
+// Función auxiliar para convertir HEX a RGB
+function hexToRgb(hex) {
+    // Elimina el # si está presente
+    hex = hex.replace('#', '');
+    
+    // Convierte a valores R, G, B
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
+    return { r, g, b };
+}
+
+// Funciones auxiliares para aclarar/oscurecer colores
+function lightenColor(color, percent) {
+    const num = parseInt(color.replace("#", ""), 16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) + amt,
+        G = (num >> 8 & 0x00FF) + amt,
+        B = (num & 0x0000FF) + amt;
+    return `#${(
+        0x1000000 +
+        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+        (B < 255 ? (B < 1 ? 0 : B) : 255)
+    ).toString(16).slice(1)}`;
+}
+
+function darkenColor(color, percent) {
+    const num = parseInt(color.replace("#", ""), 16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) - amt,
+        G = (num >> 8 & 0x00FF) - amt,
+        B = (num & 0x0000FF) - amt;
+    return `#${(
+        0x1000000 +
+        (R > 0 ? (R < 255 ? R : 255) : 0) * 0x10000 +
+        (G > 0 ? (G < 255 ? G : 255) : 0) * 0x100 +
+        (B > 0 ? (B < 255 ? B : 255) : 0)
+    ).toString(16).slice(1)}`;
+}
+
 
     function renderGames(filteredGames = games) {
         const container = document.getElementById('gamesContainer');
