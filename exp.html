@@ -990,6 +990,8 @@ function darkenColor(color, percent) {
     // Limit vertical rotation (up/down)
     controls.minPolarAngle =0; // 30 degrees
     controls.maxPolarAngle = Math.PI; // ~72 degrees
+    
+    controls.object.position.set(0, 0, 5); // Initial zoom (distance from target)
 
     //LIMITES
     controls.azimuthAngle = 1; // 30° rotación horizontal inicial
@@ -1018,8 +1020,6 @@ function darkenColor(color, percent) {
       modelFile,
       (gltf) => {
         currentModel = gltf.scene;
-        currentModel.rotation.y = Math.PI / 4;
-        currentModel.rotation.x = -Math.PI / 2;
         currentModel.traverse((child) => {
           if (child.isMesh) {
             const name = child.name.toLowerCase();
