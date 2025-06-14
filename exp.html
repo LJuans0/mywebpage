@@ -792,8 +792,8 @@ function updateColorScheme(accentColor) {
 
 
     // Aplicar los nuevos colores a las variables CSS
-    document.documentElement.style.Property('--color-accent', accentColor);
-    document.documentElement.style.Property('--color-border', lighterColor);
+    document.documentElement.style.Property.set('--color-accent', accentColor);
+    document.documentElement.style.Property.set('--color-border', lighterColor);
     
     // Actualizar gradientes y fondos
     const modalContent = document.querySelector('.modal-content');
