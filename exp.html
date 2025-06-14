@@ -1032,6 +1032,9 @@ function darkenColor(color, percent) {
         });
 
         scene.add(currentModel);
+        // Rotación inicial después de cargar el modelo
+        controls.target.set(0, 0.5, 0); // Enfoca en el centro del modelo
+        controls.update(); // Fuerza la actualización
       },
       undefined,
       (error) => console.error("Error loading model:", error)
