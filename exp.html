@@ -992,9 +992,9 @@ function darkenColor(color, percent) {
     controls.maxPolarAngle = Math.PI; // ~72 degrees
 
     //LIMITES
-    controls.target.set(0, 0.5, 0); // Enfoque centrado
-    controls.azimuthAngle = Math.PI / 2; // 30° rotación horizontal inicial
-    controls.polarAngle = Math.PI/4;   // 45° rotación vertical inicial
+    controls.target.set(0, 10, 0); // Enfoque centrado
+    controls.azimuthAngle = 1; // 30° rotación horizontal inicial
+    controls.polarAngle = 1;   // 45° rotación vertical inicial
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
