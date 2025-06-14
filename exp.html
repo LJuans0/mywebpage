@@ -561,6 +561,15 @@ a:hover {
     justify-content: center;
     z-index: 1;
     transition: opacity 0.3s ease;
+    transform: scale(0);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
 }
 
 .modal.hidden {
@@ -753,6 +762,8 @@ const games = [
 document.addEventListener('DOMContentLoaded', () => {
 
     function openModal(game) {
+    const modal = document.getElementById('gameModal');
+
     document.getElementById('modalTitle').textContent = game.title;
     document.getElementById('modalFavorite').textContent = game.favorite ? "★" : "";
     document.getElementById('modalScore').textContent = game.score;
@@ -762,18 +773,27 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modalReview').textContent = game.review || "Sin reseña";
     document.getElementById('modalVideo').src = game.ost || "";
 
-    document.getElementById('gameModal').classList.remove('hidden');
+    modal.classList.remove('hidden');
+    // Permitir render antes de animar
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10);
 
-    // 🚀 Llamar al visor 3D con portadas del juego
     load3DBoxForGame(game);
     updateColorScheme(game.accentColor);
-
 }
 
-    document.querySelector('.close-button').addEventListener('click', () => {
-        document.getElementById('gameModal').classList.add('hidden');
+document.querySelector('.close-button').addEventListener('click', () => {
+    const modal = document.getElementById('gameModal');
+    modal.classList.remove('show');
+
+    // Esperar a que termine la animación antes de ocultar
+    setTimeout(() => {
+        modal.classList.add('hidden');
         document.getElementById('modalVideo').src = ""; // Detener video
-    });
+    }, 300); // Tiempo igual al de transición
+});
+
 
 
 function updateColorScheme(accentColor) {
