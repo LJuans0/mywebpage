@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta char="UTF-8">
   <title>Juegos que he jugado</title>
   <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
@@ -792,8 +792,8 @@ function updateColorScheme(accentColor) {
 
 
     // Aplicar los nuevos colores a las variables CSS
-    document.documentElement.style.setProperty('--color-accent', accentColor);
-    document.documentElement.style.setProperty('--color-border', lighterColor);
+    document.documentElement.style.Property('--color-accent', accentColor);
+    document.documentElement.style.Property('--color-border', lighterColor);
     
     // Actualizar gradientes y fondos
     const modalContent = document.querySelector('.modal-content');
@@ -973,7 +973,7 @@ function darkenColor(color, percent) {
     camera = new THREE.PerspectiveCamera(70, container.clientWidth / container.clientHeight, 0.1, 100);
 
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.Size(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
@@ -994,7 +994,7 @@ function darkenColor(color, percent) {
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(3, 3, 5);
+    directionalLight.position.(3, 3, 5);
     scene.add(ambientLight, directionalLight);
   }
 
@@ -1032,7 +1032,9 @@ function darkenColor(color, percent) {
 
         scene.add(currentModel);
         // Rotación inicial después de cargar el modelo
-        camera.position.set(90, 0, 100); // (X, Y, Z) - Ajusta Z para zoom
+        camera.rotation.x = 0;
+        camera.rotation.y = 0;
+        camera.rotation.z = 0;
         controls.update(); // Fuerza la actualización
       },
       undefined,
@@ -1052,7 +1054,7 @@ function darkenColor(color, percent) {
     if (!camera || !renderer) return;
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.Size(container.clientWidth, container.clientHeight);
   });
 
   window.load3DBoxForGame = load3DBoxForGame;
@@ -1122,12 +1124,12 @@ function darkenColor(color, percent) {
     for (let i = 0; i < waveCount; i++) {
       const amplitude = baseAmplitude + amplitudeBoost + i * 5;
       const frequency = 0.005 + i * 0.001;
-      const offsetY = height * (0.2 + i * 0.15);
+      const offY = height * (0.2 + i * 0.15);
       const color = `rgba(100, 169, 255, ${0.06 + i * 0.04})`;
 
       ctx.beginPath();
       for (let x = 0; x <= width; x++) {
-        const y = offsetY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
+        const y = offY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
         ctx.lineTo(x, y);
       }
       ctx.lineTo(width, height);
