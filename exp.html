@@ -1033,6 +1033,7 @@ function darkenColor(color, percent) {
         scene.add(currentModel);
         // Rotación inicial después de cargar el modelo
         controls.target.set(0, 0.5, 0); // Enfoca en el centro del modelo
+        camera.position.set(2, 90, 5); // (X, Y, Z) - Ajusta Z para zoom
         controls.update(); // Fuerza la actualización
       },
       undefined,
