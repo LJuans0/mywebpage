@@ -990,7 +990,9 @@ function darkenColor(color, percent) {
     // Limit vertical rotation (up/down)
     controls.minPolarAngle =0; // 30 degrees
     controls.maxPolarAngle = Math.PI; // ~72 degrees
-    
+
+    controls.azimuthAngle = Math.PI / 2; // 30° rotación horizontal inicial
+    controls.polarAngle = Math.PI;   // 45° rotación vertical inicial
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -1031,9 +1033,6 @@ function darkenColor(color, percent) {
         });
 
         scene.add(currentModel);
-        // Rotación inicial después de cargar el modelo
-        controls.azimuthAngle = Math.PI / 2; // 30° rotación horizontal inicial
-        controls.polarAngle = Math.PI / 2;   // 45° rotación vertical inicial
         controls.update(); // Fuerza la actualización
       },
       undefined,
