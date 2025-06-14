@@ -979,22 +979,19 @@ function darkenColor(color, percent) {
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.1;
+    controls.dampingFactor = 0.5;
     
     // Disable panning (left-click drag)
     controls.enablePan = false;
     
     // Limit zoom range
-    controls.minDistance = 3;
-    controls.maxDistance = 8;
+    controls.minDistance = 5;
+    controls.maxDistance = 15;
     
     // Limit vertical rotation (up/down)
-    controls.minPolarAngle = Math.PI / 6; // 30 degrees
-    controls.maxPolarAngle = Math.PI / 2.5; // ~72 degrees
+    controls.minPolarAngle =0; // 30 degrees
+    controls.maxPolarAngle = Math.PI; // ~72 degrees
     
-    // Limit horizontal rotation (left/right)
-    controls.minAzimuthAngle = -Math.PI / 4; // -45 degrees
-    controls.maxAzimuthAngle = Math.PI / 4; // 45 degrees
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
