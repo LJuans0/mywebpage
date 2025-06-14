@@ -993,9 +993,7 @@ function darkenColor(color, percent) {
 
     //LIMITES
     controls.azimuthAngle = 1; // 30° rotación horizontal inicial
-    controls.polarAngle = 1;   // 45° rotación vertical inicial
-    controls.rotateTo(Math.PI / 4, Math.PI / 4);
-    
+    controls.polarAngle = 1;   // 45° rotación vertical inicial    
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(3, 3, 5);
@@ -1020,7 +1018,7 @@ function darkenColor(color, percent) {
       modelFile,
       (gltf) => {
         currentModel = gltf.scene;
-
+        currentModel.rotation.y = Math.PI / 4;
         currentModel.traverse((child) => {
           if (child.isMesh) {
             const name = child.name.toLowerCase();
