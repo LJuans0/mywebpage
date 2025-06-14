@@ -1032,9 +1032,8 @@ function darkenColor(color, percent) {
 
         scene.add(currentModel);
         // Rotación inicial después de cargar el modelo
-        camera.rotation.x = 0;
-        camera.rotation.y = 0;
-        camera.rotation.z = 0;
+        controls.azimuthAngle = Math.PI / 2; // 30° rotación horizontal inicial
+        controls.polarAngle = Math.PI / 2;   // 45° rotación vertical inicial
         controls.update(); // Fuerza la actualización
       },
       undefined,
