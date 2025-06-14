@@ -1019,7 +1019,7 @@ function darkenColor(color, percent) {
       (gltf) => {
         currentModel = gltf.scene;
         currentModel.rotation.y = Math.PI / 4;
-        currentModel.rotation.z = Math.PI / 2;
+        currentModel.rotation.x = Math.PI / 2;
         currentModel.traverse((child) => {
           if (child.isMesh) {
             const name = child.name.toLowerCase();
