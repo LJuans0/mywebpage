@@ -766,7 +766,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 🚀 Llamar al visor 3D con portadas del juego
     load3DBoxForGame(game);
-updateColorScheme(game.accentColor);
+    updateColorScheme(game.accentColor);
 
 }
 
@@ -994,7 +994,7 @@ function darkenColor(color, percent) {
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.(3, 3, 5);
+    directionalLight.position.set(3, 3, 5);
     scene.add(ambientLight, directionalLight);
   }
 
