@@ -959,11 +959,9 @@ function darkenColor(color, percent) {
     "3DS": "3DSCase.glb",
     "DS": "DSCase.glb",
     "PC": "DVDCase.glb"
-    // Agrega más plataformas según tus modelos
   };
 
   function initScene() {
-    // Eliminar escena previa si existe
     if (renderer) {
       renderer.dispose();
       container.innerHTML = '';
@@ -979,6 +977,11 @@ function darkenColor(color, percent) {
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+    controls.enablePan = false; // Disable camera panning (no movement)
+    controls.minDistance = 2;   // Minimum zoom distance
+    controls.maxDistance = 6;   // Maximum zoom distance
+    controls.maxPolarAngle = Math.PI * 0.5; // Limit rotation to prevent flipping upside down
+    controls.minPolarAngle = Math.PI * 0.25; // Minimum vertical angle
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -990,7 +993,6 @@ function darkenColor(color, percent) {
     initScene();
 
     const modelFile = platformModelMap[game.platform] || "DefaultCase.glb";
-
     const loader = new GLTFLoader();
     const textureLoader = new THREE.TextureLoader();
 
@@ -1014,6 +1016,12 @@ function darkenColor(color, percent) {
               child.material = new THREE.MeshBasicMaterial({ map: back });
             } else if (name.includes("spine") || name.includes("side")) {
               child.material = new THREE.MeshBasicMaterial({ map: spine });
+            } else {
+              // Make non-front/back/spine objects double-sided
+              child.material = new THREE.MeshBasicMaterial({ 
+                map: child.material.map,
+                side: THREE.DoubleSide 
+              });
             }
           }
         });
@@ -1021,7 +1029,7 @@ function darkenColor(color, percent) {
         scene.add(currentModel);
       },
       undefined,
-      (error) => console.error("Error al cargar el modelo:", error)
+      (error) => console.error("Error loading model:", error)
     );
 
     animate();
