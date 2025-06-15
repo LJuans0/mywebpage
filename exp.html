@@ -881,7 +881,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('modalPlatform').textContent = game.platform || "N/D";
             
             const fullReview = game.review || "Sin reseña";
-            const shortReviewLimit = 350;
+            const shortReviewLimit = 300;
             
             const shortPart = fullReview.length > shortReviewLimit
                 ? fullReview.slice(0, shortReviewLimit) + "..."
