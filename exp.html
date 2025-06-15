@@ -828,237 +828,227 @@ margin-right:10px;
     <!-- Las tarjetas de juegos se generarán dinámicamente -->
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
 <script>
-const games = [
-    {
-        title: "The Legend of Zelda: Breath of the Wild",
-        score: 5,
-        icon: "https://cdn2.steamgriddb.com/icon/dd3cd8b31f21e6ff4f74584f8710277f.ico",
-        favorite: true,
-        playtime: "60h",
-        finishedDate: "12/1/2022",
-        platform: "Switch",
-        review: "Reviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. wReviewwwww insana. w",
-        ost: "https://www.youtube.com/embed/N4BddJsbmqw?si=Zd_dTGRXgw2xhGWk&amp;controls=0",
-        coverFront: 'https://i.postimg.cc/MZ0r99vd/coversw-itch-zeldabreathofthewild.jpg',
-        coverBack: 'https://i.postimg.cc/SRGTjxww/backswitch-zeldabreathofthewild.jpg',
-        coverSide: 'https://i.postimg.cc/FzvC9Lny/spineswitch-zeldabreathofthewild.jpg',
-        accentColor: "#ff0000", // Color dorado para Majora's Mask
-    },
-    {
-        title: "The Legend of Zelda: Majora's Mask",
-        score: "10",
-        icon: "https://cdn2.steamgriddb.com/icon/dd3cd8b31f21e6ff4f74584f8710277f.ico",
-        favorite: false,
-        playtime: "40h",
-        finishedDate: "12/2/2021",
-        platform: "PS2",
-        review: "Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.Una experiencia única, melancólica y brillante.",
-        ost: "https://www.youtube.com/embed/N4BddJsbmqw?si=Zd_dTGRXgw2xhGWk&amp;controls=0",
-        coverFront: 'https://i.postimg.cc/MZ0r99vd/coversw-itch-zeldabreathofthewild.jpg',
-        coverBack: 'https://i.postimg.cc/MZ0r99vd/coversw-itch-zeldabreathofthewild.jpg',
-        coverSide: 'https://i.postimg.cc/MZ0r99vd/coversw-itch-zeldabreathofthewild.jpg',
-        accentColor: "#f2c40a", // Color dorado para Majora's Mask
-    }
-];
 
 document.addEventListener('DOMContentLoaded', () => {
-
-    function openModal(game) {
-    const modal = document.getElementById('gameModal');
-
-    document.getElementById('modalTitle').textContent = game.title;
-    document.getElementById('modalFavorite').textContent = game.favorite ? "★" : "";
-    document.getElementById('modalScore').textContent = game.score;
-    document.getElementById('modalTime').textContent = game.playtime || "N/D";
-    document.getElementById('modalDate').textContent = game.finishedDate || "N/D";
-    document.getElementById('modalPlatform').textContent = game.platform || "N/D";
-    const fullReview = game.review || "Sin reseña";
-const shortReviewLimit = 160;
-
-const shortPart = fullReview.length > shortReviewLimit
-    ? fullReview.slice(0, shortReviewLimit) + "..."
-    : fullReview;
-
-const reviewShort = document.getElementById('modalReviewShort');
-const reviewFull = document.getElementById('modalReviewFull');
-const toggleBtn = document.getElementById('toggleReviewBtn');
-
-reviewShort.textContent = shortPart;
-reviewFull.textContent = fullReview.slice(shortReviewLimit);
-
-toggleBtn.style.display = fullReview.length > shortReviewLimit ? "inline" : "none";
-reviewFull.style.display = "none";
-toggleBtn.textContent = "Ver más";
-
-toggleBtn.onclick = function () {
-    const isExpanded = reviewFull.style.display === "inline";
-    reviewFull.style.display = isExpanded ? "none" : "inline";
-    reviewShort.textContent = isExpanded ? shortPart : fullReview.slice(0, shortReviewLimit);
-    toggleBtn.textContent = isExpanded ? "Ver más" : "Ver menos";
-};
-
-
-    document.getElementById('modalVideo').src = game.ost || "";
-
-    modal.classList.remove('hidden');
-    // Permitir render antes de animar
-    setTimeout(() => {
-        modal.classList.add('show');
-    }, 10);
-
-
-    load3DBoxForGame(game);
-    updateColorScheme(game.accentColor);
-}
-
-document.querySelector('.close-button').addEventListener('click', () => {
-    const modal = document.getElementById('gameModal');
-    modal.classList.remove('show');
-
-    // Esperar a que termine la animación antes de ocultar
-    setTimeout(() => {
-        modal.classList.add('hidden');
-        document.getElementById('modalVideo').src = ""; // Detener video
-    }, 300); // Tiempo igual al de transición
-});
-
-
-
-function updateColorScheme(accentColor) {
-    // Generar colores derivados (más claro y más oscuro)
-    const lighterColor = lightenColor(accentColor, 30);
-    const darkerColor = darkenColor(accentColor, 20);
-    const veryLightColor = lightenColor(accentColor, 45);
-
-// Actualizar el fondo del modal con transparencia (0.5)
-    const modal = document.querySelector('.modal');
-    if (modal) {
-        // Convierte el color hexadecimal a RGB
-        const rgbColor = hexToRgb(accentColor);
-        modal.style.background = `rgba(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}, 0.5)`;
-    }
-
-
-    // Aplicar los nuevos colores a las variables CSS
-    document.documentElement.style.setProperty('--color-accent', accentColor);
-    document.documentElement.style.setProperty('--color-border', lighterColor);
+    // URL de tu Google Sheet exportada como CSV
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR1XDkBEEb3mPcd_IskPiRtNUYBWyKDynGZycSrzuqmbaXIFPfcdGCAbBjBFO6s_kdZp-8eekabv8hD/pub?gid=0&single=true&output=csv';
     
-    // Actualizar gradientes y fondos
-    const modalContent = document.querySelector('.modal-content');
-    if (modalContent) {
-        modalContent.style.background = `linear-gradient(to bottom, #ffffff, ${veryLightColor})`;
-    }
-
-    // Actualizar el color del score
-    const scoreElements = document.querySelectorAll('.game-score, .modal-score');
-    scoreElements.forEach(el => {
-        el.style.background = `linear-gradient(to bottom, ${lighterColor}, ${accentColor})`;
-    });
-}
-
-// Función auxiliar para convertir HEX a RGB
-function hexToRgb(hex) {
-    // Elimina el # si está presente
-    hex = hex.replace('#', '');
-    
-    // Convierte a valores R, G, B
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    
-    return { r, g, b };
-}
-
-// Funciones auxiliares para aclarar/oscurecer colores
-function lightenColor(color, percent) {
-    const num = parseInt(color.replace("#", ""), 16),
-        amt = Math.round(2.55 * percent),
-        R = (num >> 16) + amt,
-        G = (num >> 8 & 0x00FF) + amt,
-        B = (num & 0x0000FF) + amt;
-    return `#${(
-        0x1000000 +
-        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
-        (B < 255 ? (B < 1 ? 0 : B) : 255)
-    ).toString(16).slice(1)}`;
-}
-
-function darkenColor(color, percent) {
-    const num = parseInt(color.replace("#", ""), 16),
-        amt = Math.round(2.55 * percent),
-        R = (num >> 16) - amt,
-        G = (num >> 8 & 0x00FF) - amt,
-        B = (num & 0x0000FF) - amt;
-    return `#${(
-        0x1000000 +
-        (R > 0 ? (R < 255 ? R : 255) : 0) * 0x10000 +
-        (G > 0 ? (G < 255 ? G : 255) : 0) * 0x100 +
-        (B > 0 ? (B < 255 ? B : 255) : 0)
-    ).toString(16).slice(1)}`;
-}
-
-
-    function renderGames(filteredGames = games) {
-        const container = document.getElementById('gamesContainer');
-        container.innerHTML = '';
-
-        if (filteredGames.length === 0) {
-            container.innerHTML = '<div class="no-results">No se encontraron juegos que coincidan con tu búsqueda.</div>';
-            return;
+    // Cargar los datos y transformarlos al formato que espera tu modal
+    Papa.parse(csvUrl, {
+        download: true,
+        header: true,
+        complete: function(results) {
+            const rawGames = results.data;
+            const games = transformGamesData(rawGames);
+            
+            // Una vez tenemos los datos transformados, el resto del código es igual al que ya tenías
+            initializeApp(games);
         }
-
-        filteredGames.forEach(game => {
-            const gameCard = document.createElement('a');
-            gameCard.className = 'game-card-horizontal';
-            gameCard.href = '#';
-
-            gameCard.addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal(game);
-            });
-
-            if (game.favorite) {
-                gameCard.classList.add('favorite');
+    });
+    
+    // Función para transformar los datos del spreadsheet al formato que usa tu modal
+    function transformGamesData(rawGames) {
+        return rawGames.filter(game => game.Nombre).map(game => ({
+            title: game.Nombre,
+            score: game.Nota,
+            icon: game.Icon,
+            favorite: game.Fav === "TRUE" || game.Fav === "true" || game.Fav === "★",
+            playtime: game.Tiempo,
+            finishedDate: game["Fecha de pasado"],
+            platform: game.Platform,
+            review: game.Review,
+            ost: game["Best track"],
+            coverFront: game["Front Cover"],
+            coverBack: game["Back Cover"],
+            coverSide: game["Side Cover"],
+            accentColor: game["Accent Color"] || "#cccccc"
+        }));
+    }
+    
+    // El resto de tu código original (adaptado para usar los datos cargados)
+    function initializeApp(games) {
+        function openModal(game) {
+            const modal = document.getElementById('gameModal');
+            
+            document.getElementById('modalTitle').textContent = game.title;
+            document.getElementById('modalFavorite').textContent = game.favorite ? "★" : "";
+            document.getElementById('modalScore').textContent = game.score;
+            document.getElementById('modalTime').textContent = game.playtime || "N/D";
+            document.getElementById('modalDate').textContent = game.finishedDate || "N/D";
+            document.getElementById('modalPlatform').textContent = game.platform || "N/D";
+            
+            const fullReview = game.review || "Sin reseña";
+            const shortReviewLimit = 160;
+            
+            const shortPart = fullReview.length > shortReviewLimit
+                ? fullReview.slice(0, shortReviewLimit) + "..."
+                : fullReview;
+            
+            const reviewShort = document.getElementById('modalReviewShort');
+            const reviewFull = document.getElementById('modalReviewFull');
+            const toggleBtn = document.getElementById('toggleReviewBtn');
+            
+            reviewShort.textContent = shortPart;
+            reviewFull.textContent = fullReview.slice(shortReviewLimit);
+            
+            toggleBtn.style.display = fullReview.length > shortReviewLimit ? "inline" : "none";
+            reviewFull.style.display = "none";
+            toggleBtn.textContent = "Ver más";
+            
+            toggleBtn.onclick = function() {
+                const isExpanded = reviewFull.style.display === "inline";
+                reviewFull.style.display = isExpanded ? "none" : "inline";
+                reviewShort.textContent = isExpanded ? shortPart : fullReview.slice(0, shortReviewLimit);
+                toggleBtn.textContent = isExpanded ? "Ver más" : "Ver menos";
+            };
+            
+            document.getElementById('modalVideo').src = game.ost || "";
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+            
+            load3DBoxForGame(game);
+            updateColorScheme(game.accentColor);
+        }
+        
+        document.querySelector('.close-button').addEventListener('click', () => {
+            const modal = document.getElementById('gameModal');
+            modal.classList.remove('show');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('modalVideo').src = "";
+            }, 300);
+        });
+        
+        function updateColorScheme(accentColor) {
+            const lighterColor = lightenColor(accentColor, 30);
+            const darkerColor = darkenColor(accentColor, 20);
+            const veryLightColor = lightenColor(accentColor, 45);
+            
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                const rgbColor = hexToRgb(accentColor);
+                modal.style.background = `rgba(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}, 0.5)`;
             }
-
-            gameCard.innerHTML = `
-                <img src="${game.icon}" alt="Ícono de ${game.title}" class="game-icon-horizontal">
-                <div class="game-info-horizontal">
-                    <div class="game-title-horizontal">${game.title}</div>
-                    <div class="game-score-horizontal">${game.score}</div>
-                </div>
-                <div class="favorite-icon">${game.favorite ? '★' : ''}</div>
-            `;
-
-            container.appendChild(gameCard);
-        });
-
-        document.getElementById('gamesCounter').textContent =
-            `Mostrando ${filteredGames.length} de ${games.length} juegos`;
+            
+            document.documentElement.style.setProperty('--color-accent', accentColor);
+            document.documentElement.style.setProperty('--color-border', lighterColor);
+            
+            const modalContent = document.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.style.background = `linear-gradient(to bottom, #ffffff, ${veryLightColor})`;
+            }
+            
+            const scoreElements = document.querySelectorAll('.game-score, .modal-score');
+            scoreElements.forEach(el => {
+                el.style.background = `linear-gradient(to bottom, ${lighterColor}, ${accentColor})`;
+            });
+        }
+        
+        function hexToRgb(hex) {
+            hex = hex.replace('#', '');
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            return { r, g, b };
+        }
+        
+        function lightenColor(color, percent) {
+            const num = parseInt(color.replace("#", ""), 16),
+                amt = Math.round(2.55 * percent),
+                R = (num >> 16) + amt,
+                G = (num >> 8 & 0x00FF) + amt,
+                B = (num & 0x0000FF) + amt;
+            return `#${(
+                0x1000000 +
+                (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+                (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+                (B < 255 ? (B < 1 ? 0 : B) : 255)
+            ).toString(16).slice(1)}`;
+        }
+        
+        function darkenColor(color, percent) {
+            const num = parseInt(color.replace("#", ""), 16),
+                amt = Math.round(2.55 * percent),
+                R = (num >> 16) - amt,
+                G = (num >> 8 & 0x00FF) - amt,
+                B = (num & 0x0000FF) - amt;
+            return `#${(
+                0x1000000 +
+                (R > 0 ? (R < 255 ? R : 255) : 0) * 0x10000 +
+                (G > 0 ? (G < 255 ? G : 255) : 0) * 0x100 +
+                (B > 0 ? (B < 255 ? B : 255) : 0)
+            ).toString(16).slice(1)}`;
+        }
+        
+        function renderGames(filteredGames = games) {
+            const container = document.getElementById('gamesContainer');
+            container.innerHTML = '';
+            
+            if (filteredGames.length === 0) {
+                container.innerHTML = '<div class="no-results">No se encontraron juegos que coincidan con tu búsqueda.</div>';
+                return;
+            }
+            
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('a');
+                gameCard.className = 'game-card-horizontal';
+                gameCard.href = '#';
+                
+                gameCard.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal(game);
+                });
+                
+                if (game.favorite) {
+                    gameCard.classList.add('favorite');
+                }
+                
+                gameCard.innerHTML = `
+                    <img src="${game.icon}" alt="Ícono de ${game.title}" class="game-icon-horizontal">
+                    <div class="game-info-horizontal">
+                        <div class="game-title-horizontal">${game.title}</div>
+                        <div class="game-score-horizontal">${game.score}</div>
+                    </div>
+                    <div class="favorite-icon">${game.favorite ? '★' : ''}</div>
+                `;
+                
+                container.appendChild(gameCard);
+            });
+            
+            document.getElementById('gamesCounter').textContent =
+                `Mostrando ${filteredGames.length} de ${games.length} juegos`;
+        }
+        
+        function filterGames() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const onlyFavorites = document.getElementById('favoriteFilter').checked;
+            
+            const filteredGames = games.filter(game => {
+                const matchesSearch = game.title.toLowerCase().includes(searchTerm);
+                const matchesFavorite = onlyFavorites ? game.favorite : true;
+                return matchesSearch && matchesFavorite;
+            });
+            
+            renderGames(filteredGames);
+        }
+        
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterGames);
+        document.getElementById('favoriteFilter').addEventListener('change', filterGames);
+        
+        // Renderizar al inicio
+        renderGames();
     }
-
-    function filterGames() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const onlyFavorites = document.getElementById('favoriteFilter').checked;
-
-        const filteredGames = games.filter(game => {
-            const matchesSearch = game.title.toLowerCase().includes(searchTerm);
-            const matchesFavorite = onlyFavorites ? game.favorite : true;
-            return matchesSearch && matchesFavorite;
-        });
-
-        renderGames(filteredGames);
-    }
-
-    // Event listeners
-    document.getElementById('searchInput').addEventListener('input', filterGames);
-    document.getElementById('favoriteFilter').addEventListener('change', filterGames);
-
-    // Renderizar al inicio
-    renderGames();
+    
+    // Asegúrate de tener esta función definida o elimínala si no la usas
+    load3DBoxForGame(game)
 });
 </script>
 
@@ -1296,4 +1286,5 @@ Mejor track del OST:
 </script>
 
 </body>
+</html>
 </html>
