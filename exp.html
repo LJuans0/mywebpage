@@ -1098,16 +1098,26 @@ Mejor track del OST:
 
   const platformModelMap = {
     "Switch": "SwitchGB.glb",
-    "PS1": "PS1GB.glb",
-    "PS2": "PS2GB.glb",
-    "PS3": "PS3GB.glb",
-    "PS4": "PS4GB.glb",
-    "Dreamcast": "DreamCastGB.glb",
-    "3DS": "3DSGB.glb",
-    "DS": "DSGB.glb",
-    "Wii": "WiiGB.glb",
-    "Quest2": "Quest2GB.glb",
-    "PC": "DvDGB.glb"
+    "Switch2": "DefaultSizeCase.glb",
+    "Phone": "DefaultSizeCase.glb",
+    "Xbox": "DefaultSizeCase.glb",
+    "Xbox 360": "DefaultSizeCase.glb",
+    "Web": "DefaultSizeCase.glb",
+    "NES": "DefaultSizeCase.glb",
+    "N64": "DefaultSizeCase.glb",
+    "GB": "DefaultSizeCase.glb",
+    "GBA": "DefaultSizeCase.glb",
+    "PS1": "DefaultSizeCase.glb",
+    "PS2": "DefaultSizeCase.glb",
+    "PS3": "DefaultSizeCase.glb",
+    "PS4": "DefaultSizeCase.glb",
+    "Dreamcast": "DefaultSizeCase.glb",
+    "3DS": "DefaultSizeCase.glb",
+    "DS": "DefaultSizeCase.glb",
+    "DSi": "DefaultSizeCase.glb",
+    "Wii": "DefaultSizeCase.glb",
+    "Quest2": "DefaultSizeCase.glb",
+    "PC": "DefaultSizeCase.glb"
     // Add more platforms as needed
   };
 
@@ -1151,7 +1161,7 @@ Mejor track del OST:
   async function load3DBoxForGame(game) {
     initScene();
 
-    const modelFile = platformModelMap[game.platform] || "DefaultSizeCase.glb";
+    const modelFile = platformModelMap[game.platform];
 
     const loader = new GLTFLoader();
     const textureLoader = new THREE.TextureLoader();
