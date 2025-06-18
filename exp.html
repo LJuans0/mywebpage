@@ -22,6 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
   <style>
 
+
     :root {
       --color-bg: #000000;
       --color-text: #000000;
@@ -164,6 +165,7 @@ a:hover {
   pointer-events: none;
   animation: flicker 0.9s infinite;
 }
+
 <!//NO CAMBIAR NADA DE ARRIBAAAAAAAAAAAAAAAA ES EL STYLE PARA IR PROBANDOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO-->
 
         /* Encabezado */
@@ -406,6 +408,8 @@ a:hover {
     transform: scale(0);
     pointer-events: none;
     transition: opacity 0.3s ease, transform 0.3s ease;
+    overflow-y: auto; /* Permite scroll en el modal si es necesario */
+
 }
 
 .modal.show {
@@ -429,6 +433,8 @@ a:hover {
     font-family: inherit;
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     position: relative;
+max-height: 90vh; /* Limita la altura máxima al 90% del viewport */
+    overflow-y: auto; /* Hace el contenido scrollable */
 }
 
 .close-button {
@@ -602,11 +608,11 @@ margin-right:10px;
     }
 
     .game-title-horizontal {
-        font-size: 1.8rem;
+        font-size: 1.2rem;
     }
 
     .game-score-horizontal {
-        font-size: 2rem;
+        font-size: 1.5rem;
         padding: 1px 8px;
             background: linear-gradient(to bottom, #4d9dff, #0073ff);
             color: white;
@@ -617,8 +623,8 @@ margin-right:10px;
     }
 
 .game-icon-horizontal {
-            width: 65px;
-            height: 65px;
+            width: 50px;
+            height: 50px;
             border-radius: 10px;
             object-fit: contain;
             margin-right: 12px;
@@ -627,11 +633,11 @@ margin-right:10px;
         }
 
     .page-title {
-        font-size: 9rem;
+        font-size: 5rem;
     }
 
 .page-subtitle {
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
         /* Advertencia */
@@ -643,13 +649,13 @@ margin-right:10px;
             margin: 0 auto 2rem;
             max-width: 800px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             box-shadow: 0 8px 5px rgba(255, 219, 219, 0.35);
         }
 
 
     .search-container {
-        padding: 0 1rem;
+        padding: -10 1rem;
     }
 
     .search-box {
