@@ -718,55 +718,66 @@ input:checked + .slider:before {
     .modal-left,
     .modal-cover {
         display: none;
+      animation: none;
     }
 
     .modal-body {
         flex-direction: column;
         align-items: center;
         padding: 1.5rem 0;
+      animation: none;
     }
 
     .modal-content {
         padding: 1rem;
         width: 95%;
+      animation: none;
     }
 
     .modal-header h2 {
         font-size: 2rem;
+      animation: none;
     }
 
     .modal-score {
         font-size: 5rem;
         max-width: 500rem;
         padding: 2px 8px;
+      animation: none;
     }
 
     .modal-meta p {
         font-size: 0.8rem;
+      animation: none;
     }
 
     .modal-review {
         font-size: 0.8rem;
         padding: 1rem;
+      animation: none;
     }
 
     .game-card-horizontal {
         width: 80px;
         padding: 6px;
+      animation: none;
     }
 
     .game-icon-horizontal {
         width: 50px;
         height: 50px;
+      animation: none;
     }
 
     .game-score-horizontal {
         font-size: 1.2rem;
         padding: 2px 10px;
+      animation: none;
     }
 
     .favorite-icon {
         font-size: 25px;
+      animation: none;
     }
 
     .page-title {
@@ -791,22 +802,26 @@ input:checked + .slider:before {
 
     .search-container {
         padding: -10 1rem;
+      animation: none;
     }
 
     .search-box {
         font-size: 1rem;
         padding: 0.8rem 1rem;
+      animation: none;
     }
 
     .games-container {
         grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
         justify-items: center;
+      animation: none;
     }
 
     .close-button {
         font-size: 3rem;
         top: 20;
         right: 20;
+      animation: none;
     }
 
     .review-toggle {
@@ -819,6 +834,25 @@ input:checked + .slider:before {
         font-weight: bold;
         margin-left: 5px;
         text-decoration: underline;
+      animation: none;
+    }
+  .game-card-horizontal:hover .game-icon-horizontal {
+        transform: none;
+    }
+  .modal-score:hover {
+        transform: none;
+    }
+    
+    .modal-cover:hover {
+        transform: none;
+    }
+    
+    .modal-header h2:hover {
+        transform: none;
+    }
+    
+    .modal-video iframe:hover {
+        transform: none;
     }
 }
 
