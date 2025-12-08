@@ -1224,7 +1224,7 @@ Mejor track del OST:
 
     const loader = new GLTFLoader();
     const textureLoader = new THREE.TextureLoader();
-
+    textureLoader.setCrossOrigin("anonymous");
     const [front, back, spine] = await Promise.all([
       textureLoader.loadAsync(game.coverFront),
       textureLoader.loadAsync(game.coverBack),
