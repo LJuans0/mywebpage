@@ -30,15 +30,172 @@
     --color-accent: #0073ff;
     --color-border: #dbf7ff;
     transition: --color-accent 0.3s ease, --color-border 0.3s ease;
---like-color: #4caf50;
-  --dislike-color: #f44336;
+--like-color: #1ce279;
+  --dislike-color: #ec2020;
   --bar-bg: #1c1c1c;
 
   --radius: 14px;
   --speed: 0.7s;
 }
 
+.vote-widget {
+  width: auto;
 
+}
+
+/* ---------- BUTTONS ---------- */
+
+.vote-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+margin-bottom: -25px;
+align-items: center;
+    justify-content: center;
+text-align: center;
+gap:35px;
+}
+
+.vote-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+box-shadow: 3px 3px 7px rgba(0, 90, 150, 0.35);
+border:none;
+
+  background:none;
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.vote-btn img {
+  width: 22px;
+  height: 28px;
+  pointer-events: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.vote-btn:hover {
+  transform: scale(1.15);
+}
+
+.vote-btn:active {
+  transform: scale(0.9);
+}
+
+.vote-btn.active.like {
+  background: var(--like-color);
+
+}
+
+.vote-btn.active.dislike {
+  background: var(--dislike-color);
+
+}
+
+/* ---------- GRAPH ---------- */
+
+.vote-graph {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 100px;
+  padding: 10px;
+  background: var(--bg);
+  border-radius: var(--radius);
+
+  animation: graphPop 0.45s cubic-bezier(.25,1.4,.5,1);
+}
+
+.column {
+  position: relative;
+  width: 40px;
+margin: 0 9.5px;
+  height: 70%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.column-fill {
+  width: 100%;
+  height: 0%;
+  border-radius: 10px;
+  transition:
+    height var(--speed) cubic-bezier(.2,1.4,.4,1);
+}
+
+.like-column .column-fill {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--like-color), white 25%),
+    var(--like-color)
+  );
+}
+
+.dislike-column .column-fill {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--dislike-color), white 25%),
+    var(--dislike-color)
+  );
+}
+
+/* ---------- LABELS ---------- */
+
+.label {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+
+}
+
+.like-label {
+  background: rgba(10, 183, 92, 0.8);
+}
+
+.dislike-label {
+  background: rgba(190, 13, 13, 0.8);
+}
+
+/* ---------- UTIL ---------- */
+
+.hidden {
+  display: none;
+}
+
+/* ---------- ANIMATIONS ---------- */
+
+@keyframes graphPop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes labelFloat {
+  from {
+    transform: translate(-50%, 6px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
 * {
     box-sizing: border-box;
 }
@@ -724,6 +881,10 @@ box-shadow: 0px 12px 25px rgba(0, 90, 150, 0.35);
 padding:10px;
 border-radius: 10px;
 transition: all 0.3s ease;
+align-items: center;
+    justify-content: center;
+text-align: center;
+max-height:180px;
 }
 .modal-vote:hover {
 box-shadow: 0px 12px 25px rgba(0, 90, 150, 0.75);
@@ -732,11 +893,15 @@ transition: all 0.3s ease;
 
 .modal-video {
 max-width: 250px;
+max-height:180px;
 margin-top: 10px;
 box-shadow: 0px 12px 25px rgba(0, 90, 150, 0.35);
 padding:10px;
 border-radius: 10px;
 transition: all 0.3s ease;
+align-items: center;
+    justify-content: center;
+text-align: center;
 }
 
 .modal-video:hover {
@@ -1186,13 +1351,35 @@ document.addEventListener('DOMContentLoaded', () => {
 </p>
 <div class="modal-bottom">
 <div class="modal-video">
-Mejor track del OST:
+Mejor track del OST
           <iframe id="modalVideo" width="100%" frameborder="1"></iframe>
 
         </div>
 <div class="modal-vote">
-¿Te gusto esta reseña?
+¿Te gustó esta reseña?
+<div class="vote-widget" data-review-id="42">
+  <div class="vote-buttons">
+    <button class="vote-btn like" data-vote="like" aria-label="Like">
+      <img src="https://server.ljuan.online/img/icons/like.png" alt="">
+    </button>
 
+    <button class="vote-btn dislike" data-vote="dislike" aria-label="Dislike">
+      <img src="https://server.ljuan.online/img/icons/dislike.png" alt="">
+    </button>
+  </div>
+
+  <div class="vote-graph hidden">
+    <div class="column like-column">
+      <div class="column-fill"></div>
+      <span class="label like-label"></span>
+    </div>
+
+    <div class="column dislike-column">
+      <div class="column-fill"></div>
+      <span class="label dislike-label"></span>
+    </div>
+  </div>
+</div>
 </div>
 
 </div>
@@ -1412,5 +1599,65 @@ Mejor track del OST:
 
   draw();
 </script>
+
+
+
+
+<script>
+document.querySelectorAll('.vote-widget').forEach(widget => {
+  const likeBtn = widget.querySelector('.vote-btn.like');
+  const dislikeBtn = widget.querySelector('.vote-btn.dislike');
+
+  const graph = widget.querySelector('.vote-graph');
+  const likeFill = widget.querySelector('.like-column .column-fill');
+  const dislikeFill = widget.querySelector('.dislike-column .column-fill');
+
+  const likeLabel = widget.querySelector('.like-label');
+  const dislikeLabel = widget.querySelector('.dislike-label');
+
+  // INITIAL DATA (replace with backend later)
+  let likes = 12;
+  let dislikes = 0;
+  let userVote = null; // "like" | "dislike"
+
+  function render() {
+    const total = likes + dislikes || 1;
+    const likePct = Math.round((likes / total) * 100);
+    const dislikePct = 100 - likePct;
+
+    likeFill.style.height = likePct + '%';
+    dislikeFill.style.height = dislikePct + '%';
+
+    likeLabel.textContent = `${likePct}% · ${likes}`;
+    dislikeLabel.textContent = `${dislikePct}% · ${dislikes}`;
+
+    graph.classList.remove('hidden');
+
+    likeBtn.classList.toggle('active', userVote === 'like');
+    dislikeBtn.classList.toggle('active', userVote === 'dislike');
+  }
+
+  likeBtn.addEventListener('click', () => {
+    if (userVote === 'like') return;
+
+    if (userVote === 'dislike') dislikes--;
+    likes++;
+    userVote = 'like';
+    render();
+  });
+
+  dislikeBtn.addEventListener('click', () => {
+    if (userVote === 'dislike') return;
+
+    if (userVote === 'like') likes--;
+    dislikes++;
+    userVote = 'dislike';
+    render();
+  });
+
+  render();
+});
+</script>
+
 </body>
 </html>
