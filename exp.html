@@ -1660,9 +1660,7 @@ document.querySelectorAll('.vote-widget').forEach(async widget => {
   }
 
   // LOAD EXISTING VOTES
-  const res = await fetch(
-  `${API}/votes/${reviewId}?user=${USER_ID}`
-);
+  const res = await fetch(`${API}/votes/${reviewId}`);
   const data = await res.json();
   likes = data.likes;
   dislikes = data.dislikes;
