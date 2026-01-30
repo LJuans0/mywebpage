@@ -1145,7 +1145,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializeApp(games) {
         function openModal(game) {
             const modal = document.getElementById('gameModal');
-            
+            const reviewId = game.title
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/(^-|-$)/g, '');
+
+          const voteWidget = document.querySelector('.vote-widget');
+voteWidget.dataset.reviewId = reviewId;
+          
             document.getElementById('modalTitle').textContent = game.title;
             document.getElementById('modalFavorite').textContent = game.favorite ? "★" : "";
             document.getElementById('modalScore').textContent = game.score;
@@ -1357,7 +1364,7 @@ Mejor track del OST
         </div>
 <div class="modal-vote">
 ¿Te gustó esta reseña?
-<div class="vote-widget" data-review-id="42">
+<div class="vote-widget">
   <div class="vote-buttons">
     <button class="vote-btn like" data-vote="like" aria-label="Like">
       <img src="https://server.ljuan.online/img/icons/like.png" alt="">
