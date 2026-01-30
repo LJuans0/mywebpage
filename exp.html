@@ -30,7 +30,14 @@
     --color-accent: #0073ff;
     --color-border: #dbf7ff;
     transition: --color-accent 0.3s ease, --color-border 0.3s ease;
+--like-color: #4caf50;
+  --dislike-color: #f44336;
+  --bar-bg: #1c1c1c;
+
+  --radius: 14px;
+  --speed: 0.7s;
 }
+
 
 * {
     box-sizing: border-box;
@@ -545,6 +552,9 @@ input:checked + .slider:before {
     background: linear-gradient(to bottom, #fffff, #dbf7ff);
     border-radius: 10px;
     transition: all 0.3s ease;
+
+box-shadow: 0px 12px 25px rgba(0, 90, 150, 0.35);
+
 }
 
 .modal-left:hover {
@@ -567,6 +577,12 @@ input:checked + .slider:before {
     flex: 1;
     display: flex;
     flex-direction: column;
+}
+.modal-bottom{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+gap:10px;
 }
 
 .modal-header {
@@ -701,17 +717,40 @@ input:checked + .slider:before {
     transform: scale(1.1);
     color: #0055cc;
 }
+.modal-vote {
 
+margin-top: 10px;
+box-shadow: 0px 12px 25px rgba(0, 90, 150, 0.35);
+padding:10px;
+border-radius: 10px;
+transition: all 0.3s ease;
+}
+.modal-vote:hover {
+box-shadow: 0px 12px 25px rgba(0, 90, 150, 0.75);
+transition: all 0.3s ease;
+}
+
+.modal-video {
+max-width: 250px;
+margin-top: 10px;
+box-shadow: 0px 12px 25px rgba(0, 90, 150, 0.35);
+padding:10px;
+border-radius: 10px;
+transition: all 0.3s ease;
+}
+
+.modal-video:hover {
+box-shadow: 0px 12px 25px rgba(0, 90, 150, 0.75);
+transition: all 0.3s ease;
+}
 .modal-video iframe {
     border-radius: 10px;
-    box-shadow: 0 12px 25px rgba(0, 90, 150, 0.35);
     height: 126px;
     transition: all 0.3s ease;
 }
 
 .modal-video iframe:hover {
     transform: scale(1.02);
-    box-shadow: 0 15px 30px rgba(0, 90, 150, 0.5);
 }
 
 @media (max-width: 1000px) {
@@ -750,7 +789,15 @@ input:checked + .slider:before {
         font-size: 0.8rem;
       animation: none;
     }
-
+.modal-video {
+      animation: none;
+    }
+.modal-bottom {
+      animation: none;
+    }
+.modal-vote {
+      animation: none;
+    }
     .modal-review {
         font-size: 0.8rem;
         padding: 1rem;
@@ -1137,11 +1184,18 @@ document.addEventListener('DOMContentLoaded', () => {
   <span id="modalReviewShort"></span><span id="modalReviewFull" style="display: none;"></span>
   <button id="toggleReviewBtn" class="review-toggle">Ver más</button>
 </p>
-
+<div class="modal-bottom">
+<div class="modal-video">
 Mejor track del OST:
-        <div class="modal-video">
           <iframe id="modalVideo" width="100%" frameborder="1"></iframe>
+
         </div>
+<div class="modal-vote">
+¿Te gusto esta reseña?
+
+</div>
+
+</div>
       </div>
     </div>
   </div>
@@ -1358,6 +1412,5 @@ Mejor track del OST:
 
   draw();
 </script>
-
 </body>
 </html>
