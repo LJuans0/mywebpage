@@ -1601,10 +1601,22 @@ Mejor track del OST
 </script>
 
 
+<script>
+function getUserId() {
+  let id = localStorage.getItem('vote_user_id');
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem('vote_user_id', id);
+  }
+  return id;
+}
+const USER_ID = getUserId();
+const API = 'https://server.ljuan.online/api';
+</script>
 
 
 <script>
-document.querySelectorAll('.vote-widget').forEach(widget => {
+document.querySelectorAll('.vote-widget').forEach(async widget => {
   const likeBtn = widget.querySelector('.vote-btn.like');
   const dislikeBtn = widget.querySelector('.vote-btn.dislike');
 
@@ -1615,10 +1627,11 @@ document.querySelectorAll('.vote-widget').forEach(widget => {
   const likeLabel = widget.querySelector('.like-label');
   const dislikeLabel = widget.querySelector('.dislike-label');
 
-  // INITIAL DATA (replace with backend later)
-  let likes = 12;
+  const reviewId = widget.dataset.reviewId;
+
+  let likes = 0;
   let dislikes = 0;
-  let userVote = null; // "like" | "dislike"
+  let userVote = null;
 
   function render() {
     const total = likes + dislikes || 1;
@@ -1637,27 +1650,35 @@ document.querySelectorAll('.vote-widget').forEach(widget => {
     dislikeBtn.classList.toggle('active', userVote === 'dislike');
   }
 
-  likeBtn.addEventListener('click', () => {
-    if (userVote === 'like') return;
-
-    if (userVote === 'dislike') dislikes--;
-    likes++;
-    userVote = 'like';
-    render();
-  });
-
-  dislikeBtn.addEventListener('click', () => {
-    if (userVote === 'dislike') return;
-
-    if (userVote === 'like') likes--;
-    dislikes++;
-    userVote = 'dislike';
-    render();
-  });
-
+  // LOAD EXISTING VOTES
+  const res = await fetch(`${API}/votes/${reviewId}`);
+  const data = await res.json();
+  likes = data.likes;
+  dislikes = data.dislikes;
   render();
+
+  async function vote(type) {
+    const res = await fetch(`${API}/vote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        review_id: reviewId,
+        user_id: USER_ID,
+        vote: type
+      })
+    });
+    const data = await res.json();
+    likes = data.likes;
+    dislikes = data.dislikes;
+    userVote = data.userVote;
+    render();
+  }
+
+  likeBtn.onclick = () => vote('like');
+  dislikeBtn.onclick = () => vote('dislike');
 });
 </script>
+
 
 </body>
 </html>
