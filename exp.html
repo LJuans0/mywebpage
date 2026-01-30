@@ -1149,11 +1149,95 @@ document.addEventListener('DOMContentLoaded', () => {
     .replace(/(^-|-$)/g, '');
 }
     // El resto de tu código original (adaptado para usar los datos cargados)
+
+  async function initVoteWidget(reviewId) {
+  const widget = document.querySelector('.vote-widget');
+  if (!reviewId) return;
+
+  const likeBtn = widget.querySelector('.vote-btn.like');
+  const dislikeBtn = widget.querySelector('.vote-btn.dislike');
+
+  const graph = widget.querySelector('.vote-graph');
+  const likeFill = widget.querySelector('.like-column .column-fill');
+  const dislikeFill = widget.querySelector('.dislike-column .column-fill');
+
+  const likeLabel = widget.querySelector('.like-label');
+  const dislikeLabel = widget.querySelector('.dislike-label');
+
+  let likes = 0;
+  let dislikes = 0;
+  let userVote = null;
+
+  function render() {
+    const total = likes + dislikes || 1;
+    const likePct = Math.round((likes / total) * 100);
+    const dislikePct = 100 - likePct;
+
+    likeFill.style.height = likePct + '%';
+    dislikeFill.style.height = dislikePct + '%';
+
+    likeLabel.textContent = `${likePct}% · ${likes}`;
+    dislikeLabel.textContent = `${dislikePct}% · ${dislikes}`;
+
+    graph.classList.remove('hidden');
+
+    likeBtn.classList.toggle('active', userVote === 'like');
+    dislikeBtn.classList.toggle('active', userVote === 'dislike');
+  }
+
+  // RESET visual (importantísimo)
+  graph.classList.add('hidden');
+  likeBtn.classList.remove('active');
+  dislikeBtn.classList.remove('active');
+
+  // LOAD DATA
+  const res = await fetch(`${API}/votes/${reviewId}`);
+  const data = await res.json();
+
+  likes = data.likes ?? 0;
+  dislikes = data.dislikes ?? 0;
+  userVote = data.userVote ?? null;
+
+  render();
+
+  likeBtn.onclick = async () => {
+    const res = await fetch(`${API}/vote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        review_id: reviewId,
+        user_id: USER_ID,
+        vote: 'like'
+      })
+    });
+    const data = await res.json();
+    likes = data.likes;
+    dislikes = data.dislikes;
+    userVote = data.userVote;
+    render();
+  };
+
+  dislikeBtn.onclick = async () => {
+    const res = await fetch(`${API}/vote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        review_id: reviewId,
+        user_id: USER_ID,
+        vote: 'dislike'
+      })
+    });
+    const data = await res.json();
+    likes = data.likes;
+    dislikes = data.dislikes;
+    userVote = data.userVote;
+    render();
+  };
+}
+
+  
     function initializeApp(games) {
         function openModal(game) {
-          const voteWidget = document.querySelector('.vote-widget');
-voteWidget.dataset.reviewId = makeReviewId(game.title);
-          
             const modal = document.getElementById('gameModal');     
             document.getElementById('modalTitle').textContent = game.title;
             document.getElementById('modalFavorite').textContent = game.favorite ? "★" : "";
@@ -1196,6 +1280,10 @@ voteWidget.dataset.reviewId = makeReviewId(game.title);
             
             load3DBoxForGame(game);
             updateColorScheme(game.accentColor);
+
+          const reviewId = makeReviewId(game.title);
+initVoteWidget(reviewId);
+
         }
         
         document.querySelector('.close-button').addEventListener('click', () => {
@@ -1621,71 +1709,6 @@ function getUserId() {
 }
 const USER_ID = getUserId();
 const API = 'https://server.ljuan.online/api';
-</script>
-
-
-<script>
-document.querySelectorAll('.vote-widget').forEach(async widget => {
-  const likeBtn = widget.querySelector('.vote-btn.like');
-  const dislikeBtn = widget.querySelector('.vote-btn.dislike');
-
-  const graph = widget.querySelector('.vote-graph');
-  const likeFill = widget.querySelector('.like-column .column-fill');
-  const dislikeFill = widget.querySelector('.dislike-column .column-fill');
-
-  const likeLabel = widget.querySelector('.like-label');
-  const dislikeLabel = widget.querySelector('.dislike-label');
-
-  const reviewId = widget.dataset.reviewId;
-
-  let likes = 0;
-  let dislikes = 0;
-  let userVote = null;
-
-  function render() {
-    const total = likes + dislikes || 1;
-    const likePct = Math.round((likes / total) * 100);
-    const dislikePct = 100 - likePct;
-
-    likeFill.style.height = likePct + '%';
-    dislikeFill.style.height = dislikePct + '%';
-
-    likeLabel.textContent = `${likePct}% · ${likes}`;
-    dislikeLabel.textContent = `${dislikePct}% · ${dislikes}`;
-
-    graph.classList.remove('hidden');
-
-    likeBtn.classList.toggle('active', userVote === 'like');
-    dislikeBtn.classList.toggle('active', userVote === 'dislike');
-  }
-
-  // LOAD EXISTING VOTES
-  const res = await fetch(`${API}/votes/${reviewId}`);
-  const data = await res.json();
-  likes = data.likes;
-  dislikes = data.dislikes;
-  render();
-
-  async function vote(type) {
-    const res = await fetch(`${API}/vote`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        review_id: reviewId,
-        user_id: USER_ID,
-        vote: type
-      })
-    });
-    const data = await res.json();
-    likes = data.likes;
-    dislikes = data.dislikes;
-    userVote = data.userVote;
-    render();
-  }
-
-  likeBtn.onclick = () => vote('like');
-  dislikeBtn.onclick = () => vote('dislike');
-});
 </script>
 
 
