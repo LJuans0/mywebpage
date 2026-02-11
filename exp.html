@@ -1103,7 +1103,7 @@ transition: all 0.3s ease;
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
-<script>
+<script type="module">
 
 document.addEventListener('DOMContentLoaded', () => {
     // URL de tu Google Sheet exportada como CSV
@@ -1278,7 +1278,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 modal.classList.add('show');
             }, 10);
             
-            //load3DBoxForGame(game);
+            load3DBoxForGame(game);
             updateColorScheme(game.accentColor);
 
           const reviewId = makeReviewId(game.title);
@@ -1418,74 +1418,7 @@ initVoteWidget(reviewId);
     // Asegúrate de tener esta función definida o elimínala si no la usas
     load3DBoxForGame(game);
 });
-</script>
 
-<div id="gameModal" class="modal hidden">
-  <div class="modal-content">
-    <span class="close-button">&times;</span>
-    <div class="modal-body">
-      <div class="modal-left">
-  <div id="container3D" style="width: 300px; height: 400px;"></div>
-</div>
-      <div class="modal-right">
-        <div class="modal-header">
-          <h2>
-    <span id="modalTitle">Título</span>
-
-  </h2>
-  <div class="modal-score" id="modalScore">95</div>
-        </div>
-        <div class="modal-meta">
-          <p><span id="modalFavorite">★</span></p>
-          <p><strong>Tiempo:</strong> <span id="modalTime"></span></p>
-          <p><strong>Terminado:</strong> <span id="modalDate"></span></p>
-          <p><strong>Plataforma:</strong> <span id="modalPlatform"></span></p>
-        </div>
-
-          <p id="modalReview" class="modal-review">
-  <span id="modalReviewShort"></span><span id="modalReviewFull" style="display: none;"></span>
-  <button id="toggleReviewBtn" class="review-toggle">Ver más</button>
-</p>
-<div class="modal-bottom">
-<div class="modal-video">
-Mejor track del OST
-          <iframe id="modalVideo" width="100%" frameborder="1"></iframe>
-
-        </div>
-<div class="modal-vote">
-¿Te gustó esta reseña?
-<div class="vote-widget">
-  <div class="vote-buttons">
-    <button class="vote-btn like" data-vote="like" aria-label="Like">
-      <img src="https://server.ljuan.online/img/icons/like.png" alt="">
-    </button>
-
-    <button class="vote-btn dislike" data-vote="dislike" aria-label="Dislike">
-      <img src="https://server.ljuan.online/img/icons/dislike.png" alt="">
-    </button>
-  </div>
-
-  <div class="vote-graph hidden">
-    <div class="column like-column">
-      <div class="column-fill"></div>
-      <span class="label like-label"></span>
-    </div>
-
-    <div class="column dislike-column">
-      <div class="column-fill"></div>
-      <span class="label dislike-label"></span>
-    </div>
-  </div>
-</div>
-</div>
-
-</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script type="module">
   import * as THREE from "https://unpkg.com/three@0.129.0/build/three.module.js";
   import { GLTFLoader } from "https://unpkg.com/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
   import { OrbitControls } from "https://unpkg.com/three@0.129.0/examples/jsm/controls/OrbitControls.js";
@@ -1613,6 +1546,72 @@ Mejor track del OST
 </script>
 
 
+  
+<div id="gameModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <div class="modal-body">
+      <div class="modal-left">
+  <div id="container3D" style="width: 300px; height: 400px;"></div>
+</div>
+      <div class="modal-right">
+        <div class="modal-header">
+          <h2>
+    <span id="modalTitle">Título</span>
+
+  </h2>
+  <div class="modal-score" id="modalScore">95</div>
+        </div>
+        <div class="modal-meta">
+          <p><span id="modalFavorite">★</span></p>
+          <p><strong>Tiempo:</strong> <span id="modalTime"></span></p>
+          <p><strong>Terminado:</strong> <span id="modalDate"></span></p>
+          <p><strong>Plataforma:</strong> <span id="modalPlatform"></span></p>
+        </div>
+
+          <p id="modalReview" class="modal-review">
+  <span id="modalReviewShort"></span><span id="modalReviewFull" style="display: none;"></span>
+  <button id="toggleReviewBtn" class="review-toggle">Ver más</button>
+</p>
+<div class="modal-bottom">
+<div class="modal-video">
+Mejor track del OST
+          <iframe id="modalVideo" width="100%" frameborder="1"></iframe>
+
+        </div>
+<div class="modal-vote">
+¿Te gustó esta reseña?
+<div class="vote-widget">
+  <div class="vote-buttons">
+    <button class="vote-btn like" data-vote="like" aria-label="Like">
+      <img src="https://server.ljuan.online/img/icons/like.png" alt="">
+    </button>
+
+    <button class="vote-btn dislike" data-vote="dislike" aria-label="Dislike">
+      <img src="https://server.ljuan.online/img/icons/dislike.png" alt="">
+    </button>
+  </div>
+
+  <div class="vote-graph hidden">
+    <div class="column like-column">
+      <div class="column-fill"></div>
+      <span class="label like-label"></span>
+    </div>
+
+    <div class="column dislike-column">
+      <div class="column-fill"></div>
+      <span class="label dislike-label"></span>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+  
 <!//NO CAMBIAR NADA DE ABAJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO-->
 
   <svg width="0" height="0">
