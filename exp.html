@@ -1104,7 +1104,11 @@ transition: all 0.3s ease;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
 <script type="module">
+import * as THREE from "https://unpkg.com/three@0.129.0/build/three.module.js";
+  import { GLTFLoader } from "https://unpkg.com/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
+  import { OrbitControls } from "https://unpkg.com/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 
+  
 document.addEventListener('DOMContentLoaded', () => {
     // URL de tu Google Sheet exportada como CSV
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR1XDkBEEb3mPcd_IskPiRtNUYBWyKDynGZycSrzuqmbaXIFPfcdGCAbBjBFO6s_kdZp-8eekabv8hD/pub?gid=0&single=true&output=csv';
@@ -1418,10 +1422,6 @@ initVoteWidget(reviewId);
     // Asegúrate de tener esta función definida o elimínala si no la usas
     load3DBoxForGame(game);
 });
-
-  import * as THREE from "https://unpkg.com/three@0.129.0/build/three.module.js";
-  import { GLTFLoader } from "https://unpkg.com/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
-  import { OrbitControls } from "https://unpkg.com/three@0.129.0/examples/jsm/controls/OrbitControls.js";
 
   const container = document.getElementById("container3D");
   let scene, camera, renderer, controls, currentModel;
