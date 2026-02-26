@@ -1455,7 +1455,7 @@ initVoteWidget(reviewId);
   };
 
   function initScene() {
-  // Limpiar escena anterior
+
   if (renderer) {
     renderer.dispose();
     container.innerHTML = '';
@@ -1469,7 +1469,6 @@ initVoteWidget(reviewId);
     0.1,
     100
   );
-
   camera.position.set(0, 0, 13);
 
   renderer = new THREE.WebGLRenderer({
@@ -1483,16 +1482,11 @@ initVoteWidget(reviewId);
   // 🔥 Color correcto
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-  // 🔥 Tonemapping moderno
+  // 🔥 Tonemapping más suave
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.toneMappingExposure = 1.0;
 
-  // 🔥 Luces físicamente correctas
   renderer.physicallyCorrectLights = true;
-
-  // 🔥 Sombras suaves
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   container.appendChild(renderer.domElement);
 
@@ -1505,29 +1499,26 @@ initVoteWidget(reviewId);
   controls.minPolarAngle = 0;
   controls.maxPolarAngle = Math.PI;
 
-  // 🌎 Iluminación mejorada
+  // 🌎 Iluminación equilibrada 360°
 
-  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
-  scene.add(hemiLight);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+  scene.add(ambient);
 
-  const dirLight = new THREE.DirectionalLight(0xffffff, 3);
-  dirLight.position.set(5, 10, 7);
-  dirLight.castShadow = true;
-  dirLight.shadow.mapSize.set(2048, 2048);
-  scene.add(dirLight);
+  const frontLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  frontLight.position.set(5, 5, 5);
+  scene.add(frontLight);
 
-  // Plano invisible para recibir sombras
-  const shadowPlane = new THREE.Mesh(
-    new THREE.PlaneGeometry(50, 50),
-    new THREE.ShadowMaterial({ opacity: 0.25 })
-  );
-  shadowPlane.rotation.x = -Math.PI / 2;
-  shadowPlane.position.y = -2.5;
-  shadowPlane.receiveShadow = true;
-  scene.add(shadowPlane);
+  const backLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  backLight.position.set(-5, 3, -5);
+  scene.add(backLight);
+
+  const topLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  topLight.position.set(0, 10, 0);
+  scene.add(topLight);
 }
 
 async function load3DBoxForGame(game) {
+
   initScene();
 
   const modelFile = platformModelMap[game.platform];
@@ -1542,7 +1533,7 @@ async function load3DBoxForGame(game) {
     textureLoader.loadAsync(game.coverSide)
   ]);
 
-  // 🔥 Corregir espacio de color
+  // 🔥 Color correcto en texturas
   front.colorSpace = THREE.SRGBColorSpace;
   back.colorSpace = THREE.SRGBColorSpace;
   spine.colorSpace = THREE.SRGBColorSpace;
@@ -1554,51 +1545,41 @@ async function load3DBoxForGame(game) {
       currentModel = gltf.scene;
 
       currentModel.traverse((child) => {
-        if (child.isMesh) {
 
-          child.castShadow = true;
-          child.receiveShadow = true;
+        if (!child.isMesh) return;
 
-          const name = child.name.toLowerCase();
+        const name = child.name.toLowerCase();
 
-          let texture = null;
+        // ✅ CLONAR material original para no modificar el compartido
+        child.material = child.material.clone();
 
-          if (name.includes("front")) texture = front;
-          else if (name.includes("back")) texture = back;
-          else if (name.includes("spine") || name.includes("side")) texture = spine;
-
-          if (texture) {
-
-            child.material = new THREE.MeshStandardMaterial({
-              map: texture,
-              roughness: 0.7,
-              metalness: 0.0,
-              transparent: true,
-              alphaTest: 0.05, // 🔥 mejora MUCHO transparencias tipo PNG
-              depthWrite: true,
-              side: THREE.FrontSide
-            });
-
-          } else {
-
-            // Si el mesh ya trae material (ej: plástico caja)
-            child.material = new THREE.MeshStandardMaterial({
-              color: 0xffffff,
-              roughness: 0.6,
-              metalness: 0.1
-            });
-
-          }
-
-          // 🔥 Manejo avanzado de transparencia
-          if (child.material.transparent || child.material.opacity < 1) {
-            child.material.depthWrite = false;
-            child.renderOrder = 1;
-          }
+        // 🔥 SOLO reemplazar mapas necesarios
+        if (name.includes("front")) {
+          child.material.map = front;
         }
+        else if (name.includes("back")) {
+          child.material.map = back;
+        }
+        else if (name.includes("spine") || name.includes("side")) {
+          child.material.map = spine;
+        }
+
+        // Si reemplazamos textura
+        if (child.material.map) {
+          child.material.map.colorSpace = THREE.SRGBColorSpace;
+          child.material.needsUpdate = true;
+        }
+
+        // 🔥 Manejo correcto de transparencias
+        if (child.material.transparent || child.material.opacity < 1) {
+          child.material.depthWrite = false;
+          child.material.alphaTest = 0.05;
+          child.renderOrder = 1;
+        }
+
       });
 
-      // 📦 Centrar modelo automáticamente
+      // 📦 Centrar modelo
       const box = new THREE.Box3().setFromObject(currentModel);
       const center = box.getCenter(new THREE.Vector3());
       currentModel.position.sub(center);
@@ -1619,11 +1600,13 @@ function animate() {
 }
 
 window.addEventListener("resize", () => {
+
   if (!camera || !renderer) return;
 
   camera.aspect = container.clientWidth / container.clientHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(container.clientWidth, container.clientHeight);
+
 });
 
 window.load3DBoxForGame = load3DBoxForGame;
