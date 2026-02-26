@@ -1455,7 +1455,7 @@ initVoteWidget(reviewId);
   };
 
   function initScene() {
-   // Limpiar escena previa
+  // Limpiar escena anterior
   if (renderer) {
     renderer.dispose();
     container.innerHTML = '';
@@ -1478,21 +1478,24 @@ initVoteWidget(reviewId);
   });
 
   renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // 🔥 Configuración moderna de color e iluminación
+  // 🔥 Color correcto
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  // 🔥 Tonemapping moderno
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1;
+  renderer.toneMappingExposure = 1.1;
+
+  // 🔥 Luces físicamente correctas
   renderer.physicallyCorrectLights = true;
 
-  // Sombras
+  // 🔥 Sombras suaves
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   container.appendChild(renderer.domElement);
 
-  // Controles
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
@@ -1504,19 +1507,27 @@ initVoteWidget(reviewId);
 
   // 🌎 Iluminación mejorada
 
-  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.7);
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
   scene.add(hemiLight);
 
-  const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 3);
   dirLight.position.set(5, 10, 7);
   dirLight.castShadow = true;
-  dirLight.shadow.mapSize.width = 2048;
-  dirLight.shadow.mapSize.height = 2048;
+  dirLight.shadow.mapSize.set(2048, 2048);
   scene.add(dirLight);
+
+  // Plano invisible para recibir sombras
+  const shadowPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(50, 50),
+    new THREE.ShadowMaterial({ opacity: 0.25 })
+  );
+  shadowPlane.rotation.x = -Math.PI / 2;
+  shadowPlane.position.y = -2.5;
+  shadowPlane.receiveShadow = true;
+  scene.add(shadowPlane);
 }
 
 async function load3DBoxForGame(game) {
-
   initScene();
 
   const modelFile = platformModelMap[game.platform];
@@ -1531,7 +1542,7 @@ async function load3DBoxForGame(game) {
     textureLoader.loadAsync(game.coverSide)
   ]);
 
-  // 🔥 Corrección de color en texturas
+  // 🔥 Corregir espacio de color
   front.colorSpace = THREE.SRGBColorSpace;
   back.colorSpace = THREE.SRGBColorSpace;
   spine.colorSpace = THREE.SRGBColorSpace;
@@ -1543,7 +1554,6 @@ async function load3DBoxForGame(game) {
       currentModel = gltf.scene;
 
       currentModel.traverse((child) => {
-
         if (child.isMesh) {
 
           child.castShadow = true;
@@ -1551,31 +1561,38 @@ async function load3DBoxForGame(game) {
 
           const name = child.name.toLowerCase();
 
-          let selectedTexture = null;
+          let texture = null;
 
-          if (name.includes("front")) {
-            selectedTexture = front;
-          } else if (name.includes("back")) {
-            selectedTexture = back;
-          } else if (name.includes("spine") || name.includes("side")) {
-            selectedTexture = spine;
-          }
+          if (name.includes("front")) texture = front;
+          else if (name.includes("back")) texture = back;
+          else if (name.includes("spine") || name.includes("side")) texture = spine;
 
-          if (selectedTexture) {
+          if (texture) {
+
             child.material = new THREE.MeshStandardMaterial({
-              map: selectedTexture,
-              roughness: 0.6,
-              metalness: 0.05,
+              map: texture,
+              roughness: 0.7,
+              metalness: 0.0,
               transparent: true,
-              opacity: 1,
+              alphaTest: 0.05, // 🔥 mejora MUCHO transparencias tipo PNG
+              depthWrite: true,
               side: THREE.FrontSide
             });
+
+          } else {
+
+            // Si el mesh ya trae material (ej: plástico caja)
+            child.material = new THREE.MeshStandardMaterial({
+              color: 0xffffff,
+              roughness: 0.6,
+              metalness: 0.1
+            });
+
           }
 
-          // Manejo de transparencias reales
-          if (child.material.transparent) {
+          // 🔥 Manejo avanzado de transparencia
+          if (child.material.transparent || child.material.opacity < 1) {
             child.material.depthWrite = false;
-            child.material.alphaTest = 0.05;
             child.renderOrder = 1;
           }
         }
@@ -1587,8 +1604,6 @@ async function load3DBoxForGame(game) {
       currentModel.position.sub(center);
 
       scene.add(currentModel);
-
-      controls.update();
     },
     undefined,
     (error) => console.error("Error loading model:", error)
