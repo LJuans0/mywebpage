@@ -1469,6 +1469,7 @@ initVoteWidget(reviewId);
     0.1,
     100
   );
+
   camera.position.set(0, 0, 13);
 
   renderer = new THREE.WebGLRenderer({
@@ -1482,9 +1483,9 @@ initVoteWidget(reviewId);
   // 🔥 Color correcto
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-  // 🔥 Tonemapping más suave
+  // 🔥 Tonemapping equilibrado
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;
+  renderer.toneMappingExposure = 1.15;
 
   renderer.physicallyCorrectLights = true;
 
@@ -1499,17 +1500,17 @@ initVoteWidget(reviewId);
   controls.minPolarAngle = 0;
   controls.maxPolarAngle = Math.PI;
 
-  // 🌎 Iluminación equilibrada 360°
+  // 🌎 Iluminación equilibrada
 
-  const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.9);
   scene.add(ambient);
 
-  const frontLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  const frontLight = new THREE.DirectionalLight(0xffffff, 1.4);
   frontLight.position.set(5, 5, 5);
   scene.add(frontLight);
 
   const backLight = new THREE.DirectionalLight(0xffffff, 1.2);
-  backLight.position.set(-5, 3, -5);
+  backLight.position.set(-5, 4, -5);
   scene.add(backLight);
 
   const topLight = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -1533,7 +1534,7 @@ async function load3DBoxForGame(game) {
     textureLoader.loadAsync(game.coverSide)
   ]);
 
-  // 🔥 Color correcto en texturas
+  // 🔥 IMPORTANTE: sRGB correcto
   front.colorSpace = THREE.SRGBColorSpace;
   back.colorSpace = THREE.SRGBColorSpace;
   spine.colorSpace = THREE.SRGBColorSpace;
@@ -1550,27 +1551,35 @@ async function load3DBoxForGame(game) {
 
         const name = child.name.toLowerCase();
 
-        // ✅ CLONAR material original para no modificar el compartido
+        // 🔥 CLONAR material para no afectar instancias
         child.material = child.material.clone();
 
-        // 🔥 SOLO reemplazar mapas necesarios
-        if (name.includes("front")) {
-          child.material.map = front;
-        }
-        else if (name.includes("back")) {
-          child.material.map = back;
-        }
-        else if (name.includes("spine") || name.includes("side")) {
-          child.material.map = spine;
-        }
+        let newTexture = null;
 
-        // Si reemplazamos textura
-        if (child.material.map) {
-          child.material.map.colorSpace = THREE.SRGBColorSpace;
+        if (name.includes("front")) newTexture = front;
+        else if (name.includes("back")) newTexture = back;
+        else if (name.includes("spine") || name.includes("side")) newTexture = spine;
+
+        if (newTexture) {
+
+          child.material.map = newTexture;
+
+          // 🔥 Ajustes clave para evitar que se vea oscuro
+          if (child.material.isMeshStandardMaterial || child.material.isMeshPhysicalMaterial) {
+
+            child.material.metalness = 0;     // cajas no son metálicas
+            child.material.roughness = 0.8;   // papel/cartón
+            child.material.envMapIntensity = 1;
+
+          }
+
+          // 🔥 Asegurar que el color base no oscurezca
+          child.material.color.set(0xffffff);
+
           child.material.needsUpdate = true;
         }
 
-        // 🔥 Manejo correcto de transparencias
+        // 🔥 Transparencias estables
         if (child.material.transparent || child.material.opacity < 1) {
           child.material.depthWrite = false;
           child.material.alphaTest = 0.05;
