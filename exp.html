@@ -1455,97 +1455,163 @@ initVoteWidget(reviewId);
   };
 
   function initScene() {
-    // Clear previous scene if it exists
-    if (renderer) {
-      renderer.dispose();
-      container.innerHTML = '';
-    }
-
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(70, container.clientWidth / container.clientHeight, 0.1, 100);
-
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
-
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.5;
-    
-    // Disable panning (left-click drag)
-    controls.enablePan = false;
-    
-    // Limit zoom range
-    controls.minDistance = 5;
-    controls.maxDistance = 25;
-    
-    // Limit vertical rotation (up/down)
-    controls.minPolarAngle =0; // 30 degrees
-    controls.maxPolarAngle = Math.PI; // ~72 degrees
-    
-    controls.object.position.set(0, 0, 13); // Initial zoom (distance from target)
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(3, 3, 5);
-    scene.add(ambientLight, directionalLight);
+   // Limpiar escena previa
+  if (renderer) {
+    renderer.dispose();
+    container.innerHTML = '';
   }
 
-  async function load3DBoxForGame(game) {
-    initScene();
+  scene = new THREE.Scene();
 
-    const modelFile = platformModelMap[game.platform];
+  camera = new THREE.PerspectiveCamera(
+    70,
+    container.clientWidth / container.clientHeight,
+    0.1,
+    100
+  );
 
-    const loader = new GLTFLoader();
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.setCrossOrigin("anonymous");
-    const [front, back, spine] = await Promise.all([
-      textureLoader.loadAsync(game.coverFront),
-      textureLoader.loadAsync(game.coverBack),
-      textureLoader.loadAsync(game.coverSide)
-    ]);
+  camera.position.set(0, 0, 13);
 
-    loader.load(
-      modelFile,
-      (gltf) => {
-        currentModel = gltf.scene;
-        currentModel.traverse((child) => {
-          if (child.isMesh) {
-            const name = child.name.toLowerCase();
-            if (name.includes("front")) {
-              child.material = new THREE.MeshBasicMaterial({ map: front });
-            } else if (name.includes("back")) {
-              child.material = new THREE.MeshBasicMaterial({ map: back });
-            } else if (name.includes("spine") || name.includes("side")) {
-              child.material = new THREE.MeshBasicMaterial({ map: spine });
-            }
-          }
-        });
-
-        scene.add(currentModel);
-        controls.update(); // Fuerza la actualización
-      },
-      undefined,
-      (error) => console.error("Error loading model:", error)
-    );
-
-    animate();
-  }
-
-  function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-  }
-
-  window.addEventListener("resize", () => {
-    if (!camera || !renderer) return;
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer = new THREE.WebGLRenderer({
+    alpha: true,
+    antialias: true
   });
 
-  window.load3DBoxForGame = load3DBoxForGame;
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  // 🔥 Configuración moderna de color e iluminación
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1;
+  renderer.physicallyCorrectLights = true;
+
+  // Sombras
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  container.appendChild(renderer.domElement);
+
+  // Controles
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.enablePan = false;
+  controls.minDistance = 5;
+  controls.maxDistance = 25;
+  controls.minPolarAngle = 0;
+  controls.maxPolarAngle = Math.PI;
+
+  // 🌎 Iluminación mejorada
+
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.7);
+  scene.add(hemiLight);
+
+  const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+  dirLight.position.set(5, 10, 7);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.width = 2048;
+  dirLight.shadow.mapSize.height = 2048;
+  scene.add(dirLight);
+}
+
+async function load3DBoxForGame(game) {
+
+  initScene();
+
+  const modelFile = platformModelMap[game.platform];
+
+  const loader = new GLTFLoader();
+  const textureLoader = new THREE.TextureLoader();
+  textureLoader.setCrossOrigin("anonymous");
+
+  const [front, back, spine] = await Promise.all([
+    textureLoader.loadAsync(game.coverFront),
+    textureLoader.loadAsync(game.coverBack),
+    textureLoader.loadAsync(game.coverSide)
+  ]);
+
+  // 🔥 Corrección de color en texturas
+  front.colorSpace = THREE.SRGBColorSpace;
+  back.colorSpace = THREE.SRGBColorSpace;
+  spine.colorSpace = THREE.SRGBColorSpace;
+
+  loader.load(
+    modelFile,
+    (gltf) => {
+
+      currentModel = gltf.scene;
+
+      currentModel.traverse((child) => {
+
+        if (child.isMesh) {
+
+          child.castShadow = true;
+          child.receiveShadow = true;
+
+          const name = child.name.toLowerCase();
+
+          let selectedTexture = null;
+
+          if (name.includes("front")) {
+            selectedTexture = front;
+          } else if (name.includes("back")) {
+            selectedTexture = back;
+          } else if (name.includes("spine") || name.includes("side")) {
+            selectedTexture = spine;
+          }
+
+          if (selectedTexture) {
+            child.material = new THREE.MeshStandardMaterial({
+              map: selectedTexture,
+              roughness: 0.6,
+              metalness: 0.05,
+              transparent: true,
+              opacity: 1,
+              side: THREE.FrontSide
+            });
+          }
+
+          // Manejo de transparencias reales
+          if (child.material.transparent) {
+            child.material.depthWrite = false;
+            child.material.alphaTest = 0.05;
+            child.renderOrder = 1;
+          }
+        }
+      });
+
+      // 📦 Centrar modelo automáticamente
+      const box = new THREE.Box3().setFromObject(currentModel);
+      const center = box.getCenter(new THREE.Vector3());
+      currentModel.position.sub(center);
+
+      scene.add(currentModel);
+
+      controls.update();
+    },
+    undefined,
+    (error) => console.error("Error loading model:", error)
+  );
+
+  animate();
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+window.addEventListener("resize", () => {
+  if (!camera || !renderer) return;
+
+  camera.aspect = container.clientWidth / container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(container.clientWidth, container.clientHeight);
+});
+
+window.load3DBoxForGame = load3DBoxForGame;
 </script>
 
 
