@@ -1429,7 +1429,7 @@ const container = document.getElementById("container3D");
 let modelViewer = null;
 
 const platformModelMap = {
-  "Switch": "SwitchGB.glb",
+  "Switch": "SwitchCasedef.glb",
   "Switch2": "DefaultGB.glb",
   "Phone": "DefaultGB.glb",
   "Xbox": "DefaultGB.glb",
@@ -1447,9 +1447,9 @@ const platformModelMap = {
   "3DS": "DefaultGB.glb",
   "DS": "DefaultGB.glb",
   "DSi": "DefaultGB.glb",
-  "Wii": "WiiGBox.glb",
+  "Wii": "wiidefcase.glb",
   "Quest2": "DefaultGB.glb",
-  "PC": "PCGBoxes.glb"
+  "PC": "pcdeficase.glb"
 };
 
 function createViewer(modelFile) {
@@ -1465,7 +1465,7 @@ function createViewer(modelFile) {
 
   modelViewer.setAttribute("camera-controls", "");
   modelViewer.setAttribute("camera-orbit", "0deg 75deg 13m");
-  modelViewer.setAttribute("min-camera-orbit", "auto auto 50%");
+  modelViewer.setAttribute("min-camera-orbit", "auto auto 100%");
   modelViewer.setAttribute("max-camera-orbit", "auto auto 200%");
 
   // 🔥 HDRI y exposición automática
