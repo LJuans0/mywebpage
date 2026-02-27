@@ -1102,7 +1102,12 @@ transition: all 0.3s ease;
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+<script type="module"
+  src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  
 <script type="module">
 
 import * as THREE from "https://server.ljuan.online/img/sides/three.module.js";
@@ -1426,196 +1431,106 @@ initVoteWidget(reviewId);
     load3DBoxForGame(game);
 });
 
-  const container = document.getElementById("container3D");
-  let scene, camera, renderer, controls, currentModel;
+const container = document.getElementById("container3D");
 
-  const platformModelMap = {
-    "Switch": "SwitchGB.glb",
-    "Switch2": "DefaultGB.glb",
-    "Phone": "DefaultGB.glb",
-    "Xbox": "DefaultGB.glb",
-    "Xbox 360": "DefaultGB.glb",
-    "Web": "DefaultGB.glb",
-    "NES": "DefaultGB.glb",
-    "N64": "DefaultGB.glb",
-    "GB": "DefaultGB.glb",
-    "GBA": "DefaultGB.glb",
-    "PS1": "ps1cased.glb",
-    "PS2": "DefaultGB.glb",
-    "PS3": "DefaultGB.glb",
-    "PS4": "DefaultGB.glb",
-    "Dreamcast": "DefaultGB.glb",
-    "3DS": "DefaultGB.glb",
-    "DS": "DefaultGB.glb",
-    "DSi": "DefaultGB.glb",
-    "Wii": "WiiGBox.glb",
-    "Quest2": "DefaultGB.glb",
-    "PC": "PCGBoxes.glb"
-    // Add more platforms as needed
-  };
+let modelViewer = null;
 
-  function initScene() {
+const platformModelMap = {
+  "Switch": "SwitchGB.glb",
+  "Switch2": "DefaultGB.glb",
+  "Phone": "DefaultGB.glb",
+  "Xbox": "DefaultGB.glb",
+  "Xbox 360": "DefaultGB.glb",
+  "Web": "DefaultGB.glb",
+  "NES": "DefaultGB.glb",
+  "N64": "DefaultGB.glb",
+  "GB": "DefaultGB.glb",
+  "GBA": "DefaultGB.glb",
+  "PS1": "ps1cased.glb",
+  "PS2": "DefaultGB.glb",
+  "PS3": "DefaultGB.glb",
+  "PS4": "DefaultGB.glb",
+  "Dreamcast": "DefaultGB.glb",
+  "3DS": "DefaultGB.glb",
+  "DS": "DefaultGB.glb",
+  "DSi": "DefaultGB.glb",
+  "Wii": "WiiGBox.glb",
+  "Quest2": "DefaultGB.glb",
+  "PC": "PCGBoxes.glb"
+};
 
-  if (renderer) {
-    renderer.dispose();
-    container.innerHTML = '';
+function createViewer(modelFile) {
+
+  // limpiar anterior
+  container.innerHTML = "";
+
+  modelViewer = document.createElement("model-viewer");
+
+  modelViewer.src = modelFile;
+  modelViewer.style.width = "100%";
+  modelViewer.style.height = "100%";
+
+  modelViewer.setAttribute("camera-controls", "");
+  modelViewer.setAttribute("camera-orbit", "0deg 75deg 13m");
+  modelViewer.setAttribute("min-camera-orbit", "auto auto 5m");
+  modelViewer.setAttribute("max-camera-orbit", "auto auto 25m");
+
+  // 🔥 HDRI y exposición automática
+  modelViewer.setAttribute("environment-image", "studio");
+  modelViewer.setAttribute("exposure", "1.2");
+  modelViewer.setAttribute("shadow-intensity", "1");
+
+  container.appendChild(modelViewer);
+}
+
+async function replaceTextures(game) {
+
+  await modelViewer.updateComplete;
+
+  const model = modelViewer.model;
+  if (!model) return;
+
+  const materials = model.materials;
+
+  for (const material of materials) {
+
+    const name = material.name.toLowerCase();
+
+    let textureURL = null;
+
+    if (name.includes("front")) textureURL = game.coverFront;
+    else if (name.includes("back")) textureURL = game.coverBack;
+    else if (name.includes("spine") || name.includes("side")) textureURL = game.coverSide;
+
+    if (textureURL) {
+
+      const texture = await modelViewer.createTexture(textureURL);
+
+      material.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+
+      // 🔥 Ajustes tipo papel/cartón
+      material.pbrMetallicRoughness.setMetallicFactor(0.0);
+      material.pbrMetallicRoughness.setRoughnessFactor(0.85);
+
+    }
   }
-
-  scene = new THREE.Scene();
-
-  camera = new THREE.PerspectiveCamera(
-    70,
-    container.clientWidth / container.clientHeight,
-    0.1,
-    100
-  );
-
-  camera.position.set(0, 0, 13);
-
-  renderer = new THREE.WebGLRenderer({
-    alpha: true,
-    antialias: true
-  });
-
-  renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
-  renderer.physicallyCorrectLights = true;
-
-  // 🔥 IMPORTANTE para transparencias
-  renderer.sortObjects = true;
-
-  container.appendChild(renderer.domElement);
-
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
-  controls.enablePan = false;
-  controls.minDistance = 5;
-  controls.maxDistance = 25;
-
-  // 🌎 Iluminación equilibrada
-
-  const ambient = new THREE.AmbientLight(0xffffff, 0.9);
-  scene.add(ambient);
-
-  const frontLight = new THREE.DirectionalLight(0xffffff, 1.4);
-  frontLight.position.set(5, 5, 5);
-  scene.add(frontLight);
-
-  const backLight = new THREE.DirectionalLight(0xffffff, 1.2);
-  backLight.position.set(-5, 4, -5);
-  scene.add(backLight);
-
-  const topLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  topLight.position.set(0, 10, 0);
-  scene.add(topLight);
 }
 
 async function load3DBoxForGame(game) {
 
-  initScene();
-
   const modelFile = platformModelMap[game.platform];
 
-  const loader = new GLTFLoader();
-  const textureLoader = new THREE.TextureLoader();
-  textureLoader.setCrossOrigin("anonymous");
+  createViewer(modelFile);
 
-  const [front, back, spine] = await Promise.all([
-    textureLoader.loadAsync(game.coverFront),
-    textureLoader.loadAsync(game.coverBack),
-    textureLoader.loadAsync(game.coverSide)
-  ]);
-
-  front.colorSpace = THREE.SRGBColorSpace;
-  back.colorSpace = THREE.SRGBColorSpace;
-  spine.colorSpace = THREE.SRGBColorSpace;
-
-  loader.load(
-    modelFile,
-    (gltf) => {
-
-      currentModel = gltf.scene;
-
-      currentModel.traverse((child) => {
-
-        if (!child.isMesh) return;
-
-        child.material = child.material.clone();
-
-        const name = child.name.toLowerCase();
-
-        let newTexture = null;
-
-        if (name.includes("front")) newTexture = front;
-        else if (name.includes("back")) newTexture = back;
-        else if (name.includes("spine") || name.includes("side")) newTexture = spine;
-
-        // 🔥 REEMPLAZAR SOLO TEXTURAS NECESARIAS
-        if (newTexture) {
-
-          child.material.map = newTexture;
-
-          if (child.material.isMeshStandardMaterial || child.material.isMeshPhysicalMaterial) {
-            child.material.metalness = 0;
-            child.material.roughness = 0.85;
-          }
-
-          child.material.color.set(0xffffff);
-          child.material.needsUpdate = true;
-        }
-
-        // 🔥 MANEJO PROFESIONAL DE TRANSPARENCIAS (CLAVE)
-        if (child.material.transparent || child.material.opacity < 1) {
-
-          child.material.depthWrite = false;   // 🔑 evita oscurecer lo de atrás
-          child.material.depthTest = true;
-          child.material.side = THREE.DoubleSide; // plástico fino
-          child.renderOrder = 10; // se renderiza después
-
-        } else {
-
-          child.renderOrder = 0;
-
-        }
-
-      });
-
-      // 📦 Centrar modelo
-      const box = new THREE.Box3().setFromObject(currentModel);
-      const center = box.getCenter(new THREE.Vector3());
-      currentModel.position.sub(center);
-
-      scene.add(currentModel);
-    },
-    undefined,
-    (error) => console.error("Error loading model:", error)
-  );
-
-  animate();
+  modelViewer.addEventListener("load", async () => {
+    await replaceTextures(game);
+  }, { once: true });
 }
-
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-}
-
-window.addEventListener("resize", () => {
-
-  if (!camera || !renderer) return;
-
-  camera.aspect = container.clientWidth / container.clientHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(container.clientWidth, container.clientHeight);
-
-});
 
 window.load3DBoxForGame = load3DBoxForGame;
+
+
+  
 </script>
 
 
