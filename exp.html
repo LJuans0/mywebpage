@@ -1480,14 +1480,13 @@ initVoteWidget(reviewId);
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // 🔥 Color correcto
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-  // 🔥 Tonemapping equilibrado
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
-
   renderer.physicallyCorrectLights = true;
+
+  // 🔥 IMPORTANTE para transparencias
+  renderer.sortObjects = true;
 
   container.appendChild(renderer.domElement);
 
@@ -1497,8 +1496,6 @@ initVoteWidget(reviewId);
   controls.enablePan = false;
   controls.minDistance = 5;
   controls.maxDistance = 25;
-  controls.minPolarAngle = 0;
-  controls.maxPolarAngle = Math.PI;
 
   // 🌎 Iluminación equilibrada
 
@@ -1534,7 +1531,6 @@ async function load3DBoxForGame(game) {
     textureLoader.loadAsync(game.coverSide)
   ]);
 
-  // 🔥 IMPORTANTE: sRGB correcto
   front.colorSpace = THREE.SRGBColorSpace;
   back.colorSpace = THREE.SRGBColorSpace;
   spine.colorSpace = THREE.SRGBColorSpace;
@@ -1549,10 +1545,9 @@ async function load3DBoxForGame(game) {
 
         if (!child.isMesh) return;
 
-        const name = child.name.toLowerCase();
-
-        // 🔥 CLONAR material para no afectar instancias
         child.material = child.material.clone();
+
+        const name = child.name.toLowerCase();
 
         let newTexture = null;
 
@@ -1560,30 +1555,32 @@ async function load3DBoxForGame(game) {
         else if (name.includes("back")) newTexture = back;
         else if (name.includes("spine") || name.includes("side")) newTexture = spine;
 
+        // 🔥 REEMPLAZAR SOLO TEXTURAS NECESARIAS
         if (newTexture) {
 
           child.material.map = newTexture;
 
-          // 🔥 Ajustes clave para evitar que se vea oscuro
           if (child.material.isMeshStandardMaterial || child.material.isMeshPhysicalMaterial) {
-
-            child.material.metalness = 0;     // cajas no son metálicas
-            child.material.roughness = 0.8;   // papel/cartón
-            child.material.envMapIntensity = 1;
-
+            child.material.metalness = 0;
+            child.material.roughness = 0.85;
           }
 
-          // 🔥 Asegurar que el color base no oscurezca
           child.material.color.set(0xffffff);
-
           child.material.needsUpdate = true;
         }
 
-        // 🔥 Transparencias estables
+        // 🔥 MANEJO PROFESIONAL DE TRANSPARENCIAS (CLAVE)
         if (child.material.transparent || child.material.opacity < 1) {
-          child.material.depthWrite = false;
-          child.material.alphaTest = 0.05;
-          child.renderOrder = 1;
+
+          child.material.depthWrite = false;   // 🔑 evita oscurecer lo de atrás
+          child.material.depthTest = true;
+          child.material.side = THREE.DoubleSide; // plástico fino
+          child.renderOrder = 10; // se renderiza después
+
+        } else {
+
+          child.renderOrder = 0;
+
         }
 
       });
