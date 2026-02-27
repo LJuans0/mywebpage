@@ -1439,7 +1439,7 @@ const platformModelMap = {
   "N64": "DefaultGB.glb",
   "GB": "DefaultGB.glb",
   "GBA": "DefaultGB.glb",
-  "PS1": "ps1defcase.glb",
+  "PS1": "ps1definitivecase.glb",
   "PS2": "DefaultGB.glb",
   "PS3": "DefaultGB.glb",
   "PS4": "DefaultGB.glb",
@@ -1447,9 +1447,9 @@ const platformModelMap = {
   "3DS": "DefaultGB.glb",
   "DS": "DefaultGB.glb",
   "DSi": "DefaultGB.glb",
-  "Wii": "wiidefcase.glb",
+  "Wii": "wiidefinitivevivecase.glb",
   "Quest2": "DefaultGB.glb",
-  "PC": "pcdeficase.glb"
+  "PC": "pcdefinitivecase.glb"
 };
 
 function createViewer(modelFile) {
@@ -1464,7 +1464,7 @@ function createViewer(modelFile) {
   modelViewer.style.height = "100%";
 
   modelViewer.setAttribute("camera-controls", "");
-  modelViewer.setAttribute("camera-orbit", "0deg 75deg 13m");
+  modelViewer.setAttribute("camera-orbit", "0deg 0deg 26m");
   modelViewer.setAttribute("min-camera-orbit", "auto auto 100%");
   modelViewer.setAttribute("max-camera-orbit", "auto auto 200%");
 
