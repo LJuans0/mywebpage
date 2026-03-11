@@ -961,16 +961,16 @@ font-style: italic;
   height:36px;
   border-radius:10px;
   cursor:pointer;
-  transition:0.2s;
+  transition:0.1s;
 }
 
 #playPauseBtn:hover{
   background:#444;
 }
 
-#volumeSlider{
-  flex:1;
-}
+
+
+
 
 .music-player iframe{
   width:0;
@@ -1307,6 +1307,20 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 }
 
+function updateVideoTitle(videoId){
+
+fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+.then(res => res.json())
+.then(data=>{
+    document.getElementById("videoTitle").textContent = data.title;
+})
+.catch(()=>{
+    document.getElementById("videoTitle").textContent = "Unknown track";
+});
+
+}
+
+
   function loadYouTubeOST(url){
 
     if(!url) return;
@@ -1315,6 +1329,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!match) return;
 
     const videoId = match[1];
+updateVideoTitle(videoId);
 
     if(ytPlayer){
         ytPlayer.loadVideoById(videoId);
@@ -1693,7 +1708,7 @@ Mejor track del OST
 
   <div class="music-controls">
     <button id="playPauseBtn">▶</button>
-    <input type="range" id="volumeSlider" min="0" max="100" value="50">
+    <input type="range" id="volumeSlider" min="0" max="100" value="25">
   </div>
 
   <div id="modalVideo"></div>
@@ -1747,6 +1762,7 @@ Mejor track del OST
   </svg>
 
 <canvas id="wave-bg"></canvas>
+
 <script>
   const canvas = document.getElementById('wave-bg');
   const ctx = canvas.getContext('2d');
@@ -1818,7 +1834,6 @@ Mejor track del OST
 
   draw();
 </script>
-
 
 <script>
 function getUserId() {
