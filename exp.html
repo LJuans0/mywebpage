@@ -332,16 +332,13 @@ a:hover::before {
 }
 
 #wave-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    width: 100vw;
-    height: 100vh;
-    background: #f6fcff;
-    opacity: 0.6;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
-
 .page-header {
     text-align: center;
     margin-bottom: 2rem;
@@ -983,7 +980,7 @@ padding-bottom:6px;
   border:0;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 780px) {
 
     body {
     animation: none;
@@ -1825,11 +1822,15 @@ Mejor track del OST
   const sensitivity = 0.015; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
 
   function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-  }
+  width = window.innerWidth;
+  height = document.body.scrollHeight;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  canvas.style.width = width + "px";
+  canvas.style.height = height + "px";
+}}
 
   window.addEventListener('resize', resize);
   resize();
@@ -1868,7 +1869,7 @@ if (!isMobile) {
       const color = `rgba(100, 169, 255, ${0.06 + i * 0.04})`;
 
       ctx.beginPath();
-      for (let x = 0; x <= width; x++) {
+      for (let x = 0; x <= width; x += 3) {
         const y = offsetY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
         ctx.lineTo(x, y);
       }
