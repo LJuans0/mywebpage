@@ -1274,7 +1274,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleBtn.textContent = isExpanded ? "Ver más" : "Ver menos";
             };
             
-            document.getElementById('modalVideo').src = game.ost || "";
+            if(game.ost){
+  loadOST(game.ost);
+}
             
             modal.classList.remove('hidden');
             setTimeout(() => {
@@ -1295,10 +1297,77 @@ initVoteWidget(reviewId);
             
             setTimeout(() => {
                 modal.classList.add('hidden');
-                document.getElementById('modalVideo').src = "";
+                if(player){
+  player.stopVideo();
+}
             }, 300);
         });
         
+let player;
+let isPlaying = false;
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('youtube-player', {
+    height: '0',
+    width: '0',
+    videoId: '',
+    playerVars: {
+      autoplay: 0,
+      controls: 0
+    },
+    events: {
+      onReady: () => {}
+    }
+  });
+}
+
+function loadOST(url){
+  if(!player) return;
+
+  const videoId = extractVideoID(url);
+
+  player.loadVideoById(videoId);
+
+  const dataInterval = setInterval(()=>{
+    const data = player.getVideoData();
+    if(data && data.title){
+      document.getElementById("songTitle").textContent = data.title;
+      clearInterval(dataInterval);
+    }
+  },200);
+}
+
+function extractVideoID(url){
+  const regExp = /(?:youtube\.com.*v=|youtu\.be\/)([^&]+)/;
+  const match = url.match(regExp);
+  return match ? match[1] : url;
+}
+
+
+const playBtn = document.getElementById("playPause");
+const volume = document.getElementById("volume");
+
+playBtn.onclick = () => {
+  if(!isPlaying){
+    player.playVideo();
+    playBtn.textContent="⏸";
+    isPlaying=true;
+  }else{
+    player.pauseVideo();
+    playBtn.textContent="▶";
+    isPlaying=false;
+  }
+};
+
+volume.oninput = ()=>{
+  player.setVolume(volume.value);
+};
+
+
+
+
+
+
         function updateColorScheme(accentColor) {
             const lighterColor = lightenColor(accentColor, 30);
             const darkerColor = darkenColor(accentColor, 20);
@@ -1555,7 +1624,21 @@ window.load3DBoxForGame = load3DBoxForGame;
 <div class="modal-bottom">
 <div class="modal-video">
 Mejor track del OST
-          <iframe id="modalVideo" width="100%" frameborder="1" allow="autoplay; encrypted-media"></iframe>
+
+          <div id="youtube-player"></div>
+
+<div class="music-box">
+  <div class="title-container">
+    <div id="songTitle">Loading...</div>
+  </div>
+
+  <div class="controls">
+    <button id="playPause">▶</button>
+    <input type="range" id="volume" min="0" max="100" value="50">
+  </div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
 
         </div>
 <div class="modal-vote">
