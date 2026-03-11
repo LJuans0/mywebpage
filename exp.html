@@ -1810,6 +1810,8 @@ Mejor track del OST
 <canvas id="wave-bg"></canvas>
 
 <script>
+  const isMobile = window.innerWidth < 768;
+  
   const canvas = document.getElementById('wave-bg');
   const ctx = canvas.getContext('2d');
 
@@ -1832,18 +1834,20 @@ Mejor track del OST
   window.addEventListener('resize', resize);
   resize();
 
+if (!isMobile) {
   document.addEventListener('mousemove', e => {
     const dx = e.clientX - lastMouseX;
     const dy = e.clientY - lastMouseY;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    amplitudeBoost += distance * sensitivity; // ✅ Aplica sensibilidad
+    amplitudeBoost += distance * sensitivity;
     amplitudeBoost = Math.min(amplitudeBoost, 50);
 
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
     lastMoveTime = Date.now();
   });
+}
 
   function draw() {
     ctx.clearRect(0, 0, width, height);
@@ -1874,11 +1878,17 @@ Mejor track del OST
       ctx.fillStyle = color;
       ctx.fill();
     }
-
+  if (!isMobile) {
     requestAnimationFrame(draw);
   }
+}
 
+if (isMobile) {
   draw();
+} else {
+  requestAnimationFrame(draw);
+}
+  
 </script>
 
 <script>
