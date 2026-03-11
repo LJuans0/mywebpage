@@ -1274,9 +1274,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleBtn.textContent = isExpanded ? "Ver más" : "Ver menos";
             };
             
-            if(game.ost){
-  loadOST(game.ost);
-}
+            loadOST(game.ost);
             
             modal.classList.remove('hidden');
             setTimeout(() => {
@@ -1304,67 +1302,65 @@ initVoteWidget(reviewId);
         });
         
 let player;
-let isPlaying = false;
+let playerReady = false;
 
 function onYouTubeIframeAPIReady() {
-  player = new YT.Player('youtube-player', {
-    height: '0',
-    width: '0',
-    videoId: '',
-    playerVars: {
-      autoplay: 0,
-      controls: 0
-    },
-    events: {
-      onReady: () => {}
-    }
-  });
-}
-
-function loadOST(url){
-  if(!player) return;
-
-  const videoId = extractVideoID(url);
-
-  player.loadVideoById(videoId);
-
-  const dataInterval = setInterval(()=>{
-    const data = player.getVideoData();
-    if(data && data.title){
-      document.getElementById("songTitle").textContent = data.title;
-      clearInterval(dataInterval);
-    }
-  },200);
-}
-
-function extractVideoID(url){
-  const regExp = /(?:youtube\.com.*v=|youtu\.be\/)([^&]+)/;
-  const match = url.match(regExp);
-  return match ? match[1] : url;
+    player = new YT.Player('youtube-player', {
+        height: '20',
+        width: '20',
+        videoId: '',
+        playerVars: {
+            autoplay: 0,
+            controls: 0
+        },
+        events: {
+            onReady: function () {
+                playerReady = true;
+            }
+        }
+    });
 }
 
 
-const playBtn = document.getElementById("playPause");
-const volume = document.getElementById("volume");
+function extractVideoID(url) {
 
-playBtn.onclick = () => {
-  if(!isPlaying){
-    player.playVideo();
-    playBtn.textContent="⏸";
-    isPlaying=true;
-  }else{
-    player.pauseVideo();
-    playBtn.textContent="▶";
-    isPlaying=false;
-  }
-};
+    if(!url) return null;
 
-volume.oninput = ()=>{
-  player.setVolume(volume.value);
-};
+    const regExp =
+    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
 
+    const match = url.match(regExp);
 
+    return (match && match[2].length === 11)
+        ? match[2]
+        : null;
+}
 
+      function loadOST(url){
+
+    const videoId = extractVideoID(url);
+
+    if(!videoId) return;
+
+    const waitForPlayer = setInterval(()=>{
+
+        if(playerReady){
+
+            player.loadVideoById(videoId);
+
+            setTimeout(()=>{
+                const data = player.getVideoData();
+                document.getElementById("songTitle").textContent =
+                    data.title || "Unknown OST";
+            },500);
+
+            clearInterval(waitForPlayer);
+        }
+
+    },100);
+}
+
+      
 
 
 
