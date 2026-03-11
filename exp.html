@@ -1747,7 +1747,77 @@ Mejor track del OST
   </svg>
 
 <canvas id="wave-bg"></canvas>
+<script>
+  const canvas = document.getElementById('wave-bg');
+  const ctx = canvas.getContext('2d');
 
+  let width, height;
+  let baseAmplitude = 0;
+  let amplitudeBoost = 0;
+  let lastMouseX = 0;
+  let lastMouseY = 0;
+  let lastMoveTime = Date.now();
+
+  const sensitivity = 0.015; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
+
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  document.addEventListener('mousemove', e => {
+    const dx = e.clientX - lastMouseX;
+    const dy = e.clientY - lastMouseY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    amplitudeBoost += distance * sensitivity; // ✅ Aplica sensibilidad
+    amplitudeBoost = Math.min(amplitudeBoost, 50);
+
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+    lastMoveTime = Date.now();
+  });
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = '#f6fcff';
+    ctx.fillRect(0, 0, width, height);
+
+    const timeSinceLastMove = Date.now() - lastMoveTime;
+    if (timeSinceLastMove > 0) {
+      amplitudeBoost *= 0.95;
+      if (amplitudeBoost < 0.01) amplitudeBoost = 0;
+    }
+
+    const waveCount = 4;
+    for (let i = 0; i < waveCount; i++) {
+      const amplitude = baseAmplitude + amplitudeBoost + i * 5;
+      const frequency = 0.005 + i * 0.001;
+      const offsetY = height * (0.2 + i * 0.15);
+      const color = `rgba(100, 169, 255, ${0.06 + i * 0.04})`;
+
+      ctx.beginPath();
+      for (let x = 0; x <= width; x++) {
+        const y = offsetY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>
 
 
 <script>
