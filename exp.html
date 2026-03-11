@@ -1329,7 +1329,8 @@ fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vide
   function loadYouTubeOST(url){
 
     if(!url) return;
-
+isPlaying = true;
+document.getElementById("playPauseBtn").textContent = "⏸";
     const match = url.match(/(?:v=|embed\/|youtu\.be\/)([^&?/]+)/);
     if(!match) return;
 
