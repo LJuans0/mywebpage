@@ -918,6 +918,19 @@ transition: all 0.3s ease;
     transform: scale(1.02);
 }
 
+.music-player iframe{
+  width:0;
+  height:0;
+  border:0;
+}
+
+.music-ui{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-top:10px;
+}
+
 @media (max-width: 1000px) {
     .modal-left,
     .modal-cover {
@@ -1066,6 +1079,7 @@ transition: all 0.3s ease;
     .modal-video iframe:hover {
         transform: none;
     }
+
 }
 
 
@@ -1106,8 +1120,16 @@ transition: all 0.3s ease;
   src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
 </script>
   
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+
 <script type="module">
-  
+  let ytPlayer = null;
+let playerReady = false;
+let isPlaying = false;
+
+
 document.addEventListener('DOMContentLoaded', () => {
     // URL de tu Google Sheet exportada como CSV
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR1XDkBEEb3mPcd_IskPiRtNUYBWyKDynGZycSrzuqmbaXIFPfcdGCAbBjBFO6s_kdZp-8eekabv8hD/pub?gid=0&single=true&output=csv';
@@ -1238,7 +1260,33 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 }
 
-  
+  function loadYouTubeOST(url){
+
+    if(!url) return;
+
+    const match = url.match(/(?:v=|embed\/|youtu\.be\/)([^&?/]+)/);
+    if(!match) return;
+
+    const videoId = match[1];
+
+    if(ytPlayer){
+        ytPlayer.loadVideoById(videoId);
+        return;
+    }
+
+    ytPlayer = new YT.Player('modalVideo', {
+        videoId: videoId,
+        playerVars:{ autoplay:0 },
+        events:{
+            onReady:function(){
+                playerReady = true;
+                ytPlayer.setVolume(50);
+            }
+        }
+    });
+
+}
+
     function initializeApp(games) {
         function openModal(game) {
             const modal = document.getElementById('gameModal');     
@@ -1273,8 +1321,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 reviewShort.textContent = isExpanded ? shortPart : fullReview.slice(0, shortReviewLimit);
                 toggleBtn.textContent = isExpanded ? "Ver más" : "Ver menos";
             };
+
+document.getElementById("playPauseBtn").onclick = function(){
+
+    if(!playerReady) return;
+
+    if(!isPlaying){
+        ytPlayer.playVideo();
+        this.textContent="⏸";
+        isPlaying=true;
+    }else{
+        ytPlayer.pauseVideo();
+        this.textContent="▶";
+        isPlaying=false;
+    }
+
+};
+
+document.getElementById("volumeSlider").addEventListener("input", function(){
+
+    if(playerReady){
+        ytPlayer.setVolume(this.value);
+    }
+
+});
             
-            loadOST(game.ost);
+            loadYouTubeOST(game.ost);
             
             modal.classList.remove('hidden');
             setTimeout(() => {
@@ -1295,75 +1367,10 @@ initVoteWidget(reviewId);
             
             setTimeout(() => {
                 modal.classList.add('hidden');
-                if(player){
-  player.stopVideo();
-}
+                document.getElementById('modalVideo').src = "";
             }, 300);
         });
         
-let player;
-let playerReady = false;
-
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('youtube-player', {
-        height: '20',
-        width: '20',
-        videoId: '',
-        playerVars: {
-            autoplay: 0,
-            controls: 0
-        },
-        events: {
-            onReady: function () {
-                playerReady = true;
-            }
-        }
-    });
-}
-
-
-function extractVideoID(url) {
-
-    if(!url) return null;
-
-    const regExp =
-    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-
-    const match = url.match(regExp);
-
-    return (match && match[2].length === 11)
-        ? match[2]
-        : null;
-}
-
-      function loadOST(url){
-
-    const videoId = extractVideoID(url);
-
-    if(!videoId) return;
-
-    const waitForPlayer = setInterval(()=>{
-
-        if(playerReady){
-
-            player.loadVideoById(videoId);
-
-            setTimeout(()=>{
-                const data = player.getVideoData();
-                document.getElementById("songTitle").textContent =
-                    data.title || "Unknown OST";
-            },500);
-
-            clearInterval(waitForPlayer);
-        }
-
-    },100);
-}
-
-      
-
-
-
         function updateColorScheme(accentColor) {
             const lighterColor = lightenColor(accentColor, 30);
             const darkerColor = darkenColor(accentColor, 20);
@@ -1620,21 +1627,18 @@ window.load3DBoxForGame = load3DBoxForGame;
 <div class="modal-bottom">
 <div class="modal-video">
 Mejor track del OST
+          
+<div class="music-player">
 
-          <div id="youtube-player"></div>
-
-<div class="music-box">
-  <div class="title-container">
-    <div id="songTitle">Loading...</div>
+  <div class="music-ui">
+    <button id="playPauseBtn">▶</button>
+    <input type="range" id="volumeSlider" min="0" max="100" value="50">
   </div>
 
-  <div class="controls">
-    <button id="playPause">▶</button>
-    <input type="range" id="volume" min="0" max="100" value="50">
-  </div>
+  <div id="modalVideo"></div>
+
 </div>
 
-<script src="https://www.youtube.com/iframe_api"></script>
 
         </div>
 <div class="modal-vote">
@@ -1682,77 +1686,7 @@ Mejor track del OST
   </svg>
 
 <canvas id="wave-bg"></canvas>
-<script>
-  const canvas = document.getElementById('wave-bg');
-  const ctx = canvas.getContext('2d');
 
-  let width, height;
-  let baseAmplitude = 0;
-  let amplitudeBoost = 0;
-  let lastMouseX = 0;
-  let lastMouseY = 0;
-  let lastMoveTime = Date.now();
-
-  const sensitivity = 0.015; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
-
-  function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-
-  document.addEventListener('mousemove', e => {
-    const dx = e.clientX - lastMouseX;
-    const dy = e.clientY - lastMouseY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    amplitudeBoost += distance * sensitivity; // ✅ Aplica sensibilidad
-    amplitudeBoost = Math.min(amplitudeBoost, 50);
-
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
-    lastMoveTime = Date.now();
-  });
-
-  function draw() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = '#f6fcff';
-    ctx.fillRect(0, 0, width, height);
-
-    const timeSinceLastMove = Date.now() - lastMoveTime;
-    if (timeSinceLastMove > 0) {
-      amplitudeBoost *= 0.95;
-      if (amplitudeBoost < 0.01) amplitudeBoost = 0;
-    }
-
-    const waveCount = 4;
-    for (let i = 0; i < waveCount; i++) {
-      const amplitude = baseAmplitude + amplitudeBoost + i * 5;
-      const frequency = 0.005 + i * 0.001;
-      const offsetY = height * (0.2 + i * 0.15);
-      const color = `rgba(100, 169, 255, ${0.06 + i * 0.04})`;
-
-      ctx.beginPath();
-      for (let x = 0; x <= width; x++) {
-        const y = offsetY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(width, height);
-      ctx.lineTo(0, height);
-      ctx.closePath();
-      ctx.fillStyle = color;
-      ctx.fill();
-    }
-
-    requestAnimationFrame(draw);
-  }
-
-  draw();
-</script>
 
 
 <script>
@@ -1769,5 +1703,5 @@ const API = 'https://server.ljuan.online/api';
 </script>
 
 
-</body>
 </html>
+</body>
