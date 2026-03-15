@@ -86,7 +86,7 @@
 
 
 <audio id="bg-music" autoplay loop>
-  <source src="https://github.com/LJuans0/mywebpage/raw/refs/heads/main/maintheme.mp3">
+  <source src="maintheme.mp3">
 </audio>
 
 <button id="mute-button">🔊</button>
@@ -119,16 +119,17 @@ const music = document.getElementById("bg-music");
   });
 
 
-const theme = document.getElementById("theme-style");
-const button = document.getElementById("themeToggle");
+  const theme = document.getElementById("theme-style");
+const button2 = document.getElementById("themeToggle");
 
-button.onclick = () => {
+button2.onclick = () => {
   if (theme.getAttribute("href") === "darkindex.css") {
-    theme.setAttribute("href", "whiteindex.css");
-  } else {
     theme.setAttribute("href", "darkindex.css");
+  } else {
+    theme.setAttribute("href", "whiteindex.css");
   }
 };
+
 
 </script>
 
