@@ -154,16 +154,21 @@ button2.onclick = () => {
   let lastMoveTime = Date.now();
   const sensitivity = 0.02; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
 
-  function resize() {
+function resize() {
   width = window.innerWidth;
   height = window.innerHeight;
 
   canvas.width = width;
   canvas.height = height;
+
+  if (!isMobile) {
     draw();
+  }
 }
 
+  if (!isMobile) {
   window.addEventListener('resize', resize);
+}
   resize();
 
 if (!isMobile) {
