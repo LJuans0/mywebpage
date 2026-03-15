@@ -23,6 +23,7 @@
 
   <link rel='stylesheet' type='text/css' href='style.css'>
 </head>
+  
 <body>
 <div class="background-waves"></div>
 
@@ -69,7 +70,7 @@ let isPlaying = false;
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    // URL de tu Google Sheet exportada como CSV
+    // URL de tu Google Sheet exportada co CSV
     const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR1XDkBEEb3mPcd_IskPiRtNUYBWyKDynGZycSrzuqmbaXIFPfcdGCAbBjBFO6s_kdZp-8eekabv8hD/pub?gid=0&single=true&output=csv';
     
     // Cargar los datos y transformarlos al formato que espera tu modal
@@ -250,6 +251,8 @@ fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vide
 
 }
 
+const theme = document.getElementById("theme-style");
+
     function initializeApp(games) {
         function openModal(game) {
             const modal = document.getElementById('gameModal');     
@@ -325,7 +328,16 @@ document.getElementById("volumeSlider").addEventListener("input", function(){
             }, 10);
             
             load3DBoxForGame(game);
-            updateColorScheme(game.accentColor);
+
+if (theme.getAttribute("href") === "darkindex.css") {
+ 
+    updateColorSchemeDARK(game.accentColor);
+
+  } else {
+
+    updateColorSchemeWHITE(game.accentColor);
+
+  }
 
           const reviewId = makeReviewId(game.title);
 initVoteWidget(reviewId);
@@ -343,8 +355,8 @@ initVoteWidget(reviewId);
 }
             }, 300);
         });
-        
-        function updateColorScheme(accentColor) {
+
+function updateColorSchemeWHITE(accentColor) {
             const lighterColor = lightenColor(accentColor, 30);
             const darkerColor = darkenColor(accentColor, 20);
             const veryLightColor = lightenColor(accentColor, 45);
@@ -368,42 +380,101 @@ initVoteWidget(reviewId);
                 el.style.background = `linear-gradient(to bottom, ${lighterColor}, ${accentColor})`;
             });
         }
+
         
-        function hexToRgb(hex) {
-            hex = hex.replace('#', '');
-            const r = parseInt(hex.substring(0, 2), 16);
-            const g = parseInt(hex.substring(2, 4), 16);
-            const b = parseInt(hex.substring(4, 6), 16);
-            return { r, g, b };
-        }
-        
-        function lightenColor(color, percent) {
-            const num = parseInt(color.replace("#", ""), 16),
-                amt = Math.round(2.55 * percent),
-                R = (num >> 16) + amt,
-                G = (num >> 8 & 0x00FF) + amt,
-                B = (num & 0x0000FF) + amt;
-            return `#${(
-                0x1000000 +
-                (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-                (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
-                (B < 255 ? (B < 1 ? 0 : B) : 255)
-            ).toString(16).slice(1)}`;
-        }
-        
-        function darkenColor(color, percent) {
-            const num = parseInt(color.replace("#", ""), 16),
-                amt = Math.round(2.55 * percent),
-                R = (num >> 16) - amt,
-                G = (num >> 8 & 0x00FF) - amt,
-                B = (num & 0x0000FF) - amt;
-            return `#${(
-                0x1000000 +
-                (R > 0 ? (R < 255 ? R : 255) : 0) * 0x10000 +
-                (G > 0 ? (G < 255 ? G : 255) : 0) * 0x100 +
-                (B > 0 ? (B < 255 ? B : 255) : 0)
-            ).toString(16).slice(1)}`;
-        }
+       function updateColorSchemeDARK(accentColor) {
+    // Check if the accent color is too dark
+    const brightness = getColorBrightness(accentColor);
+    
+    // If color is too dark (brightness < 50), lighten it to a minimum brightness
+    if (brightness < 50) {
+        accentColor = lightenToBrightness(accentColor, 60); // Lighten to 60% brightness
+    }
+    
+    const lighterColor = lightenColor(accentColor, 30);
+    const darkerColor = darkenColor(accentColor, 20);
+    const veryLightColor = lightenColor(accentColor, 45);
+    const veryDarkColor = darkenColor(accentColor, 40); // Extra dark accent for bottom
+    
+    const modal = document.querySelector('.modal');
+    if (modal) {
+        const rgbColor = hexToRgb(accentColor);
+        modal.style.background = `rgba(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}, 0.3)`;
+    }
+    
+    document.documentElement.style.setProperty('--color-accent', accentColor);
+    document.documentElement.style.setProperty('--color-border', lighterColor);
+    
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.style.background = `linear-gradient(to bottom, #000000, ${veryDarkColor})`;
+    }
+    
+    const scoreElements = document.querySelectorAll('.game-score, .modal-score');
+    scoreElements.forEach(el => {
+        el.style.background = `linear-gradient(to bottom, ${lighterColor}, ${darkerColor})`;
+    });
+}
+
+// Helper function to calculate color brightness (0-255)
+function getColorBrightness(color) {
+    const rgb = hexToRgb(color);
+    // Standard luminance formula (perceived brightness)
+    return (rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114);
+}
+
+// Helper function to lighten a color to a specific minimum brightness
+function lightenToBrightness(color, targetBrightness) {
+    let currentColor = color;
+    let currentBrightness = getColorBrightness(currentColor);
+    let steps = 0;
+    const maxSteps = 20; // Prevent infinite loop
+    
+    // Gradually lighten until we reach target brightness
+    while (currentBrightness < targetBrightness && steps < maxSteps) {
+        currentColor = lightenColor(currentColor, 10); // Lighten by 10% each step
+        currentBrightness = getColorBrightness(currentColor);
+        steps++;
+    }
+    
+    return currentColor;
+}
+
+function hexToRgb(hex) {
+    hex = hex.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return { r, g, b };
+}
+
+function lightenColor(color, percent) {
+    const num = parseInt(color.replace("#", ""), 16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) + amt,
+        G = (num >> 8 & 0x00FF) + amt,
+        B = (num & 0x0000FF) + amt;
+    return `#${(
+        0x1000000 +
+        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+        (B < 255 ? (B < 1 ? 0 : B) : 255)
+    ).toString(16).slice(1)}`;
+}
+
+function darkenColor(color, percent) {
+    const num = parseInt(color.replace("#", ""), 16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) - amt,
+        G = (num >> 8 & 0x00FF) - amt,
+        B = (num & 0x0000FF) - amt;
+    return `#${(
+        0x1000000 +
+        (R > 0 ? (R < 255 ? R : 255) : 0) * 0x10000 +
+        (G > 0 ? (G < 255 ? G : 255) : 0) * 0x100 +
+        (B > 0 ? (B < 255 ? B : 255) : 0)
+    ).toString(16).slice(1)}`;
+}
         
         function renderGames(filteredGames = games) {
             const container = document.getElementById('gamesContainer');
@@ -566,6 +637,111 @@ async function load3DBoxForGame(game) {
 window.load3DBoxForGame = load3DBoxForGame;
 
 
+
+
+const button2 = document.getElementById("themeToggle");
+  let canvas = document.getElementById('wave-bg');
+let ctx = canvas.getContext('2d');
+let rgb = [60, 60, 60];
+  let newcolor = '#0d0d0d';
+button2.onclick = () => {
+  if (theme.getAttribute("href") === "darkindex.css") {
+    theme.setAttribute("href", "whiteindex.css");
+    newcolor = '#f6fcff';
+    rgb[0] = 100;
+    rgb[1] = 169;
+    rgb[2] = 255;
+    draw();
+  } else {
+    theme.setAttribute("href", "darkindex.css");
+    newcolor = '#0d0d0d';
+    rgb[0] = 60;
+    rgb[1] = 60;
+    rgb[2] = 60;
+    draw();
+  }
+};
+
+  const isMobile = window.innerWidth < 768;
+  
+  let width, height;
+  let baseAmplitude = 0;
+  let amplitudeBoost = 0;
+  let lastMouseX = 0;
+  let lastMouseY = 0;
+  let lastMoveTime = Date.now();
+  const sensitivity = 0.02; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
+
+function resize() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  if (!isMobile) {
+    draw();
+  }
+}
+
+  if (!isMobile) {
+  window.addEventListener('resize', resize);
+}
+  resize();
+
+if (!isMobile) {
+  document.addEventListener('mousemove', e => {
+    const dx = e.clientX - lastMouseX;
+    const dy = e.clientY - lastMouseY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    amplitudeBoost += distance * sensitivity;
+    amplitudeBoost = Math.min(amplitudeBoost, 50);
+
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+    lastMoveTime = Date.now();
+  });
+}
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = newcolor;
+    const timeSinceLastMove = Date.now() - lastMoveTime;
+    if (timeSinceLastMove > 0) {
+      amplitudeBoost *= 0.95;
+      if (amplitudeBoost < 0.01) amplitudeBoost = 0;
+    }
+
+    const waveCount = 4;
+    for (let i = 0; i < waveCount; i++) {
+      const amplitude = baseAmplitude + amplitudeBoost + i * 5;
+      const frequency = 0.005 + i * 0.001;
+      const offsetY = height * (0.2 + i * 0.15);
+      const color = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]},${0.06 + i * 0.04})`;
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 3) {
+        const y = offsetY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+  if (!isMobile) {
+    requestAnimationFrame(draw);
+  }
+}
+resize();
+if (isMobile) {
+  draw();
+} else {
+  requestAnimationFrame(draw);
+}
+ 
   
 </script>
 
@@ -655,115 +831,8 @@ Mejor track del OST
 
 <button id="themeToggle">🎨</button>
 <canvas id="wave-bg"></canvas>
-<link id="theme-style" rel="stylesheet" href="expdark.css">
+<link id="theme-style" rel="stylesheet" href="darkindex.css">
 
-<script>
-const theme = document.getElementById("theme-style");
-const button2 = document.getElementById("themeToggle");
-  let canvas = document.getElementById('wave-bg');
-let ctx = canvas.getContext('2d');
-let rgb = [60, 60, 60];
-  let newcolor = '#0d0d0d';
-button2.onclick = () => {
-  if (theme.getAttribute("href") === "expdark.css") {
-    theme.setAttribute("href", "expwhite.css");
-    newcolor = '#f6fcff';
-    rgb[0] = 100;
-    rgb[1] = 169;
-    rgb[2] = 255;
-    draw();
-  } else {
-    theme.setAttribute("href", "expdark.css");
-    newcolor = '#0d0d0d';
-    rgb[0] = 60;
-    rgb[1] = 60;
-    rgb[2] = 60;
-    draw();
-  }
-};
-
-
-  const isMobile = window.innerWidth < 768;
-  
-  let width, height;
-  let baseAmplitude = 0;
-  let amplitudeBoost = 0;
-  let lastMouseX = 0;
-  let lastMouseY = 0;
-  let lastMoveTime = Date.now();
-  const sensitivity = 0.02; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
-
-function resize() {
-  width = window.innerWidth;
-  height = window.innerHeight;
-
-  canvas.width = width;
-  canvas.height = height;
-
-  if (!isMobile) {
-    draw();
-  }
-}
-
-  if (!isMobile) {
-  window.addEventListener('resize', resize);
-}
-  resize();
-
-if (!isMobile) {
-  document.addEventListener('mousemove', e => {
-    const dx = e.clientX - lastMouseX;
-    const dy = e.clientY - lastMouseY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    amplitudeBoost += distance * sensitivity;
-    amplitudeBoost = Math.min(amplitudeBoost, 50);
-
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
-    lastMoveTime = Date.now();
-  });
-}
-
-  function draw() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = newcolor;
-    const timeSinceLastMove = Date.now() - lastMoveTime;
-    if (timeSinceLastMove > 0) {
-      amplitudeBoost *= 0.95;
-      if (amplitudeBoost < 0.01) amplitudeBoost = 0;
-    }
-
-    const waveCount = 4;
-    for (let i = 0; i < waveCount; i++) {
-      const amplitude = baseAmplitude + amplitudeBoost + i * 5;
-      const frequency = 0.005 + i * 0.001;
-      const offsetY = height * (0.2 + i * 0.15);
-      const color = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]},${0.06 + i * 0.04})`;
-      ctx.beginPath();
-      for (let x = 0; x <= width; x += 3) {
-        const y = offsetY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(width, height);
-      ctx.lineTo(0, height);
-      ctx.closePath();
-      ctx.fillStyle = color;
-      ctx.fill();
-    }
-  if (!isMobile) {
-    requestAnimationFrame(draw);
-  }
-}
-resize();
-if (isMobile) {
-  draw();
-} else {
-  requestAnimationFrame(draw);
-}
-  
-</script>
 
 <script>
 function getUserId() {
