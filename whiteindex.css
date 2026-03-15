@@ -12,7 +12,7 @@
     }
     body {
   background: linear-gradient(to bottom, #f6fcff, #dceeff);
-  color: var(--color-text);
+  color: #000000;
   font-family: 'Hind Madurai', sans-serif;
   max-width: 800px;
   margin: auto;
@@ -62,7 +62,7 @@ max-width:auto;
 
 h1, h2, h3, h4 {
   font-family: 'Karla', sans-serif;
-  color: var(--color-accent);
+  color: #0073ff;
   text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.12);
     width:auto;
 margin-bottom: 19px;
@@ -71,12 +71,12 @@ margin-bottom: 19px;
 
 h1 {
   font-size: 1.7rem;
-    color: var(--color-accent);
+    color: #0073ff;
   margin-bottom: 1rem;
 }
 
 p {
-  color: var(--color-text);
+  color: #000000;
   font-size: 1rem;
   line-height: 1.6;
 border-radius: 12px;
@@ -98,9 +98,9 @@ score {
 }
 
 a {
-  color: var(--color-accent);
+  color: #0073ff;
   text-decoration: none;
-  border-bottom: 2px dotted var(--color-accent);
+  border-bottom: 2px dotted #0073ff;
 }
 
 a:hover {
