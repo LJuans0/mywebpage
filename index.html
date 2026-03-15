@@ -121,6 +121,7 @@ const music = document.getElementById("bg-music");
 
   const theme = document.getElementById("theme-style");
 const button2 = document.getElementById("themeToggle");
+  const canvas = document.getElementById('wave-bg');
 const ctx = canvas.getContext('2d');
 const rgb = [75, 75, 75];
 button2.onclick = () => {
@@ -144,8 +145,6 @@ button2.onclick = () => {
 
   const isMobile = window.innerWidth < 768;
   
-  const canvas = document.getElementById('wave-bg');
-
   let width, height;
   let baseAmplitude = 0;
   let amplitudeBoost = 0;
