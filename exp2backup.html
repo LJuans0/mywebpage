@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicon estándar (.ico) -->
+<link rel="icon" href="icon.ico" type="image/x-icon">
+
+<!-- Para mejor compatibilidad con navegadores modernos (PNG/SVG) -->
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+
+<!-- Para Apple (iPhone/iPad) -->
+<link rel="apple-touch-icon" href="icon.png">
+
+<!-- Para Android/Chrome -->
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#0d1117"> <!-- Color de la pestaña en móviles -->
+  
+  <title>LJ's EXP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  <style>
+
+
+
+:root {
+    --color-bg: #000000;
+    --color-text: #ffffff;
+    --color-accent: #fcffff;
+    --color-border: #fcffff;
+    transition: --color-accent 0.3s ease, --color-border 0.3s ease;
+--like-color: #1ce279;
+  --dislike-color: #ec2020;
+  --bar-bg: #1c1c1c;
+
+  --radius: 14px;
+  --speed: 0.7s;
+}
+
+.vote-widget {
+  width: auto;
+
+}
+
+body {
+    background: linear-gradient(to bottom, #0d0d0d, #040505);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    color: var(--color-text);
+    font-family: 'Hind Madurai', sans-serif;
+    max-width: 1080px;
+    margin: auto;
+    padding: 2rem;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.vote-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+margin-bottom: -25px;
+align-items: center;
+    justify-content: center;
+text-align: center;
+gap:35px;
+}
+
+.vote-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 3px;
+box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.09);
+border:none;
+
+  background:none;
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.vote-btn img {
+  width: 22px;
+  height: 28px;
+  pointer-events: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.vote-btn:hover {
+  transform: scale(1.15);
+}
+
+.vote-btn:active {
+  transform: scale(0.9);
+}
+
+.vote-btn.active.like {
+  background: var(--like-color);
+
+}
+
+.vote-btn.active.dislike {
+  background: var(--dislike-color);
+
+}
+
+/* ---------- GRAPH ---------- */
+
+.vote-graph {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 100px;
+  padding: 10px;
+  background: var(--bg);
+  border-radius: var(--radius);
+
+  animation: graphPop 0.45s cubic-bezier(.25,1.4,.5,1);
+}
+
+.column {
+  position: relative;
+  width: 40px;
+margin: 0 9.5px;
+  height: 70%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.column-fill {
+  width: 100%;
+  height: 0%;
+  border-radius: 3px;
+  transition:
+    height var(--speed) cubic-bezier(.2,1.4,.4,1);
+}
+
+.like-column .column-fill {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--like-color), white 25%),
+    var(--like-color)
+  );
+}
+
+.dislike-column .column-fill {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--dislike-color), white 25%),
+    var(--dislike-color)
+  );
+}
+
+/* ---------- LABELS ---------- */
+
+.label {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+
+}
+
+.like-label {
+  background: rgba(10, 183, 92, 0.8);
+}
+
+.dislike-label {
+  background: rgba(190, 13, 13, 0.8);
+}
+
+/* ---------- UTIL ---------- */
+
+.hidden {
+  display: none;
+}
+
+/* ---------- ANIMATIONS ---------- */
+
+@keyframes graphPop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes labelFloat {
+  from {
+    transform: translate(-50%, 6px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+* {
+    box-sizing: border-box;
+}
+
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.game-score, .game-score-horizontal, .modal-score {
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Karla', sans-serif;
+    color: var(--color-accent);
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.12);
+    margin-bottom: 5px;
+    margin-top: 6px;
+    width: auto;
+    animation: fadeInUp 0.8s ease-out;
+
+}
+
+h1 {
+    font-size: 1.7rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    animation: expandWidth 2s ease-in-out infinite alternate;
+}
+
+@keyframes expandWidth {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.6;
+    border-radius: 3px;
+    padding: 0.2rem;
+box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.09);
+    max-width: auto;
+    transition: all 0.3s ease;
+    color: var(--color-text);
+}
+
+p:hover {
+    box-shadow: 0px 0px 15px rgba(252, 255, 255, 0.09);
+}
+
+
+
+@keyframes gradientFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+a {
+    color: #4d9dff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+a:hover {
+    color: #0055cc;
+    transform: translateY(-2px);
+}
+
+a::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    transition: width 0.3s ease;
+}
+
+a:hover::before {
+    width: 100%;
+}
+
+#wave-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px;
+    animation: slideInFromTop 0.8s ease-out;
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-title {
+    font-family: 'Karla', sans-serif;
+    color: #770f8c;
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.12);
+    text-align: center;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+
+.page-subtitle {
+  background: linear-gradient(to bottom, #040505 70%, #0d0d0d 90%);
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+    padding: 0.5rem;
+    font-size: 1rem;
+    color: var (--color-text);
+    max-width: 800px;
+    margin: 0 auto 0.4rem;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+    animation: bounceIn 1s ease-out;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.disclaimer {
+background: linear-gradient(to bottom, #1a0000 70%, #290000 90%);
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+color: white;
+    padding: 0.5rem;
+    margin: 0 auto 2rem;
+margin-top: -20px;
+    max-width: 800px;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    animation: shake 0.5s ease-in-out 0.1s both;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+
+}
+
+.search-box {
+    width: 100%;
+    max-width: 500px;
+    padding: 0.8rem 1.2rem;
+    border-radius: 3px;
+    font-family: 'Hind Madurai', sans-serif;
+    font-size: 1rem;
+      box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+    transition: all 0.3s ease;
+    outline: none;
+    animation: typewriter 2s steps(20) 1s both;
+  background: linear-gradient(to bottom, #040505 70%, #0d0d0d 90%);
+
+}
+
+@keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+.search-box:focus {
+      box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.38);
+
+    transform: scale(1.02);
+}
+
+.games-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 1rem;
+    padding: 10px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: stagger 0.6s ease-out forwards;
+}
+
+@keyframes stagger {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.game-card-horizontal {
+    background: linear-gradient(to bottom, #040505 75%, #0d0d0d 92%);
+    border-radius: 3px;
+    padding: 8px;
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 80px;
+    position: relative;
+    animation: cardAppear 0.5s ease-out;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8) rotate(-5deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+
+.game-card-horizontal:hover {
+    transform: translateY(-4px) scale(1.05);
+      box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.38);
+}
+
+.game-icon-horizontal {
+    width: 50px;
+    height: 50px;
+    border-radius: 3px;
+    object-fit: cover;
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.28);
+    margin-bottom: 6px;
+    transition: all 0.3s ease;
+}
+
+.game-card-horizontal:hover .game-icon-horizontal {
+    transform: rotate(5deg) scale(1.1);
+}
+
+.game-title-horizontal {
+    display: none;
+}
+
+.game-score-horizontal {
+    font-family: Karla, sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+      background: black;
+    background-size: 200% 200%;
+    animation: gradientFlow 1.25s ease infinite;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-top: 4px;
+    transition: all 0.3s ease;
+box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+}
+
+.favorite-icon {
+    position: absolute;
+    top: -10px;
+    right: -7px;
+    font-size: 25px;
+    color: gold;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2) ; }
+}
+
+.favorite-switch {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.switch-label {
+    margin-left: 8px;
+    font-size: px;
+}
+
+.favorite-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: relative;
+    display: inline-block;
+    min-width: 39px;
+    width: 40px;
+    height: 24px;
+    background: linear-gradient(to bottom, #040505 75%, #0d0d0d 92%);
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.38);
+
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    right: 50px;
+    background: linear-gradient(to bottom, #ffffff, #d4d4d4);
+    transition: .4s;
+    border-radius: 20px;
+}
+
+input:checked + .slider {
+    background: linear-gradient(to bottom, #ffdd00, #c9af00);
+    animation: switchGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes switchGlow {
+    0%, 100% { box-shadow: 0 0 5px gold; }
+    50% { box-shadow: 0 0 15px gold; }
+}
+
+input:checked + .slider:before {
+    transform: translateX(100%);
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(--modal-rgb), 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0);
+    pointer-events: none;
+    overflow-y: auto;
+}
+
+.modal.show {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    animation: modalAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.7) translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: linear-gradient(to bottom, #040505 75%, #0d0d0d 92%);
+    padding: 2rem;
+    border-radius: 3px;
+    max-width: 900px;
+    width: 90%;
+    color: var(--color-accent);
+    font-family: inherit;
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: contentSlide 0.5s ease-out;
+}
+
+@keyframes contentSlide {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close-button {
+    position: absolute;
+    top: -0.65rem;
+    right: 0.3rem;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-button:hover {
+    transform: scale(1.2);
+    color: #ff4444;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    animation: fadeIn 0.6s ease-out 0.2s both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-left {
+    flex: 0 50 200px;
+background: none;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+
+}
+
+.modal-left:hover {
+    transform: translateX(-5px);
+}
+
+.modal-cover {
+    width: 200px;
+    height: 100%;
+    border-radius: 3px;
+    box-shadow: 0 12px 25px rgba(0, 90, 150, 0.35);
+    transition: all 0.3s ease;
+}
+
+.modal-cover:hover {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.modal-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.modal-bottom{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+gap:10px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideInRight 0.6s ease-out 0.3s both;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.modal-header h2 {
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.modal-header h2:hover {
+    transform: translateX(5px);
+      box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.28);
+
+}
+
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.modal-score {
+    font-family: 'Karla', sans-serif;
+    font-size: 3rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #4d9dff, #0073ff);
+    background-size: 200% 200%;
+    animation: gradientFlow 3s ease infinite;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 3px;
+    max-width: 78px;
+    transition: all 0.3s ease;
+}
+
+.modal-score:hover {
+    transform: scale(1.5) rotate(5deg);
+}
+
+.modal-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    animation: staggerMeta 0.6s ease-out 0.4s both;
+}
+
+@keyframes staggerMeta {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-meta p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #a3a3a3;
+    padding: 0.3rem;
+    transition: all 0.3s ease;
+}
+
+.modal-meta p:hover {
+    transform: translateY(-3px);
+    background: rgba(4, 5, 5, 0.5);
+}
+
+.modal-review-container {
+    position: relative;
+    margin: 2px 0 0px;
+    animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.modal-review {
+    margin: 2px 0 0px;
+    line-height: 1.5;
+    color: white;
+    max-height: 130px;
+    overflow-y: auto;
+    padding-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.modal-review.collapsed {
+    max-height: none;
+    overflow: hidden;
+}
+
+.review-toggle {
+    background: none;
+    border: none;
+    color: var(--color-accent);
+    cursor: pointer;
+    padding: 0;
+    font-weight: bold;
+    margin-left: 5px;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+}
+
+.review-toggle:hover {
+    transform: scale(1.1);
+    color: #0055cc;
+}
+.modal-vote {
+
+margin-top: 10px;
+padding:10px;
+border-radius: 3px;
+transition: all 0.3s ease;
+align-items: center;
+    justify-content: center;
+text-align: center;
+max-height:180px;
+}
+.modal-vote:hover {
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+transition: all 0.3s ease;
+}
+
+.modal-video {
+max-width: 250px;
+max-height:180px;
+margin-top: 10px;
+box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+padding:10px;
+border-radius: 3px;
+transition: all 0.3s ease;
+align-items: center;
+    justify-content: center;
+text-align: center;
+}
+
+.modal-video:hover {
+box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.28);
+transition: all 0.3s ease;
+}
+.modal-video iframe {
+    border-radius: 3px;
+    height: 126px;
+    transition: all 0.3s ease;
+}
+
+.modal-video iframe:hover {
+    transform: scale(1.02);
+}
+
+.music-player{
+  border-radius:3px;
+  padding:12px;
+  margin-top:12px;
+max-width:270px;
+}
+
+.music-title{
+  overflow:hidden;
+  white-space:nowrap;
+  border-bottom:white;
+  margin-bottom:8px;
+  padding-bottom:4px;
+  font-size:14px;
+font-style: italic;
+}
+
+.music-title span{
+  display:inline-block;
+  padding-left:100%;
+  animation:scrollTitle 7s linear infinite;
+}
+
+@keyframes scrollTitle{
+  from{transform:translateX(0);}
+  to{transform:translateX(-100%);}
+}
+
+.music-controls{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+#playPauseBtn{
+  background:var(--color-accent);
+  border:none;
+  color:white;
+  font-size:15px;
+  width:36px;
+  height:36px;
+  border-radius:3px;
+  cursor:pointer;
+padding-bottom:6px;
+}
+
+#playPauseBtn:hover{
+  background:#444;
+}
+
+
+#volumeSlider{
+  width:100%;
+  height:12px;
+  border-radius:4px;
+  background:linear-gradient(to right,var(--color-accent) 25%,#040505 25%);
+  appearance:none;
+}
+
+.music-player iframe{
+  width:0;
+  height:0;
+  border:0;
+}
+
+@media (max-width: 780px) {
+
+    body {
+    animation: none;
+  }
+
+  .game-score,
+  .game-score-horizontal,
+  .modal-score {
+    animation: none;
+  }
+
+    
+  #playPauseBtn{
+  background:var(--color-accent);
+  border:none;
+  color:white;
+  font-size:15px;
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  cursor:pointer;
+padding-bottom:0px;
+padding-right:0px;
+}
+  .music-player{
+  border-radius:12px;
+  padding:12px;
+  margin-top:12px;
+max-width:150px;
+}
+
+    .modal-left,
+    .modal-cover {
+        display: none;
+      animation: none;
+    }
+
+    .modal-body {
+        flex-direction: column;
+        align-items: center;
+        padding: 1.5rem 0;
+      animation: none;
+    }
+
+    .modal-content {
+        padding: 1rem;
+        width: 95%;
+      animation: none;
+    }
+
+    .modal-header h2 {
+        font-size: 2rem;
+      animation: none;
+    }
+
+    .modal-score {
+        font-size: 5rem;
+        max-width: 500rem;
+        padding: 2px 8px;
+      animation: none;
+    }
+
+    .modal-meta p {
+        font-size: 0.8rem;
+      animation: none;
+    }
+.modal-video {
+      animation: none;
+    }
+.modal-bottom {
+      animation: none;
+    }
+.modal-vote {
+      animation: none;
+    }
+    .modal-review {
+        font-size: 0.8rem;
+        padding: 1rem;
+      animation: none;
+    }
+
+    .game-card-horizontal {
+        width: 80px;
+        padding: 6px;
+      animation: none;
+    }
+
+    .game-icon-horizontal {
+        width: 50px;
+        height: 50px;
+      animation: none;
+    }
+
+    .game-score-horizontal {
+        font-size: 1.2rem;
+        padding: 2px 10px;
+      animation: none;
+    }
+
+    .favorite-icon {
+        font-size: 25px;
+      animation: none;
+    }
+
+    .page-title {
+        font-size: 5rem;
+    }
+
+    .page-subtitle {
+        font-size: 1rem;
+    }
+
+    .disclaimer {
+        padding: 0.5rem;
+        margin: 0 auto 2rem;
+        max-width: 800px;
+        font-size: 1rem;
+    }
+
+    .search-container {
+        padding: -10 1rem;
+      animation: none;
+    }
+
+    .search-box {
+        font-size: 1rem;
+        padding: 0.8rem 1rem;
+      animation: none;
+    }
+
+    .games-container {
+        grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+        justify-items: center;
+      animation: none;
+    }
+
+    .close-button {
+        font-size: 3rem;
+        top: 20;
+        right: 20;
+      animation: none;
+    }
+
+    .review-toggle {
+        background: none;
+        border: none;
+        color: var(--color-accent);
+        cursor: pointer;
+        font-size: 0.8rem;
+        padding: 0;
+        font-weight: bold;
+        margin-left: 5px;
+        text-decoration: underline;
+      animation: none;
+    }
+  .game-card-horizontal:hover .game-icon-horizontal {
+        transform: none;
+    }
+  .modal-score:hover {
+        transform: none;
+    }
+    
+    .modal-cover:hover {
+        transform: none;
+    }
+    
+    .modal-header h2:hover {
+        transform: none;
+    }
+    
+    .modal-video iframe:hover {
+        transform: none;
+    }
+
+}
+
+
+</style>
+</head>
+<body>
+<div class="background-waves"></div>
+
+   <header class="page-header">
+        <h1 class="page-title">Mi EXP</h1>
+        <p class="page-subtitle">La razón principal de esta página es poder recopilar y tener un registro de todos los juegos que he jugado e idealmente pasado. ¡Toma un vistazo y veamos si tenemos algo en común!</p>
+    </header>
+
+    <div class="disclaimer">
+        <strong>Nota importante:</strong> Las puntuaciones y opiniones reflejadas aquí son meramente personales y subjetivas: representan que tanto me entretuve o disfrute cada juego.
+    </div> 
+  <div class="disclaimer">
+        <strong>Nota importante 2:</strong> Esta pagina no muestra todas las caratulas de los juegos porque aun estan en proceso de ser importadas junto con los modelos de caja de su plataforma.
+    </div>
+
+<div class="filter-controls">
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-box" placeholder="Buscar juegos..." aria-label="Buscar juegos">
+        <label class="favorite-switch">
+            <input type="checkbox" id="favoriteFilter">
+            <span class="slider round"></span>
+            <span class="switch-label">Solo favoritos</span>
+        </label>
+    </div>
+</div>
+<div id="gamesCounter" style="text-align: center; margin: 10px 0;"></div>
+<div class="games-container" id="gamesContainer">
+    <!-- Las tarjetas de juegos se generarán dinámicamente -->
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script type="module"
+  src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
+</script>
+  
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+
+<script type="module">
+  let ytPlayer = null;
+let playerReady = false;
+let isPlaying = false;
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // URL de tu Google Sheet exportada co CSV
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR1XDkBEEb3mPcd_IskPiRtNUYBWyKDynGZycSrzuqmbaXIFPfcdGCAbBjBFO6s_kdZp-8eekabv8hD/pub?gid=0&single=true&output=csv';
+    
+    // Cargar los datos y transformarlos al formato que espera tu modal
+    Papa.parse(csvUrl, {
+        download: true,
+        header: true,
+        complete: function(results) {
+            const rawGames = results.data;
+            const games = transformGamesData(rawGames);
+            
+            // Una vez tenemos los datos transformados, el resto del código es igual al que ya tenías
+            initializeApp(games);
+        }
+    });
+    
+    // Función para transformar los datos del spreadsheet al formato que usa tu modal
+    function transformGamesData(rawGames) {
+        return rawGames.filter(game => game.Nombre).map(game => ({
+            title: game.Nombre,
+            score: game.Nota,
+            icon: game.Icon,
+            favorite: game.Fav === "TRUE" || game.Fav === "true" || game.Fav === "★",
+            playtime: game.Tiempo,
+            finishedDate: game["Fecha de pasado"],
+            platform: game.Platform,
+            review: game.Review,
+            ost: game["Best track"],
+            coverFront: game["Front Cover"],
+            coverBack: game["Back Cover"],
+            coverSide: game["Side Cover"],
+            accentColor: game["Accent Color"] || "#cccccc"
+        }));
+    }
+
+  function makeReviewId(title) {
+  return title
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quita acentos
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+    // El resto de tu código original (adaptado para usar los datos cargados)
+
+  async function initVoteWidget(reviewId) {
+  const widget = document.querySelector('.vote-widget');
+  if (!reviewId) return;
+
+  const likeBtn = widget.querySelector('.vote-btn.like');
+  const dislikeBtn = widget.querySelector('.vote-btn.dislike');
+
+  const graph = widget.querySelector('.vote-graph');
+  const likeFill = widget.querySelector('.like-column .column-fill');
+  const dislikeFill = widget.querySelector('.dislike-column .column-fill');
+
+  const likeLabel = widget.querySelector('.like-label');
+  const dislikeLabel = widget.querySelector('.dislike-label');
+
+  let likes = 0;
+  let dislikes = 0;
+  let userVote = null;
+
+  function render() {
+    const total = likes + dislikes || 1;
+    const likePct = Math.round((likes / total) * 100);
+    const dislikePct = 100 - likePct;
+
+    likeFill.style.height = likePct + '%';
+    dislikeFill.style.height = dislikePct + '%';
+
+    likeLabel.textContent = `${likePct}% · ${likes}`;
+    dislikeLabel.textContent = `${dislikePct}% · ${dislikes}`;
+
+    graph.classList.remove('hidden');
+
+    likeBtn.classList.toggle('active', userVote === 'like');
+    dislikeBtn.classList.toggle('active', userVote === 'dislike');
+  }
+
+  // RESET visual (importantísimo)
+  graph.classList.add('hidden');
+  likeBtn.classList.remove('active');
+  dislikeBtn.classList.remove('active');
+
+  // LOAD DATA
+  const res = await fetch(`${API}/votes/${reviewId}`);
+  const data = await res.json();
+
+  likes = data.likes ?? 0;
+  dislikes = data.dislikes ?? 0;
+  userVote = data.userVote ?? null;
+
+  render();
+
+  likeBtn.onclick = async () => {
+    const res = await fetch(`${API}/vote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        review_id: reviewId,
+        user_id: USER_ID,
+        vote: 'like'
+      })
+    });
+    const data = await res.json();
+    likes = data.likes;
+    dislikes = data.dislikes;
+    userVote = data.userVote;
+    render();
+  };
+
+  dislikeBtn.onclick = async () => {
+    const res = await fetch(`${API}/vote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        review_id: reviewId,
+        user_id: USER_ID,
+        vote: 'dislike'
+      })
+    });
+    const data = await res.json();
+    likes = data.likes;
+    dislikes = data.dislikes;
+    userVote = data.userVote;
+    render();
+  };
+}
+
+function updateVideoTitle(videoId){
+
+fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+.then(res => res.json())
+.then(data=>{
+    document.getElementById("videoTitle").textContent = data.title;
+})
+.catch(()=>{
+    document.getElementById("videoTitle").textContent = "Unknown track";
+});
+
+}
+
+
+  function loadYouTubeOST(url){
+
+    if(!url) return;
+isPlaying = true;
+document.getElementById("playPauseBtn").textContent = "⏸";
+    const match = url.match(/(?:v=|embed\/|youtu\.be\/)([^&?/]+)/);
+    if(!match) return;
+
+    const videoId = match[1];
+updateVideoTitle(videoId);
+
+    if(ytPlayer){
+        ytPlayer.loadVideoById(videoId);
+        return;
+    }
+
+    ytPlayer = new YT.Player('modalVideo', {
+        videoId: videoId,
+        playerVars:{ autoplay:0 },
+        events:{
+            onReady:function(){
+                playerReady = true;
+                ytPlayer.setVolume(25);
+              ytPlayer.playVideo();
+            }
+        }
+    });
+fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+.then(res => res.json())
+.then(data=>{
+    document.getElementById("videoTitle").textContent = data.title;
+})
+.catch(()=>{
+    document.getElementById("videoTitle").textContent = "Track falló al cargar";
+});
+
+}
+
+    function initializeApp(games) {
+        function openModal(game) {
+            const modal = document.getElementById('gameModal');     
+            document.getElementById('modalTitle').textContent = game.title;
+            document.getElementById('modalFavorite').textContent = game.favorite ? "★" : "";
+            document.getElementById('modalScore').textContent = game.score;
+            document.getElementById('modalTime').textContent = game.playtime || "N/D";
+            document.getElementById('modalDate').textContent = game.finishedDate || "N/D";
+            document.getElementById('modalPlatform').textContent = game.platform || "N/D";
+            
+            const fullReview = game.review || "Sin reseña";
+            const shortReviewLimit = 300;
+            
+            const shortPart = fullReview.length > shortReviewLimit
+                ? fullReview.slice(0, shortReviewLimit) + "..."
+                : fullReview;
+            
+            const reviewShort = document.getElementById('modalReviewShort');
+            const reviewFull = document.getElementById('modalReviewFull');
+            const toggleBtn = document.getElementById('toggleReviewBtn');
+            
+            reviewShort.textContent = shortPart;
+            reviewFull.textContent = fullReview.slice(shortReviewLimit);
+            
+            toggleBtn.style.display = fullReview.length > shortReviewLimit ? "inline" : "none";
+            reviewFull.style.display = "none";
+            toggleBtn.textContent = "Ver más";
+            
+            toggleBtn.onclick = function() {
+                const isExpanded = reviewFull.style.display === "inline";
+                reviewFull.style.display = isExpanded ? "none" : "inline";
+                reviewShort.textContent = isExpanded ? shortPart : fullReview.slice(0, shortReviewLimit);
+                toggleBtn.textContent = isExpanded ? "Ver más" : "Ver menos";
+            };
+
+document.getElementById("playPauseBtn").onclick = function(){
+
+    if(!playerReady) return;
+
+    if(!isPlaying){
+        ytPlayer.playVideo();
+        this.textContent="⏸";
+        isPlaying=true;
+    }else{
+        ytPlayer.pauseVideo();
+        this.textContent="▶";
+        isPlaying=false;
+    }
+
+};
+
+document.getElementById("volumeSlider").addEventListener("input", function(){
+
+  const percent = this.value;
+
+  this.style.background =
+  `linear-gradient(to right,var(--color-accent) ${percent}%,#333 ${percent}%)`;
+
+
+    if(playerReady){
+        ytPlayer.setVolume(this.value);
+    }
+
+});
+
+
+            
+            loadYouTubeOST(game.ost);
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+            
+            load3DBoxForGame(game);
+            updateColorScheme(game.accentColor);
+
+          const reviewId = makeReviewId(game.title);
+initVoteWidget(reviewId);
+
+        }
+        
+        document.querySelector('.close-button').addEventListener('click', () => {
+            const modal = document.getElementById('gameModal');
+            modal.classList.remove('show');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                if(ytPlayer){
+    ytPlayer.stopVideo();
+}
+            }, 300);
+        });
+        
+       function updateColorScheme(accentColor) {
+    // Check if the accent color is too dark
+    const brightness = getColorBrightness(accentColor);
+    
+    // If color is too dark (brightness < 50), lighten it to a minimum brightness
+    if (brightness < 50) {
+        accentColor = lightenToBrightness(accentColor, 60); // Lighten to 60% brightness
+    }
+    
+    const lighterColor = lightenColor(accentColor, 30);
+    const darkerColor = darkenColor(accentColor, 20);
+    const veryLightColor = lightenColor(accentColor, 45);
+    const veryDarkColor = darkenColor(accentColor, 40); // Extra dark accent for bottom
+    
+    const modal = document.querySelector('.modal');
+    if (modal) {
+        const rgbColor = hexToRgb(accentColor);
+        modal.style.background = `rgba(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}, 0.3)`;
+    }
+    
+    document.documentElement.style.setProperty('--color-accent', accentColor);
+    document.documentElement.style.setProperty('--color-border', lighterColor);
+    
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.style.background = `linear-gradient(to bottom, #000000, ${veryDarkColor})`;
+    }
+    
+    const scoreElements = document.querySelectorAll('.game-score, .modal-score');
+    scoreElements.forEach(el => {
+        el.style.background = `linear-gradient(to bottom, ${lighterColor}, ${darkerColor})`;
+    });
+}
+
+// Helper function to calculate color brightness (0-255)
+function getColorBrightness(color) {
+    const rgb = hexToRgb(color);
+    // Standard luminance formula (perceived brightness)
+    return (rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114);
+}
+
+// Helper function to lighten a color to a specific minimum brightness
+function lightenToBrightness(color, targetBrightness) {
+    let currentColor = color;
+    let currentBrightness = getColorBrightness(currentColor);
+    let steps = 0;
+    const maxSteps = 20; // Prevent infinite loop
+    
+    // Gradually lighten until we reach target brightness
+    while (currentBrightness < targetBrightness && steps < maxSteps) {
+        currentColor = lightenColor(currentColor, 10); // Lighten by 10% each step
+        currentBrightness = getColorBrightness(currentColor);
+        steps++;
+    }
+    
+    return currentColor;
+}
+
+function hexToRgb(hex) {
+    hex = hex.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return { r, g, b };
+}
+
+function lightenColor(color, percent) {
+    const num = parseInt(color.replace("#", ""), 16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) + amt,
+        G = (num >> 8 & 0x00FF) + amt,
+        B = (num & 0x0000FF) + amt;
+    return `#${(
+        0x1000000 +
+        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+        (B < 255 ? (B < 1 ? 0 : B) : 255)
+    ).toString(16).slice(1)}`;
+}
+
+function darkenColor(color, percent) {
+    const num = parseInt(color.replace("#", ""), 16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) - amt,
+        G = (num >> 8 & 0x00FF) - amt,
+        B = (num & 0x0000FF) - amt;
+    return `#${(
+        0x1000000 +
+        (R > 0 ? (R < 255 ? R : 255) : 0) * 0x10000 +
+        (G > 0 ? (G < 255 ? G : 255) : 0) * 0x100 +
+        (B > 0 ? (B < 255 ? B : 255) : 0)
+    ).toString(16).slice(1)}`;
+}
+        
+        function renderGames(filteredGames = games) {
+            const container = document.getElementById('gamesContainer');
+            container.innerHTML = '';
+            
+            if (filteredGames.length === 0) {
+                container.innerHTML = '<div class="no-results">No se encontraron juegos que coincidan con tu búsqueda.</div>';
+                return;
+            }
+            
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('a');
+                gameCard.className = 'game-card-horizontal';
+                gameCard.href = '#';
+                
+                gameCard.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal(game);
+                });
+                
+                if (game.favorite) {
+                    gameCard.classList.add('favorite');
+                }
+                
+                gameCard.innerHTML = `
+    <div class="favorite-icon">${game.favorite ? '★' : ''}</div>
+    <img src="${game.icon}" alt="icono" class="game-icon-horizontal">
+    <div class="game-score-horizontal">${game.score}</div>
+`;
+
+                
+                container.appendChild(gameCard);
+            });
+            
+            document.getElementById('gamesCounter').textContent =
+                `Mostrando ${filteredGames.length} de ${games.length} juegos`;
+        }
+        
+        function filterGames() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const onlyFavorites = document.getElementById('favoriteFilter').checked;
+            
+            const filteredGames = games.filter(game => {
+                const matchesSearch = game.title.toLowerCase().includes(searchTerm);
+                const matchesFavorite = onlyFavorites ? game.favorite : true;
+                return matchesSearch && matchesFavorite;
+            });
+            
+            renderGames(filteredGames);
+        }
+        
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterGames);
+        document.getElementById('favoriteFilter').addEventListener('change', filterGames);
+        
+        // Renderizar al inicio
+        renderGames();
+    }
+    
+    // Asegúrate de tener esta función definida o elimínala si no la usas
+    load3DBoxForGame(game);
+});
+
+const container = document.getElementById("container3D");
+
+let modelViewer = null;
+
+const platformModelMap = {
+  "Switch": "SwitchCasedef.glb",
+  "Switch2": "DefaultGB.glb",
+  "Phone": "DefaultGB.glb",
+  "Xbox": "DefaultGB.glb",
+  "Xbox 360": "DefaultGB.glb",
+  "Web": "DefaultGB.glb",
+  "NES": "DefaultGB.glb",
+  "N64": "DefaultGB.glb",
+  "GB": "DefaultGB.glb",
+  "GBA": "DefaultGB.glb",
+  "PS1": "ps1definitivecase.glb",
+  "PS2": "DefaultGB.glb",
+  "PS3": "DefaultGB.glb",
+  "PS4": "DefaultGB.glb",
+  "Dreamcast": "DefaultGB.glb",
+  "3DS": "DefaultGB.glb",
+  "DS": "DefaultGB.glb",
+  "DSi": "DefaultGB.glb",
+  "Wii": "wiidefinitivevivecase.glb",
+  "Quest2": "DefaultGB.glb",
+  "PC": "pcdefinitivecase.glb"
+};
+
+function createViewer(modelFile) {
+
+  // limpiar anterior
+  container.innerHTML = "";
+
+  modelViewer = document.createElement("model-viewer");
+
+  modelViewer.src = modelFile;
+  modelViewer.style.width = "100%";
+  modelViewer.style.height = "100%";
+
+  modelViewer.setAttribute("camera-controls", "");
+  modelViewer.setAttribute("camera-orbit", "0deg 90deg 30m");
+  modelViewer.setAttribute("min-camera-orbit", "auto auto 150%");
+  modelViewer.setAttribute("max-camera-orbit", "auto auto 200%");
+
+  // 🔥 HDRI y exposición automática
+  modelViewer.setAttribute("environment-image",  "https://modelviewer.dev/shared-assets/environments/neutral.hdr");
+  modelViewer.setAttribute("exposure", "1.2");
+  modelViewer.setAttribute("shadow-intensity", "1");
+
+  container.appendChild(modelViewer);
+}
+
+async function replaceTextures(game) {
+
+  await modelViewer.updateComplete;
+
+  const model = modelViewer.model;
+  if (!model) return;
+
+  const materials = model.materials;
+
+  for (const material of materials) {
+
+    const name = material.name.toLowerCase();
+
+    let textureURL = null;
+
+    if (name.includes("front")) textureURL = game.coverFront;
+    else if (name.includes("back")) textureURL = game.coverBack;
+    else if (name.includes("spine") || name.includes("side")) textureURL = game.coverSide;
+
+    if (textureURL) {
+
+      const texture = await modelViewer.createTexture(textureURL);
+
+      material.pbrMetallicRoughness.baseColorTexture.setTexture(texture);
+
+      // 🔥 Ajustes tipo papel/cartón
+      material.pbrMetallicRoughness.setMetallicFactor(0.0);
+      material.pbrMetallicRoughness.setRoughnessFactor(0.85);
+
+    }
+  }
+}
+
+async function load3DBoxForGame(game) {
+
+  const modelFile = platformModelMap[game.platform];
+
+  createViewer(modelFile);
+
+  modelViewer.addEventListener("load", async () => {
+    await replaceTextures(game);
+  }, { once: true });
+}
+
+window.load3DBoxForGame = load3DBoxForGame;
+
+
+  
+</script>
+
+
+  
+<div id="gameModal" class="modal hidden">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <div class="modal-body">
+      <div class="modal-left">
+  <div id="container3D" style="width: 300px; height: 400px;"></div>
+</div>
+      <div class="modal-right">
+        <div class="modal-header">
+          <h2>
+    <span id="modalTitle">Título</span>
+
+  </h2>
+  <div class="modal-score" id="modalScore">95</div>
+        </div>
+        <div class="modal-meta">
+          <p><span id="modalFavorite">★</span></p>
+          <p><strong>Tiempo:</strong> <span id="modalTime"></span></p>
+          <p><strong>Terminado:</strong> <span id="modalDate"></span></p>
+          <p><strong>Plataforma:</strong> <span id="modalPlatform"></span></p>
+        </div>
+
+          <p id="modalReview" class="modal-review">
+  <span id="modalReviewShort"></span><span id="modalReviewFull" style="display: none;"></span>
+  <button id="toggleReviewBtn" class="review-toggle">Ver más</button>
+</p>
+<div class="modal-bottom">
+<div class="modal-video">
+Mejor track del OST
+          
+<div class="music-player">
+
+  <div class="music-title">
+    <span id="videoTitle">Loading track...</span>
+  </div>
+
+  <div class="music-controls">
+    <button id="playPauseBtn">▶</button>
+    <input type="range" id="volumeSlider" min="0" max="100" value="25">
+  </div>
+
+  <div id="modalVideo"></div>
+
+</div>
+
+
+        </div>
+<div class="modal-vote">
+¿Te gustó esta reseña?
+<div class="vote-widget">
+  <div class="vote-buttons">
+    <button class="vote-btn like" data-vote="like" aria-label="Like">
+      <img src="https://server.ljuan.online/img/icons/like.png" alt="">
+    </button>
+
+    <button class="vote-btn dislike" data-vote="dislike" aria-label="Dislike">
+      <img src="https://server.ljuan.online/img/icons/dislike.png" alt="">
+    </button>
+  </div>
+
+  <div class="vote-graph hidden">
+    <div class="column like-column">
+      <div class="column-fill"></div>
+      <span class="label like-label"></span>
+    </div>
+
+    <div class="column dislike-column">
+      <div class="column-fill"></div>
+      <span class="label dislike-label"></span>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+<!//NO CAMBIAR NADA DE ABAJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO-->
+
+  <svg width="0" height="0">
+    <defs>
+      <filter id="displacementFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0" numOctaves="1" result="turbulence"/>
+        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+<canvas id="wave-bg"></canvas>
+
+<script>
+  const isMobile = window.innerWidth < 768;
+  
+  const canvas = document.getElementById('wave-bg');
+  const ctx = canvas.getContext('2d');
+
+  let width, height;
+  let baseAmplitude = 0;
+  let amplitudeBoost = 0;
+  let lastMouseX = 0;
+  let lastMouseY = 0;
+  let lastMoveTime = Date.now();
+
+  const sensitivity = 0.015; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
+
+  function resize() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  draw(); // redibuja después de resize
+}
+
+  window.addEventListener('resize', resize);
+  resize();
+
+if (!isMobile) {
+  document.addEventListener('mousemove', e => {
+    const dx = e.clientX - lastMouseX;
+    const dy = e.clientY - lastMouseY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    amplitudeBoost += distance * sensitivity;
+    amplitudeBoost = Math.min(amplitudeBoost, 50);
+
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+    lastMoveTime = Date.now();
+  });
+}
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = '#f6fcff';
+    ctx.fillRect(0, 0, width, height);
+
+    const timeSinceLastMove = Date.now() - lastMoveTime;
+    if (timeSinceLastMove > 0) {
+      amplitudeBoost *= 0.95;
+      if (amplitudeBoost < 0.01) amplitudeBoost = 0;
+    }
+
+    const waveCount = 4;
+    for (let i = 0; i < waveCount; i++) {
+      const amplitude = baseAmplitude + amplitudeBoost + i * 5;
+      const frequency = 0.005 + i * 0.001;
+      const offsetY = height * (0.2 + i * 0.15);
+      const color = `rgba(100, 169, 255, ${0.06 + i * 0.04})`;
+
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 3) {
+        const y = offsetY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+  if (!isMobile) {
+    requestAnimationFrame(draw);
+  }
+}
+resize();
+if (isMobile) {
+  draw();
+} else {
+  requestAnimationFrame(draw);
+}
+  
+</script>
+
+<script>
+function getUserId() {
+  let id = localStorage.getItem('vote_user_id');
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem('vote_user_id', id);
+  }
+  return id;
+}
+const USER_ID = getUserId();
+const API = 'https://server.ljuan.online/api';
+</script>
+
+
+</html>
+</body>
