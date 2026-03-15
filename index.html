@@ -42,16 +42,16 @@
       <p>Aficionado al desarrollo de juegos, modelado 3D, programación, y mantenimiento de equipos. Te invito a que revises a lo que le invierto mi tiempo en los botones de abajo (especialmente lo que juego).</p>
       <div class="socials">
         <a href="https://ljuan.online/exp" class="vertical" target="_blank">
-    <img src="https://ljuan.neocities.org/PixelStarr.png" alt="Star Icon" class="social-pic" />
+    <img src="https://ljuan.neocities.org/PixelStarr.png" alt="Star Icon" class="star" />
     <p>Mi EXP</p>
 
       <a href="https://store.steampowered.com/app/2005990/Gunkan_Zero/" class="vertical" target="_blank">
-    <img src="https://ljuan.neocities.org/Unity.png" alt="Unity Icon" class="social-pic" />
+    <img src="https://ljuan.neocities.org/Unity.png" alt="Unity Icon" class="unity" />
     <p>Juego que desarrollo</p>
   </a>
       
       <a href="https://sketchfab.com/satomu" class="vertical" target="_blank">
-    <img src="https://ljuan.neocities.org/Blender3D.png" alt="Blender Icon" class="social-pic" />
+    <img src="https://ljuan.neocities.org/Blender3D.png" alt="Blender Icon" class="blender" />
     <p>Mis modelos 3D</p>
   </a>
       </div>
@@ -68,36 +68,30 @@
 <div class="socials">
 
 <a href="https://steamcommunity.com/id/satomu18/" class="horizontal" target="_blank">
-    <img src="https://ljuan.neocities.org/Steama.png" alt="steam icon" class="socials-pic" />
+    <img src="https://ljuan.neocities.org/Steama.png" alt="steam icon" class="steam" />
   </a>
 <a href="https://gamejolt.com/@LJuans/games" class="horizontal" target="_blank">
-    <img src="https://ljuan.neocities.org/GameJolt.png" alt="gamejolt icon" class="socials-pic" />
+    <img src="https://ljuan.neocities.org/GameJolt.png" alt="gamejolt icon" class="gamejolt" />
   </a>
 <a href="https://www.youtube.com/@_satomu" class="horizontal" target="_blank">
-    <img src="https://ljuan.neocities.org/YouTube.png" alt="youtube icon" class="socials-pic" />
+    <img src="https://ljuan.neocities.org/YouTube.png" alt="youtube icon" class="youtube" />
   </a>
 <a href="https://www.instagram.com/_ljuans/" class="horizontal" target="_blank">
-    <img src="https://ljuan.neocities.org/Instagram_1.png" alt="ig icon" class="socials-pic" />
+    <img src="https://ljuan.neocities.org/Instagram_1.png" alt="ig icon" class="ig" />
   </a>
 </div>
 </div>
 <p style="font-style: italic; max-width:208px";>BGM: Doctor - 沖辺 美佐紀</p>
 </div>
 
-  <svg width="0" height="0">
-    <defs>
-      <filter id="displacementFilter">
-        <feTurbulence type="fractalNoise" baseFrequency="0" numOctaves="1" result="turbulence"/>
-        <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G"/>
-      </filter>
-    </defs>
-  </svg>
 
 <audio id="bg-music" autoplay loop>
   <source src="https://github.com/LJuans0/mywebpage/raw/refs/heads/main/maintheme.mp3">
 </audio>
 
 <button id="mute-button">🔊</button>
+<link id="theme-style" rel="stylesheet" href="darkindex.css">
+<button id="themeToggle">Change Theme</button>
 
 <script>
   const audio = document.getElementById("bg-music");
@@ -123,6 +117,19 @@ const music = document.getElementById("bg-music");
       audio.play();
     }
   });
+
+
+const theme = document.getElementById("theme-style");
+const button = document.getElementById("themeToggle");
+
+button.onclick = () => {
+  if (theme.getAttribute("href") === "whiteindex.css") {
+    theme.setAttribute("href", "darkindex.css");
+  } else {
+    theme.setAttribute("href", "whiteindex.css");
+  }
+};
+
 </script>
 
 </audio>
