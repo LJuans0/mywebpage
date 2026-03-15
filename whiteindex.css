@@ -256,4 +256,15 @@ a:hover {
   cursor: pointer;
 }
 
+#themeToggle {
+  position: fixed;
+  top: 10px;
+  right: 60px;
+  font-size: 24px;
+  background: linear-gradient(to bottom, #ffffff, #c9f3ff);
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
 </style>
