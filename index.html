@@ -124,17 +124,18 @@ const button2 = document.getElementById("themeToggle");
   let canvas = document.getElementById('wave-bg');
 let ctx = canvas.getContext('2d');
 let rgb = [60, 60, 60];
+  let newcolor = '#0d0d0d';
 button2.onclick = () => {
   if (theme.getAttribute("href") === "darkindex.css") {
     theme.setAttribute("href", "whiteindex.css");
-    ctx.fillStyle = '#f6fcff';
+    newcolor = '#f6fcff';
     rgb[0] = 100;
     rgb[1] = 169;
     rgb[2] = 255;
     draw();
   } else {
     theme.setAttribute("href", "darkindex.css");
-    ctx.fillStyle = '#0d0d0d';
+    newcolor = '#0d0d0d';
     rgb[0] = 60;
     rgb[1] = 60;
     rgb[2] = 60;
@@ -151,7 +152,6 @@ button2.onclick = () => {
   let lastMouseX = 0;
   let lastMouseY = 0;
   let lastMoveTime = Date.now();
-
   const sensitivity = 0.02; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
 
   function resize() {
@@ -184,7 +184,7 @@ if (!isMobile) {
   function draw() {
     ctx.clearRect(0, 0, width, height);
     ctx.fillRect(0, 0, width, height);
-
+    ctx.fillStyle = newcolor;
     const timeSinceLastMove = Date.now() - lastMoveTime;
     if (timeSinceLastMove > 0) {
       amplitudeBoost *= 0.95;
