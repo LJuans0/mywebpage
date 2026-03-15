@@ -160,15 +160,10 @@ button2.onclick = () => {
 
   canvas.width = width;
   canvas.height = height;
-
-  if (!isMobile) {
     draw();
-  }
 }
 
-if (!isMobile) {
   window.addEventListener('resize', resize);
-}
   resize();
 
 if (!isMobile) {
