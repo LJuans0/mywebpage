@@ -123,10 +123,10 @@ const theme = document.getElementById("theme-style");
 const button = document.getElementById("themeToggle");
 
 button.onclick = () => {
-  if (theme.getAttribute("href") === "whiteindex.css") {
-    theme.setAttribute("href", "darkindex.css");
-  } else {
+  if (theme.getAttribute("href") === "darkindex.css") {
     theme.setAttribute("href", "whiteindex.css");
+  } else {
+    theme.setAttribute("href", "darkindex.css");
   }
 };
 
