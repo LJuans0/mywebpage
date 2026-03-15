@@ -123,11 +123,10 @@ const music = document.getElementById("bg-music");
 const button2 = document.getElementById("themeToggle");
   const canvas = document.getElementById('wave-bg');
 const ctx = canvas.getContext('2d');
-const rgb = [75, 75, 75];
+let rgb = [60, 60, 75];
 button2.onclick = () => {
   if (theme.getAttribute("href") === "darkindex.css") {
     theme.setAttribute("href", "whiteindex.css");
-    color = `rgba(100, 169, 255, ${0.06 + i * 0.04})`;
     ctx.fillStyle = '#f6fcff';
     rgb[0] = 100;
     rgb[1] = 169;
@@ -135,9 +134,10 @@ button2.onclick = () => {
     draw();
   } else {
     theme.setAttribute("href", "darkindex.css");
-    rgb[0] = 65;
-    rgb[1] = 65;
-    rgb[2] = 65;
+    ctx.fillStyle = '#0d0d0d';
+    rgb[0] = 60;
+    rgb[1] = 60;
+    rgb[2] = 60;
     draw();
   }
 };
