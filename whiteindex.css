@@ -122,7 +122,7 @@ a:hover {
   content: url("https://ljuan.neocities.org/PixelStarr.png");
 width: 50px;
   height: 50px;
-  filter: hue-rotate(335deg);
+  filter: hue-rotate(210deg);
 }
 .unity {
   transition: transform 0.2s ease;
@@ -131,7 +131,7 @@ width: 50px;
   content: url("https://ljuan.neocities.org/Unity.png");
 width: 50px;
   height: 50px;
-  filter: hue-rotate(335deg);
+  filter: hue-rotate(210deg);
 }
 
 
@@ -142,7 +142,7 @@ width: 50px;
   content: url("https://ljuan.neocities.org/Blender3D.png");
 width: 50px;
   height: 50px;
-  filter: hue-rotate(335deg);
+  filter: hue-rotate(210deg);
 }
 
 .steam {
