@@ -121,13 +121,13 @@ const music = document.getElementById("bg-music");
 
   const theme = document.getElementById("theme-style");
 const button2 = document.getElementById("themeToggle");
-  const canvas = document.getElementById('wave-bg');
-const ctx = canvas.getContext('2d');
-let rgb = [60, 60, 75];
+  let canvas = document.getElementById('wave-bg');
+let ctx = canvas.getContext('2d');
+let rgb = [60, 60, 60];
 button2.onclick = () => {
   if (theme.getAttribute("href") === "darkindex.css") {
     theme.setAttribute("href", "whiteindex.css");
-    ctx.fillStyle = '#f6fcff';
+    ctx.fillStyle = '#feffff';
     rgb[0] = 100;
     rgb[1] = 169;
     rgb[2] = 255;
