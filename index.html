@@ -92,7 +92,7 @@
 <button id="mute-button">🔊</button>
 <link id="theme-style" rel="stylesheet" href="darkindex.css">
 <button id="themeToggle">🎨</button>
-
+<canvas id="wave-bg"></canvas>
 <script>
   const audio = document.getElementById("bg-music");
   const button = document.getElementById("mute-button");
@@ -121,18 +121,111 @@ const music = document.getElementById("bg-music");
 
   const theme = document.getElementById("theme-style");
 const button2 = document.getElementById("themeToggle");
-
+const ctx = canvas.getContext('2d');
+const rgb = [75, 75, 75];
 button2.onclick = () => {
   if (theme.getAttribute("href") === "darkindex.css") {
     theme.setAttribute("href", "whiteindex.css");
+    color = `rgba(100, 169, 255, ${0.06 + i * 0.04})`;
+    ctx.fillStyle = '#f6fcff';
+    rgb[0] = 100;
+    rgb[1] = 169;
+    rgb[2] = 255;
+    draw();
   } else {
     theme.setAttribute("href", "darkindex.css");
+    rgb[0] = 65;
+    rgb[1] = 65;
+    rgb[2] = 65;
+    draw();
   }
 };
 
 
+  const isMobile = window.innerWidth < 768;
+  
+  const canvas = document.getElementById('wave-bg');
+
+  let width, height;
+  let baseAmplitude = 0;
+  let amplitudeBoost = 0;
+  let lastMouseX = 0;
+  let lastMouseY = 0;
+  let lastMoveTime = Date.now();
+
+  const sensitivity = 0.015; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
+
+  function resize() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  draw(); // redibuja después de resize
+}
+
+  window.addEventListener('resize', resize);
+  resize();
+
+if (!isMobile) {
+  document.addEventListener('mousemove', e => {
+    const dx = e.clientX - lastMouseX;
+    const dy = e.clientY - lastMouseY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    amplitudeBoost += distance * sensitivity;
+    amplitudeBoost = Math.min(amplitudeBoost, 50);
+
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+    lastMoveTime = Date.now();
+  });
+}
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillRect(0, 0, width, height);
+
+    const timeSinceLastMove = Date.now() - lastMoveTime;
+    if (timeSinceLastMove > 0) {
+      amplitudeBoost *= 0.95;
+      if (amplitudeBoost < 0.01) amplitudeBoost = 0;
+    }
+
+    const waveCount = 4;
+    for (let i = 0; i < waveCount; i++) {
+      const amplitude = baseAmplitude + amplitudeBoost + i * 5;
+      const frequency = 0.005 + i * 0.001;
+      const offsetY = height * (0.2 + i * 0.15);
+      const color = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]},${0.06 + i * 0.04})`;
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += 3) {
+        const y = offsetY + Math.sin(x * frequency + Date.now() * 0.001) * amplitude;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+  if (!isMobile) {
+    requestAnimationFrame(draw);
+  }
+}
+resize();
+if (isMobile) {
+  draw();
+} else {
+  requestAnimationFrame(draw);
+}
+
+
 </script>
 
+
+  
 </audio>
 </body>
 </html>
