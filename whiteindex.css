@@ -71,11 +71,12 @@ margin-bottom: 19px;
 
 h1 {
   font-size: 1.7rem;
+    color: var(--color-accent);
   margin-bottom: 1rem;
 }
 
 p {
-  
+  color: var(--color-text);
   font-size: 1rem;
   line-height: 1.6;
 border-radius: 12px;
@@ -213,6 +214,7 @@ transition: transform 0.2s ease;
   gap: 0.5rem;
   box-shadow: 0 4px 10px rgba(0, 120, 255, 0.2);
   transition: all 0.3s ease;
+    
 }
 
 .socials a.horizontal:hover {
