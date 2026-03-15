@@ -127,7 +127,7 @@ let rgb = [60, 60, 60];
 button2.onclick = () => {
   if (theme.getAttribute("href") === "darkindex.css") {
     theme.setAttribute("href", "whiteindex.css");
-    ctx.fillStyle = '#feffff';
+    ctx.fillStyle = '#f6fcff';
     rgb[0] = 100;
     rgb[1] = 169;
     rgb[2] = 255;
@@ -196,7 +196,7 @@ if (!isMobile) {
       if (amplitudeBoost < 0.01) amplitudeBoost = 0;
     }
 
-    const waveCount = 4;
+    const waveCount = 3;
     for (let i = 0; i < waveCount; i++) {
       const amplitude = baseAmplitude + amplitudeBoost + i * 5;
       const frequency = 0.005 + i * 0.001;
