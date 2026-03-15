@@ -655,7 +655,7 @@ Mejor track del OST
 
 <button id="themeToggle">🎨</button>
 <canvas id="wave-bg"></canvas>
-<link id="theme-style" rel="stylesheet" href="darkindex.css">
+<link id="theme-style" rel="stylesheet" href="expdark.css">
 
 <script>
 const theme = document.getElementById("theme-style");
@@ -665,15 +665,15 @@ let ctx = canvas.getContext('2d');
 let rgb = [60, 60, 60];
   let newcolor = '#0d0d0d';
 button2.onclick = () => {
-  if (theme.getAttribute("href") === "darkindex.css") {
-    theme.setAttribute("href", "whiteindex.css");
+  if (theme.getAttribute("href") === "expdark.css") {
+    theme.setAttribute("href", "expwhite.css");
     newcolor = '#f6fcff';
     rgb[0] = 100;
     rgb[1] = 169;
     rgb[2] = 255;
     draw();
   } else {
-    theme.setAttribute("href", "darkindex.css");
+    theme.setAttribute("href", "expdark.css");
     newcolor = '#0d0d0d';
     rgb[0] = 60;
     rgb[1] = 60;
