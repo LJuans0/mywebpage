@@ -161,10 +161,14 @@ button2.onclick = () => {
   canvas.width = width;
   canvas.height = height;
 
-  draw(); // redibuja después de resize
+  if (!isMobile) {
+    draw();
+  }
 }
 
+if (!isMobile) {
   window.addEventListener('resize', resize);
+}
   resize();
 
 if (!isMobile) {
@@ -206,7 +210,6 @@ if (!isMobile) {
       ctx.lineTo(width, height);
       ctx.lineTo(0, height);
       ctx.closePath();
-      ctx.fillStyle = color;
       ctx.fill();
     }
   if (!isMobile) {
