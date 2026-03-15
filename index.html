@@ -152,7 +152,7 @@ button2.onclick = () => {
   let lastMouseY = 0;
   let lastMoveTime = Date.now();
 
-  const sensitivity = 0.015; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
+  const sensitivity = 0.02; // CAMBIA ESTE VALOR PARA AJUSTAR LA SENSIBILIDAD (0.1 = baja, 1.0 = alta)
 
   function resize() {
   width = window.innerWidth;
@@ -191,7 +191,7 @@ if (!isMobile) {
       if (amplitudeBoost < 0.01) amplitudeBoost = 0;
     }
 
-    const waveCount = 3;
+    const waveCount = 4;
     for (let i = 0; i < waveCount; i++) {
       const amplitude = baseAmplitude + amplitudeBoost + i * 5;
       const frequency = 0.005 + i * 0.001;
