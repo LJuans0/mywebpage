@@ -920,14 +920,22 @@ font-style: italic;
 #playPauseBtn{
   background:var(--color-accent);
   color:white;
-  width:30px;
-  height:30px;
+  width:35px;
+  height:35px;
   border-radius:3px;
   cursor:pointer;
-padding:5px;
+object-fit:contain;
 display:flex;
   justify-content:center; /* centra horizontalmente */
   align-items:center;     /* centra verticalmente */
+
+
+}
+
+#playPauseBtn2{
+  width:20px;
+  height:20px;
+
 }
 
 #playPauseBtn:hover{
