@@ -382,36 +382,37 @@ function updateColorSchemeWHITE(accentColor) {
 
         
        function updateColorSchemeDARK(accentColor) {
-    // Check if the accent color is too dark
+   // Check if the accent color is too dark
     const brightness = getColorBrightness(accentColor);
     
     // If color is too dark (brightness < 50), lighten it to a minimum brightness
     if (brightness < 50) {
-        accentColor = lightenToBrightness(accentColor, 60); // Lighten to 60% brightness
+        accentColor = lightenToBrightness(accentColor, 70); // Lighten to 70% brightness
     }
     
-    const lighterColor = lightenColor(accentColor, 30);
-    const darkerColor = darkenColor(accentColor, 20);
-    const veryLightColor = lightenColor(accentColor, 45);
-    const veryDarkColor = darkenColor(accentColor, 40); // Extra dark accent for bottom
+    // Calculate derived colors (keeping accent as the main color)
+    const lighterAccent = lightenColor(accentColor, 20); // Slightly lighter version for highlights
+    const subtleGlow = lightenColor(accentColor, 15); // Subtle lighter version for borders/glow
     
     const modal = document.querySelector('.modal');
     if (modal) {
         const rgbColor = hexToRgb(accentColor);
-        modal.style.background = `rgba(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}, 0.3)`;
+        modal.style.background = `rgba(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b}, 0.2)`; // More subtle overlay
     }
     
     document.documentElement.style.setProperty('--color-accent', accentColor);
-    document.documentElement.style.setProperty('--color-border', lighterColor);
+    document.documentElement.style.setProperty('--color-border', subtleGlow);
     
     const modalContent = document.querySelector('.modal-content');
     if (modalContent) {
-        modalContent.style.background = `linear-gradient(to bottom, #000000, ${veryDarkColor})`;
+        // True gradient: Black at top, accent color at bottom
+        modalContent.style.background = `linear-gradient(to bottom, #000000 1%, ${accentColor} 390%)`;
     }
     
     const scoreElements = document.querySelectorAll('.game-score, .modal-score');
     scoreElements.forEach(el => {
-        el.style.background = `linear-gradient(to bottom, ${lighterColor}, ${darkerColor})`;
+        // Subtle gradient: lighter accent at top, accent at bottom
+        el.style.background = `linear-gradient(to bottom, ${lighterAccent}, ${accentColor})`;
     });
 }
 
