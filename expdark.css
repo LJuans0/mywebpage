@@ -25,7 +25,7 @@ body {
     background: linear-gradient(to bottom, #0d0d0d, #040505);
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
-    color: #ffffff;
+    color: var(--color-text);
     font-family: 'Hind Madurai', sans-serif;
     max-width: 1080px;
     margin: auto;
@@ -260,11 +260,11 @@ p {
 box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.09);
     max-width: auto;
     transition: all 0.3s ease;
-    color: #ffffff;
+    color: var(--color-text);
 }
 
 p:hover {
-    box-shadow: 0px 0px 15px rgba(252, 255, 255, 0.09);
+    box-shadow: 0px 0px 15px rgba(252, 255, 255, 0.19);
 }
 
 
@@ -344,7 +344,7 @@ a:hover::before {
   box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
     padding: 0.5rem;
     font-size: 1rem;
-    color: #ffffff;
+    color: var (--color-text);
     max-width: 800px;
     margin: 0 auto 0.4rem;
     line-height: 1.6;
@@ -849,9 +849,10 @@ align-items: center;
     justify-content: center;
 text-align: center;
 max-height:180px;
+box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
 }
 .modal-vote:hover {
-  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
+  box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.28);
 transition: all 0.3s ease;
 }
 
