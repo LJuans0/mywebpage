@@ -430,6 +430,7 @@ margin-top: -20px;
     transition: all 0.3s ease;
     outline: none;
     animation: typewriter 2s steps(20) 1s both;
+ color:black;
 }
 
 @keyframes typewriter {
