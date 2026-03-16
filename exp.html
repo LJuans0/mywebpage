@@ -250,8 +250,6 @@ fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vide
 
 }
 
-const theme = document.getElementById("theme-style");
-
     function initializeApp(games) {
         function openModal(game) {
             const modal = document.getElementById('gameModal');     
@@ -327,6 +325,8 @@ document.getElementById("volumeSlider").addEventListener("input", function(){
             }, 10);
             
             load3DBoxForGame(game);
+
+          const theme = document.getElementById("theme-style");
 
 if (theme.getAttribute("href") === "expdark.css") {
  
@@ -637,7 +637,7 @@ window.load3DBoxForGame = load3DBoxForGame;
 
 
 
-
+const theme = document.getElementById("theme-style");
 const button2 = document.getElementById("themeToggle");
   let canvas = document.getElementById('wave-bg');
 let ctx = canvas.getContext('2d');
