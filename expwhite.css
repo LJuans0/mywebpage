@@ -942,14 +942,15 @@ font-style: italic;
 
 #playPauseBtn{
   background:var(--color-accent);
-  border:none;
   color:white;
-  font-size:15px;
-  width:36px;
-  height:36px;
-  border-radius:10px;
+  width:30px;
+  height:30px;
+  border-radius:3px;
   cursor:pointer;
-padding-bottom:6px;
+padding:5px;
+display:flex;
+  justify-content:center; /* centra horizontalmente */
+  align-items:center;     /* centra verticalmente */
 }
 
 #playPauseBtn:hover{
@@ -983,19 +984,6 @@ padding-bottom:6px;
     animation: none;
   }
 
-    
-  #playPauseBtn{
-  background:var(--color-accent);
-  border:none;
-  color:white;
-  font-size:15px;
-  width:36px;
-  height:36px;
-  border-radius:10px;
-  cursor:pointer;
-padding-bottom:0px;
-padding-right:0px;
-}
   .music-player{
   border-radius:12px;
   padding:12px;
