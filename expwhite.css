@@ -32,6 +32,7 @@
   cursor: pointer;
 }
 
+
 /* ---------- BUTTONS ---------- */
 
 .vote-buttons {
@@ -48,8 +49,8 @@ gap:35px;
 .vote-btn {
   width: 42px;
   height: 42px;
-  border-radius: 10px;
-box-shadow: 3px 3px 7px rgba(0, 90, 150, 0.35);
+  border-radius: 3px;
+box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.09);
 border:none;
 
   background:none;
@@ -76,12 +77,12 @@ border:none;
 }
 
 .vote-btn.active.like {
-  background: var(--like-color);
+  background: #1ce279;
 
 }
 
 .vote-btn.active.dislike {
-  background: var(--dislike-color);
+  background: #ec2020;
 
 }
 
@@ -111,7 +112,7 @@ margin: 0 9.5px;
 .column-fill {
   width: 100%;
   height: 0%;
-  border-radius: 10px;
+  border-radius: 3px;
   transition:
     height var(--speed) cubic-bezier(.2,1.4,.4,1);
 }
@@ -119,16 +120,16 @@ margin: 0 9.5px;
 .like-column .column-fill {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--like-color), white 25%),
-    var(--like-color)
+    color-mix(in srgb, #1ce279, white 25%),
+    #1ce279
   );
 }
 
 .dislike-column .column-fill {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--dislike-color), white 25%),
-    var(--dislike-color)
+    color-mix(in srgb, #ec2020, white 25%),
+    #ec2020
   );
 }
 
