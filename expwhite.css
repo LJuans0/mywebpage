@@ -24,7 +24,7 @@
     #themeToggle {
   position: fixed;
   top: 10px;
-  right: 60px;
+  right: 10px;
   font-size: 24px;
   background: linear-gradient(to bottom, #ffffff, #c9f3ff);
   border-radius: 3px;
