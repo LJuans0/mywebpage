@@ -951,7 +951,7 @@ padding-bottom:6px;
 #themeToggle {
   position: fixed;
   top: 10px;
-  right: 60px;
+  right: 10px;
   font-size: 24px;
   background: linear-gradient(to bottom, #040505 70%, #0d0d0d 90%);
   border-radius: 3px;
