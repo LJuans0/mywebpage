@@ -644,7 +644,7 @@ let ctx = canvas.getContext('2d');
 let rgb = [60, 60, 60];
   let newcolor = '#0d0d0d';
 button2.onclick = () => {
-  if (theme.getAttribute("href") === "expdark.css.css") {
+  if (theme.getAttribute("href") === "expdark.css") {
     theme.setAttribute("href", "expwhite.css");
     newcolor = '#f6fcff';
     rgb[0] = 100;
@@ -652,7 +652,7 @@ button2.onclick = () => {
     rgb[2] = 255;
     draw();
   } else {
-    theme.setAttribute("href", "expdark.css.css");
+    theme.setAttribute("href", "expdark.css");
     newcolor = '#0d0d0d';
     rgb[0] = 60;
     rgb[1] = 60;
