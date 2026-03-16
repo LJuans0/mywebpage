@@ -216,7 +216,8 @@ fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vide
 
     if(!url) return;
 isPlaying = true;
-document.getElementById("playPauseBtn").textContent = "⏸";
+    
+document.getElementById("playPauseBtn").innerHTML = '<img src="pause.png" id="playPauseBtn" >';
     const match = url.match(/(?:v=|embed\/|youtu\.be\/)([^&?/]+)/);
     if(!match) return;
 
@@ -291,11 +292,11 @@ document.getElementById("playPauseBtn").onclick = function(){
 
     if(!isPlaying){
         ytPlayer.playVideo();
-        this.textContent="⏸";
+        this.innerHTML = '<img src="pause.png" id="playPauseBtn" >';
         isPlaying=true;
     }else{
         ytPlayer.pauseVideo();
-        this.textContent="▶";
+        this.innerHTML = '<img src="play.png" id="playPauseBtn" >';
         isPlaying=false;
     }
 
@@ -784,7 +785,7 @@ Mejor track del OST
   </div>
 
   <div class="music-controls">
-    <button id="playPauseBtn">▶</button>
+    <button id="playPauseBtn"><img src="play.png" id="playPauseBtn" alt="Play" ></button>
     <input type="range" id="volumeSlider" min="0" max="100" value="25">
   </div>
 
