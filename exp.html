@@ -20,7 +20,7 @@
   <title>LJ's EXP</title>
   <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Hind+Madurai:wght@300;400;500;600;700&family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-  <link id="theme-style" rel="stylesheet" href="darkindex.css">
+  <link id="theme-style" rel="stylesheet" href="expdark.css">
 </head>
   
 <body>
@@ -328,7 +328,7 @@ document.getElementById("volumeSlider").addEventListener("input", function(){
             
             load3DBoxForGame(game);
 
-if (theme.getAttribute("href") === "darkindex.css") {
+if (theme.getAttribute("href") === "expdark.css") {
  
     updateColorSchemeDARK(game.accentColor);
 
@@ -644,15 +644,15 @@ let ctx = canvas.getContext('2d');
 let rgb = [60, 60, 60];
   let newcolor = '#0d0d0d';
 button2.onclick = () => {
-  if (theme.getAttribute("href") === "darkindex.css") {
-    theme.setAttribute("href", "whiteindex.css");
+  if (theme.getAttribute("href") === "expdark.css.css") {
+    theme.setAttribute("href", "expwhite.css");
     newcolor = '#f6fcff';
     rgb[0] = 100;
     rgb[1] = 169;
     rgb[2] = 255;
     draw();
   } else {
-    theme.setAttribute("href", "darkindex.css");
+    theme.setAttribute("href", "expdark.css.css");
     newcolor = '#0d0d0d';
     rgb[0] = 60;
     rgb[1] = 60;
