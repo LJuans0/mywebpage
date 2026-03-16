@@ -79,12 +79,12 @@ border:none;
 }
 
 .vote-btn.active.like {
-  background: var(--like-color);
+  background: #1ce279;
 
 }
 
 .vote-btn.active.dislike {
-  background: var(--dislike-color);
+  background: #ec2020;
 
 }
 
@@ -122,16 +122,16 @@ margin: 0 9.5px;
 .like-column .column-fill {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--like-color), white 25%),
-    var(--like-color)
+    color-mix(in srgb, #1ce279, white 25%),
+    #1ce279
   );
 }
 
 .dislike-column .column-fill {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--dislike-color), white 25%),
-    var(--dislike-color)
+    color-mix(in srgb, #ec2020, white 25%),
+    #ec2020
   );
 }
 
@@ -260,7 +260,7 @@ p {
 box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.09);
     max-width: auto;
     transition: all 0.3s ease;
-    color: var(--color-text);
+    color: #ffffff;
 }
 
 p:hover {
@@ -344,7 +344,7 @@ a:hover::before {
   box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
     padding: 0.5rem;
     font-size: 1rem;
-    color: var (--color-text);
+    color:#ffffff;
     max-width: 800px;
     margin: 0 auto 0.4rem;
     line-height: 1.6;
