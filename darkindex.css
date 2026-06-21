@@ -101,7 +101,7 @@ max-width:auto;
 
 
 a {
-  color: #fcffff;
+  color: #2a77fa;
   text-decoration: none;
 }
 
@@ -115,7 +115,7 @@ a:hover {
   gap: 1rem;
   justify-content: center;
   align-items: center;
-    color: #ffffff;
+    color: #2a77fa;
 }
 
 .socials a.vertical {
@@ -127,16 +127,18 @@ a:hover {
   gap: 0.5rem;
   box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
   transition: all 0.3s ease;
-    color: #545454;
+    color: #2a77fa;
 }
 
 .socials a.vertical:hover {
   transform: scale(1.05);
   background: linear-gradient(to bottom, #040505 0%, #0d0d0d 100%);
+    color: #2a77fa;
 }
 
 .socials a.vertical p {
   font-size: 0.8rem;
+    color: #2a77fa;
   margin: 0;
 }
 
@@ -150,17 +152,19 @@ a:hover {
   gap: 0.5rem;
   box-shadow: 0px 0px 10px rgba(252, 255, 255, 0.18);
   transition: all 0.3s ease;
+    color: #2a77fa;
 }
 
 .socials a.horizontal:hover {
   transform: scale(1.05);
   background: linear-gradient(to bottom, #040505 55%, #0d0d0d 90%);
+    color: #2a77fa;
 }
 
 .socials a.horizontal p {
   font-size: 0.8rem;
   margin: 0;
-  color: #333;
+  color: #2a77fa;
 }
 
 .social-pic {
@@ -168,7 +172,7 @@ a:hover {
   transform: perspective(500px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
   will-change: transform;
   filter: hue-rotate(210deg);
-
+color: #2a77fa;
 }
 
 .star {
