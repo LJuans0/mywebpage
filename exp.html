@@ -262,7 +262,7 @@ fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${vide
             document.getElementById('modalPlatform').textContent = game.platform || "N/D";
             
             const fullReview = game.review || "Sin reseña";
-            const shortReviewLimit = 1545;
+            const shortReviewLimit = 1450;
             
             const shortPart = fullReview.length > shortReviewLimit
                 ? fullReview.slice(0, shortReviewLimit) + "..."
