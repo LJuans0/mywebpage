@@ -1010,17 +1010,16 @@ max-width:150px;
     }
 
     .modal-body {
-        flex-direction: column;
-        align-items: center;
-        padding: 1.5rem 0;
-      animation: none;
+        max-height: 90vh;
+        overflow-y: hidden;
     }
 
     .modal-content {
-        padding: 1rem;
-        width: 95%;
+        overflow-y: hidden;
+        max-height: 90vh;
       animation: none;
     }
+
 
     .modal-header h2 {
         font-size: 2rem;
@@ -1048,9 +1047,29 @@ max-width:150px;
       animation: none;
     }
     .modal-review {
-        font-size: 0.8rem;
-        padding: 1rem;
-      animation: none;
+        max-height: 45vh;          /* ajusta a tu gusto */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-right: 0.6rem;     /* espacio para que la barra no tape el texto */
+    }
+.modal-review::-webkit-scrollbar {
+        width: 5px;
+    }
+
+.modal-review::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+
+    .modal-review::-webkit-scrollbar-thumb {
+        background: var(--color-accent);
+        border-radius: 10px;
+    }
+
+    /* Firefox mobile */
+    .modal-review {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-accent) rgba(255, 255, 255, 0.05);
     }
 
     .game-card-horizontal {
@@ -1110,8 +1129,8 @@ max-width:150px;
 
     .close-button {
         font-size: 3rem;
-        top: 20;
-        right: 20;
+        top: -8;
+        right: 10;
       animation: none;
     }
 
@@ -1133,20 +1152,19 @@ max-width:150px;
   .modal-score:hover {
         transform: none;
     }
-    
+
     .modal-cover:hover {
         transform: none;
     }
-    
+
     .modal-header h2:hover {
         transform: none;
     }
-    
+
     .modal-video iframe:hover {
         transform: none;
     }
 
 }
-
 
 </style>
