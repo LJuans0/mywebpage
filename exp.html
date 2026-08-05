@@ -121,8 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const dislikeBtn = widget.querySelector('.vote-btn.dislike');
 
   const graph = widget.querySelector('.vote-graph');
-  const likeFill = widget.querySelector('.like-column .column-fill');
-  const dislikeFill = widget.querySelector('.dislike-column .column-fill');
+
 
   const likeLabel = widget.querySelector('.like-label');
   const dislikeLabel = widget.querySelector('.dislike-label');
@@ -136,8 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const likePct = Math.round((likes / total) * 100);
     const dislikePct = 100 - likePct;
 
-    likeFill.style.height = likePct + '%';
-    dislikeFill.style.height = dislikePct + '%';
 
     likeLabel.textContent = `${likePct}% · ${likes}`;
     dislikeLabel.textContent = `${dislikePct}% · ${dislikes}`;
