@@ -39,13 +39,12 @@ body {
 
 .vote-buttons {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   margin-top: 14px;
 margin-bottom: -25px;
 align-items: center;
     justify-content: center;
 text-align: center;
-gap:35px;
 }
 
 .vote-btn {
@@ -94,7 +93,7 @@ border:none;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  height: 100px;
+  height: 25px;
   padding: 10px;
   background: var(--bg);
   border-radius: var(--radius);
