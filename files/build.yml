@@ -1,0 +1,41 @@
+name: Build instaladores
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-22.04]   # Ubuntu 22.04 = mejor compatibilidad con distros de Linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Librerías del sistema (Linux, para el icono de bandeja)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgirepository1.0-dev libcairo2-dev gir1.2-ayatanaappindicator3-0.1 libayatana-appindicator3-1
+      - run: pip install pyinstaller pystray pillow
+      - name: PyGObject (Linux, opcional)
+        if: runner.os == 'Linux'
+        continue-on-error: true
+        run: pip install pygobject
+      - run: python build.py
+      - name: Empaquetar (Linux)
+        if: runner.os == 'Linux'
+        run: tar czf DiscBoxSetup-linux.tar.gz -C dist DiscBoxSetup
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows'
+        with:
+          name: DiscBoxSetup-windows
+          path: dist/DiscBoxSetup.exe
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Linux'
+        with:
+          name: DiscBoxSetup-linux
+          path: DiscBoxSetup-linux.tar.gz
